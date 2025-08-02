@@ -285,6 +285,9 @@ class NotificationManager {
 // 创建全局通知管理器实例
 const notificationManager = new NotificationManager();
 
+// 暴露到全局变量
+window.notificationManager = notificationManager;
+
 // 提供全局访问函数
 window.showNotification = function(message, type = 'info', duration = 5000) {
     return notificationManager.show(message, type, duration);

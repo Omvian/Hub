@@ -1,0 +1,87 @@
+# 🌟 OmvianHub - 多功能主站
+
+> 一个现代化的多功能主站，集成影视、音乐、科技、生活等多个领域的内容管理系统。
+
+## 📁 项目结构
+
+```
+OmvianHub/
+├── src/                          # 源代码目录
+│   ├── js/                       # JavaScript模块
+│   │   ├── core/                 # 核心模块
+│   │   │   ├── config-manager.js # 配置管理
+│   │   │   └── app-initializer.js # 应用初始化
+│   │   ├── auth/                 # 认证模块
+│   │   │   ├── auth-manager.js   # 认证管理
+│   │   │   └── form-validator.js # 表单验证
+│   │   ├── ui/                   # UI模块
+│   │   │   ├── ui-manager.js     # UI交互管理
+│   │   │   ├── button-manager.js # 按钮状态管理
+│   │   │   └── notification-manager.js # 通知管理
+│   │   └── utils/                # 工具模块
+│   │       ├── constants.js      # 常量定义
+│   │       └── helpers.js        # 辅助函数
+│   └── css/                      # 样式文件
+│       └── main.css              # 主样式文件
+├── index.html                    # 主页面
+├── script.js                     # 主脚本（向后兼容）
+├── .gitignore                   # Git忽略文件
+└── README.md                    # 项目说明
+```
+
+## ✨ 核心功能
+
+- 🎬 **影视模块**: OmvianReview影评系统、电影库、电视剧、综艺节目
+- 🎵 **音乐模块**: 专辑推荐、歌单管理、歌手资料库
+- 💻 **科技模块**: 手机、电脑、相机等产品评测
+- 🏠 **生活模块**: 美食、运动、购物指南
+- 🔐 **用户认证**: 基于Supabase的完整认证系统
+- 📱 **响应式设计**: 完美适配桌面端和移动端
+- 🔔 **智能通知**: 优雅的消息提示系统
+
+## 🔧 技术架构
+
+### 模块化设计
+- **核心模块**: 配置管理、应用初始化
+- **认证模块**: 用户认证、表单验证  
+- **UI模块**: 界面交互、按钮管理、通知系统
+- **工具模块**: 常量定义、辅助函数
+
+### 配置管理
+- 本地开发使用 `local_test.js` 配置文件
+- 生产环境使用GitHub Actions环境变量替换
+- 配置文件已被 `.gitignore` 保护
+
+### 脚本加载顺序
+1. Supabase SDK
+2. 本地配置文件
+3. 工具模块 (constants, helpers)
+4. 核心模块 (config-manager, app-initializer)
+5. UI模块 (button-manager, notification-manager, ui-manager)
+6. 认证模块 (form-validator, auth-manager)
+7. 主脚本 (script.js)
+
+## 🛠️ 开发调试
+
+在浏览器控制台中使用以下命令：
+
+```javascript
+// 查看模块架构信息
+window.getModuleInfo()
+
+// 调试所有模块状态
+window.debugModules()
+
+// 检查模块健康状态
+window.checkModuleHealth()
+
+// 查看性能指标
+window.getPerformanceMetrics()
+```
+
+## 📊 部署信息
+
+- **平台**: GitHub Pages
+- **域名**: 自定义域名或 username.github.io
+- **HTTPS**: 自动启用
+- **CDN**: GitHub全球CDN加速

@@ -6,7 +6,7 @@
     <title>OmvianHub - 多功能主站</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="src/css/main.css">
     <link rel="icon" href="favicon.ico">
 </head>
 <body>
@@ -429,42 +429,69 @@
 <!-- 全局通知 -->
 <div id="notification" class="notification"></div>
 
-<!-- Supabase SDK -->
-<!-- 使用unpkg CDN代替jsdelivr以提高国内访问稳定性 -->
-<script src="https://unpkg.com/@supabase/supabase-js@2.0.0"></script>
+<!-- 脚本加载 - 按依赖顺序加载 -->
+<!-- 1. 外部依赖 -->
+<script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 
-<!-- 条件加载本地配置文件 -->
+<!-- 2. 本地配置文件 -->
+<script src="local_test.js"></script>
+
+<!-- 3. 等待Supabase SDK加载完成后再加载其他脚本 -->
 <script>
-    // 检查是否为本地环境
-    const isLocal = window.location.hostname === 'localhost' ||
-        window.location.hostname === '127.0.0.1' ||
-        window.location.protocol === 'file:';
-
-    if (isLocal) {
-        // 本地环境加载配置文件
-        console.log('本地环境，加载local_test.js');
-        const script = document.createElement('script');
-        script.src = 'local_test.js';
-        script.onload = function() {
-            console.log('本地配置文件加载完成');
-            console.log('配置内容:', window.supabaseConfig);
-        };
-        script.onerror = function() {
-            console.error('本地配置文件加载失败');
-        };
-        document.head.appendChild(script);
-    } else {
-        // GitHub环境，配置应该已经通过部署脚本替换
-        console.log('GitHub环境，使用部署脚本替换的配置');
-        // 不需要尝试加载local_test.js，因为生产环境中该文件不存在
-        // 初始化逻辑已在script.js中通过window.addEventListener('load')实现
+    // 等待Supabase SDK加载完成
+    function waitForSupabase() {
+        return new Promise((resolve) => {
+            if (window.supabase && window.supabase.createClient) {
+                console.log('Supabase SDK 加载完成');
+                resolve();
+            } else {
+                console.log('等待 Supabase SDK 加载...');
+                setTimeout(() => waitForSupabase().then(resolve), 100);
+            }
+        });
     }
+
+    // 按顺序加载脚本
+    async function loadScripts() {
+        await waitForSupabase();
+        
+        const scripts = [
+            'src/js/utils/constants.js',
+            'src/js/utils/helpers.js',
+            'src/js/core/config-manager.js',
+            'src/js/ui/button-manager.js',
+            'src/js/ui/notification-manager.js',
+            'src/js/ui/ui-manager.js',
+            'src/js/auth/form-validator.js',
+            'src/js/auth/auth-manager.js',
+            'src/js/core/app-initializer.js',
+            'script.js'
+        ];
+
+        for (const src of scripts) {
+            await new Promise((resolve, reject) => {
+                const script = document.createElement('script');
+                script.src = src;
+                script.onload = () => {
+                    console.log(`✅ ${src} 加载完成`);
+                    resolve();
+                };
+                script.onerror = () => {
+                    console.error(`❌ ${src} 加载失败`);
+                    reject(new Error(`Failed to load ${src}`));
+                };
+                document.head.appendChild(script);
+            });
+        }
+        
+        console.log('🎉 所有脚本加载完成');
+    }
+
+    // 开始加载
+    loadScripts().catch(error => {
+        console.error('脚本加载失败:', error);
+    });
 </script>
-
-
-
-<script src="notification-manager.js"></script>
-<script src="script.js"></script>
 
 
 </body>
