@@ -410,12 +410,12 @@ footer {
     align-items: center;
     color: #FFC107;
     font-weight: bold;
-    flex-direction: column;
+    flex-direction: row;
+    gap: 8px;
 }
 
 .warning-icon {
-    font-size: 24px;
-    margin-bottom: 8px;
+    font-size: 20px;
 }
 
 /* 确保认证按钮组容器是相对定位的 */
