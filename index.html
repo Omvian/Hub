@@ -302,8 +302,7 @@
                 <p class="module-description">专业相机评测、镜头推荐和摄影技巧分享，从入门到专业，助您提升摄影水平。</p>
                 <div class="module-meta">
                     <span class="module-category">科技</span>
-                    <a href="#" class="module-link">
-                        进入 <i class="material-icons">arrow_forward</i>
+                    <a href="#" class="material-icons">arrow_forward</i>
                     </a>
                 </div>
             </div>
@@ -372,7 +371,12 @@
             </div>
             <div class="form-group">
                 <label for="password">密码</label>
-                <input type="password" id="password" placeholder="请输入您的密码" required>
+                <div class="password-input-wrapper">
+                    <input type="password" id="password" placeholder="请输入您的密码" required>
+                    <button type="button" class="password-toggle" data-target="password">
+                        <i class="material-icons">visibility</i>
+                    </button>
+                </div>
                 <div id="passwordError" class="form-error"></div>
             </div>
             <button type="submit" class="btn btn-primary" id="loginSubmitBtn">
@@ -395,31 +399,57 @@
         <form id="registerForm" class="register-overlay-form">
             <div class="form-group">
                 <label for="regEmail">邮箱</label>
-                <input type="email" id="regEmail" placeholder="请输入您的邮箱" required>
+                <div class="input-wrapper">
+                    <input type="email" id="regEmail" placeholder="请输入有效的邮箱地址" required>
+                    <button type="button" class="clear-input-btn" data-target="regEmail" style="display: none;">
+                        <i class="material-icons">close</i>
+                    </button>
+                </div>
                 <div id="regEmailError" class="form-error"></div>
             </div>
             <div class="form-group">
                 <label for="regNickname">昵称</label>
-                <input type="text" id="regNickname" placeholder="请输入您的昵称" required>
+                <div class="input-wrapper">
+                    <input type="text" id="regNickname" placeholder="请输入昵称 (2-20个字符)" required>
+                    <button type="button" class="clear-input-btn" data-target="regNickname" style="display: none;">
+                        <i class="material-icons">close</i>
+                    </button>
+                </div>
                 <div id="regNicknameError" class="form-error"></div>
             </div>
             <div class="form-group">
                 <label for="regPassword">密码</label>
-                <input type="password" id="regPassword" placeholder="请输入您的密码" required>
+                <div class="password-input-wrapper">
+                    <input type="password" id="regPassword" placeholder="请输入强密码 (6-20位，包含字母数字)" required minlength="6" maxlength="20">
+                    <button type="button" class="password-toggle" data-target="regPassword">
+                        <i class="material-icons">visibility</i>
+                    </button>
+                </div>
                 <div id="passwordStrength" class="password-strength">
                     <div id="passwordStrengthBar" class="password-strength-bar"></div>
                 </div>
                 <div id="passwordStrengthText" class="password-strength-text"></div>
                 <div id="regPasswordError" class="form-error"></div>
             </div>
-            <div class="form-group">
+            <div class="form-group" id="confirmPasswordGroup" style="display: none;">
                 <label for="regConfirmPassword">确认密码</label>
-                <input type="password" id="regConfirmPassword" placeholder="请再次输入您的密码" required>
+                <div class="password-input-wrapper">
+                    <input type="password" id="regConfirmPassword" placeholder="请再次输入密码确保一致" required minlength="6" maxlength="20">
+                    <button type="button" class="password-toggle" data-target="regConfirmPassword">
+                        <i class="material-icons">visibility</i>
+                    </button>
+                </div>
                 <div id="regConfirmPasswordError" class="form-error"></div>
             </div>
-            <button type="submit" class="btn register-overlay-submit" id="registerSubmitBtn">
-                <span id="registerSpinner" class="spinner" style="display: none;"></span>
-                <span id="registerButtonText">注册</span>
+            <button type="submit" class="btn register-overlay-submit" id="registerSubmitBtn" style="display: none;">
+                <div class="button-content">
+                    <span id="registerSpinner" class="spinner" style="display: none;">
+                        <span class="dot dot1"></span>
+                        <span class="dot dot2"></span>
+                        <span class="dot dot3"></span>
+                    </span>
+                    <span id="registerButtonText">注册</span>
+                </div>
             </button>
         </form>
     </div>

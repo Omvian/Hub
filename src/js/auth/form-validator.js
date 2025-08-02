@@ -10,6 +10,7 @@ class FormValidator {
     init() {
         this.setupLoginFormValidation();
         this.setupRegisterFormValidation();
+        this.setupPasswordToggle();
     }
 
     // 验证邮箱格式
@@ -167,71 +168,237 @@ class FormValidator {
 
         if (!emailField || !nicknameField || !passwordField || !confirmPasswordField) return;
 
+        // 设置清空按钮功能
+        this.setupClearButtons();
+
         // 邮箱验证
         emailField.addEventListener('blur', () => {
-            const email = emailField.value.trim();
-
-            if (!email) {
-                this.showFieldError('regEmail', '请输入邮箱地址');
-            } else if (!this.isValidEmail(email)) {
-                this.showFieldError('regEmail', '请输入有效的邮箱地址');
-            } else {
-                this.showFieldSuccess('regEmail');
-            }
+            this.validateRegisterEmail();
+            this.updateRegisterFormState();
         });
 
-        // 昵称验证
-        nicknameField.addEventListener('blur', () => {
-            const nickname = nicknameField.value.trim();
-
-            if (!nickname) {
-                this.showFieldError('regNickname', '请输入昵称');
-            } else if (!this.isValidNickname(nickname)) {
-                this.showFieldError('regNickname', '昵称长度应为2-20个字符');
-            } else {
-                this.showFieldSuccess('regNickname');
-            }
-        });
-
-        // 密码验证
-        passwordField.addEventListener('input', () => {
-            const password = passwordField.value;
-
-            // 更新密码强度指示器
-            this.updatePasswordStrength(password, 'passwordStrengthBar', 'passwordStrengthText');
-
-            // 验证密码
-            if (!password) {
-                this.showFieldError('regPassword', '请输入密码');
-            } else if (password.length < 6) {
-                this.showFieldError('regPassword', '密码长度至少为6位');
-            } else {
-                this.showFieldSuccess('regPassword');
-            }
-
-            // 如果确认密码已填写，重新验证
-            if (confirmPasswordField.value) {
-                this.validateConfirmPassword();
-            }
-        });
-
-        // 确认密码验证
-        confirmPasswordField.addEventListener('input', () => {
-            this.validateConfirmPassword();
-        });
-
-        // 输入时清除错误状态
         emailField.addEventListener('input', () => {
             if (emailField.classList.contains('invalid')) {
                 this.clearFieldStatus('regEmail');
             }
+            this.toggleClearButton('regEmail');
+            this.updateRegisterFormState();
+        });
+
+        // 昵称验证
+        nicknameField.addEventListener('blur', () => {
+            this.validateRegisterNickname();
+            this.updateRegisterFormState();
         });
 
         nicknameField.addEventListener('input', () => {
             if (nicknameField.classList.contains('invalid')) {
                 this.clearFieldStatus('regNickname');
             }
+            this.toggleClearButton('regNickname');
+            this.updateRegisterFormState();
         });
+
+        // 密码验证
+        passwordField.addEventListener('input', () => {
+            this.validateRegisterPassword();
+            this.updateConfirmPasswordVisibility();
+            // 如果确认密码已填写，重新验证
+            if (confirmPasswordField.value) {
+                this.validateConfirmPassword();
+            }
+            this.updateRegisterFormState();
+        });
+
+        // 确认密码验证
+        confirmPasswordField.addEventListener('input', () => {
+            this.validateConfirmPassword();
+            this.updateRegisterFormState();
+        });
+    }
+
+    // 设置清空按钮功能
+    setupClearButtons() {
+        const clearButtons = document.querySelectorAll('.clear-input-btn');
+        
+        clearButtons.forEach(button => {
+            button.addEventListener('click', (e) => {
+                e.preventDefault();
+                const targetId = button.getAttribute('data-target');
+                const input = document.getElementById(targetId);
+                
+                if (input) {
+                    input.value = '';
+                    input.focus();
+                    button.style.display = 'none';
+                    
+                    // 清除验证状态
+                    this.clearFieldStatus(targetId);
+                    this.updateRegisterFormState();
+                }
+            });
+        });
+    }
+
+    // 切换清空按钮显示
+    toggleClearButton(inputId) {
+        const input = document.getElementById(inputId);
+        const clearBtn = document.querySelector(`[data-target="${inputId}"]`);
+        
+        if (input && clearBtn) {
+            if (input.value.trim()) {
+                clearBtn.style.display = 'flex';
+            } else {
+                clearBtn.style.display = 'none';
+            }
+        }
+    }
+
+    // 更新确认密码框显示
+    updateConfirmPasswordVisibility() {
+        const passwordField = document.getElementById('regPassword');
+        const confirmPasswordGroup = document.getElementById('confirmPasswordGroup');
+        
+        if (!passwordField || !confirmPasswordGroup) return;
+        
+        const password = passwordField.value;
+        const isPasswordValid = password && password.length >= 6 && this.getPasswordStrength(password) >= 3;
+        
+        if (isPasswordValid) {
+            confirmPasswordGroup.style.display = 'block';
+            // 添加渐入动画
+            setTimeout(() => {
+                confirmPasswordGroup.style.opacity = '1';
+                confirmPasswordGroup.style.transform = 'translateY(0)';
+            }, 50);
+        } else {
+            confirmPasswordGroup.style.display = 'none';
+            // 清空确认密码
+            const confirmPasswordField = document.getElementById('regConfirmPassword');
+            if (confirmPasswordField) {
+                confirmPasswordField.value = '';
+                this.clearFieldStatus('regConfirmPassword');
+            }
+        }
+    }
+
+    // 更新注册表单状态（包括按钮显示）
+    updateRegisterFormState() {
+        this.updateRegisterButtonVisibility();
+        this.updateRegisterButtonState();
+    }
+
+    // 更新注册按钮显示
+    updateRegisterButtonVisibility() {
+        const submitBtn = document.getElementById('registerSubmitBtn');
+        if (!submitBtn) return;
+
+        const email = document.getElementById('regEmail').value.trim();
+        const nickname = document.getElementById('regNickname').value.trim();
+        const password = document.getElementById('regPassword').value;
+        const confirmPassword = document.getElementById('regConfirmPassword').value;
+
+        // 检查所有字段是否有效
+        const isEmailValid = email && this.isValidEmail(email);
+        const isNicknameValid = nickname && this.isValidNickname(nickname);
+        const isPasswordValid = password && password.length >= 6 && this.getPasswordStrength(password) >= 3;
+        const isConfirmPasswordValid = confirmPassword && password === confirmPassword;
+
+        const allValid = isEmailValid && isNicknameValid && isPasswordValid && isConfirmPasswordValid;
+
+        if (allValid) {
+            submitBtn.style.display = 'block';
+            // 添加渐入动画
+            setTimeout(() => {
+                submitBtn.style.opacity = '1';
+                submitBtn.style.transform = 'translateY(0)';
+            }, 50);
+        } else {
+            submitBtn.style.display = 'none';
+        }
+    }
+
+    // 验证注册邮箱
+    validateRegisterEmail() {
+        const email = document.getElementById('regEmail').value.trim();
+        
+        if (!email) {
+            this.showFieldError('regEmail', '请输入邮箱地址');
+            return false;
+        } else if (!this.isValidEmail(email)) {
+            this.showFieldError('regEmail', '请输入有效的邮箱地址');
+            return false;
+        } else {
+            this.showFieldSuccess('regEmail');
+            return true;
+        }
+    }
+
+    // 验证注册昵称
+    validateRegisterNickname() {
+        const nickname = document.getElementById('regNickname').value.trim();
+        
+        if (!nickname) {
+            this.showFieldError('regNickname', '请输入昵称');
+            return false;
+        } else if (!this.isValidNickname(nickname)) {
+            this.showFieldError('regNickname', '昵称长度应为2-20个字符');
+            return false;
+        } else {
+            this.showFieldSuccess('regNickname');
+            return true;
+        }
+    }
+
+    // 验证注册密码
+    validateRegisterPassword() {
+        const password = document.getElementById('regPassword').value;
+        
+        // 更新密码强度指示器
+        this.updatePasswordStrength(password, 'passwordStrengthBar', 'passwordStrengthText');
+
+        if (!password) {
+            this.showFieldError('regPassword', '请输入密码');
+            return false;
+        } else if (password.length < 6) {
+            this.showFieldError('regPassword', '密码长度至少为6位');
+            return false;
+        } else if (this.getPasswordStrength(password) < 3) {
+            this.showFieldError('regPassword', '密码强度太弱，请使用更复杂的密码');
+            return false;
+        } else {
+            this.showFieldSuccess('regPassword');
+            return true;
+        }
+    }
+
+    // 更新注册按钮状态
+    updateRegisterButtonState() {
+        const submitBtn = document.getElementById('registerSubmitBtn');
+        if (!submitBtn) return;
+
+        const email = document.getElementById('regEmail').value.trim();
+        const nickname = document.getElementById('regNickname').value.trim();
+        const password = document.getElementById('regPassword').value;
+        const confirmPassword = document.getElementById('regConfirmPassword').value;
+
+        // 检查所有字段是否有效
+        const isEmailValid = email && this.isValidEmail(email);
+        const isNicknameValid = nickname && this.isValidNickname(nickname);
+        const isPasswordValid = password && password.length >= 6 && this.getPasswordStrength(password) >= 3;
+        const isConfirmPasswordValid = confirmPassword && password === confirmPassword;
+
+        const allValid = isEmailValid && isNicknameValid && isPasswordValid && isConfirmPasswordValid;
+
+        if (allValid) {
+            submitBtn.disabled = false;
+            submitBtn.classList.remove('disabled');
+            submitBtn.classList.add('enabled');
+        } else {
+            submitBtn.disabled = true;
+            submitBtn.classList.add('disabled');
+            submitBtn.classList.remove('enabled');
+        }
     }
 
     // 验证确认密码
@@ -239,17 +406,30 @@ class FormValidator {
         const passwordField = document.getElementById('regPassword');
         const confirmPasswordField = document.getElementById('regConfirmPassword');
 
-        if (!passwordField || !confirmPasswordField) return;
+        if (!passwordField || !confirmPasswordField) return false;
 
         const password = passwordField.value;
         const confirmPassword = confirmPasswordField.value;
 
         if (!confirmPassword) {
             this.showFieldError('regConfirmPassword', '请确认密码');
+            return false;
         } else if (password !== confirmPassword) {
             this.showFieldError('regConfirmPassword', '两次输入的密码不一致');
+            return false;
         } else {
             this.showFieldSuccess('regConfirmPassword');
+            return true;
+        }
+    }
+
+    // 初始化注册按钮状态
+    initRegisterButtonState() {
+        const submitBtn = document.getElementById('registerSubmitBtn');
+        if (submitBtn) {
+            submitBtn.disabled = true;
+            submitBtn.classList.add('disabled');
+            submitBtn.classList.remove('enabled');
         }
     }
 
@@ -336,6 +516,83 @@ class FormValidator {
         errors.forEach(error => {
             error.classList.remove('show');
         });
+    }
+
+    // 设置密码显示/隐藏功能 - 按住显示，松开隐藏
+    setupPasswordToggle() {
+        const toggleButtons = document.querySelectorAll('.password-toggle');
+        
+        toggleButtons.forEach(button => {
+            const targetId = button.getAttribute('data-target');
+            const passwordInput = document.getElementById(targetId);
+            const icon = button.querySelector('i');
+            
+            if (!passwordInput || !icon) return;
+            
+            // 鼠标按下时显示密码
+            button.addEventListener('mousedown', (e) => {
+                e.preventDefault();
+                passwordInput.type = 'text';
+                icon.textContent = 'visibility_off';
+                button.classList.add('active');
+            });
+            
+            // 鼠标松开时隐藏密码
+            button.addEventListener('mouseup', (e) => {
+                e.preventDefault();
+                passwordInput.type = 'password';
+                icon.textContent = 'visibility';
+                button.classList.remove('active');
+            });
+            
+            // 鼠标离开按钮时也隐藏密码
+            button.addEventListener('mouseleave', (e) => {
+                e.preventDefault();
+                passwordInput.type = 'password';
+                icon.textContent = 'visibility';
+                button.classList.remove('active');
+            });
+            
+            // 防止按钮获得焦点
+            button.addEventListener('focus', (e) => {
+                e.preventDefault();
+                button.blur();
+            });
+        });
+    }
+
+    // 检查邮箱是否可注册（通过尝试注册来判断）
+    async checkEmailAvailability(email) {
+        if (!window.configManager.isReady()) {
+            return { available: false, error: '系统未就绪，请稍后重试' };
+        }
+
+        try {
+            const supabase = window.configManager.getSupabase();
+            
+            // 尝试使用临时密码注册来检查邮箱是否已存在
+            const { error } = await supabase.auth.signUp({
+                email,
+                password: 'temp_password_for_check_' + Date.now(),
+                options: {
+                    data: { temp_check: true }
+                }
+            });
+
+            if (error) {
+                if (error.message.includes('already registered') || 
+                    error.message.includes('User already registered')) {
+                    return { available: false, error: '该邮箱已被注册' };
+                } else {
+                    return { available: true };
+                }
+            }
+
+            return { available: true };
+        } catch (error) {
+            console.error('邮箱可用性检查失败:', error);
+            return { available: false, error: '检查失败，请稍后重试' };
+        }
     }
 }
 
