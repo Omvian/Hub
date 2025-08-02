@@ -69,7 +69,7 @@ class NotificationManager {
         copyButton.innerHTML = '<i class="material-icons">content_copy</i>';
         copyButton.title = '复制到剪贴板';
         copyButton.addEventListener('click', (event) => {
-            this.copyToClipboard(message, event, notification);
+            this.copyToClipboard(message, event);
         });
 
         // 组装通知
@@ -79,136 +79,152 @@ class NotificationManager {
         return notification;
     }
 
-    // 在鼠标位置显示气泡复制成功提示
-    showCopyToastFollowMouse(event) {
+    // 显示固定位置的复制提示（支持成功和失败状态）
+    showCopyToastFixed(type = 'success', message = '已复制到剪贴板') {
         // 移除已存在的复制提示
-        const existingToast = document.querySelector('.copy-toast-bubble');
+        const existingToast = document.querySelector('.copy-toast-fixed');
         if (existingToast) {
             existingToast.remove();
         }
 
-        // 获取初始鼠标位置
-        const mouseX = event.clientX;
-        const mouseY = event.clientY;
+        // 根据类型设置不同的配置
+        const config = {
+            success: {
+                icon: '✓',
+                iconBg: '#4caf50',
+                textColor: '#2e7d32',
+                borderColor: 'rgba(76, 175, 80, 0.2)'
+            },
+            error: {
+                icon: '✕',
+                iconBg: '#f44336',
+                textColor: '#c62828',
+                borderColor: 'rgba(244, 67, 54, 0.2)'
+            }
+        };
 
-        // 创建气泡提示
-        const toast = document.createElement('div');
-        toast.className = 'copy-toast-bubble';
-        toast.textContent = '已复制到剪贴板';
+        const currentConfig = config[type] || config.success;
 
-        // 设置气泡样式
-        Object.assign(toast.style, {
+        // 创建复制提示容器
+        const toastContainer = document.createElement('div');
+        toastContainer.className = 'copy-toast-fixed';
+
+        // 创建图标
+        const icon = document.createElement('div');
+        icon.className = 'copy-toast-icon';
+        icon.innerHTML = currentConfig.icon;
+
+        // 创建文字
+        const text = document.createElement('div');
+        text.className = 'copy-toast-text';
+        text.textContent = message;
+
+        // 组装元素
+        toastContainer.appendChild(icon);
+        toastContainer.appendChild(text);
+
+        // 设置容器样式
+        Object.assign(toastContainer.style, {
             position: 'fixed',
-            backgroundColor: '#4caf50',
-            color: 'white',
-            padding: '8px 12px',
-            borderRadius: '20px', // 更圆润的气泡效果
-            fontSize: '12px',
+            top: '20px',
+            left: '50%',
+            transform: 'translateX(-50%) translateY(-100px)', // 初始位置在屏幕上方
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+            backgroundColor: '#ffffff',
+            padding: '12px 20px',
+            borderRadius: '50px',
+            fontSize: '14px',
             fontWeight: '500',
             whiteSpace: 'nowrap',
-            boxShadow: '0 4px 16px rgba(76, 175, 80, 0.4), 0 2px 8px rgba(0, 0, 0, 0.2)',
-            border: '1px solid rgba(255, 255, 255, 0.3)',
+            boxShadow: '0 8px 32px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.08)',
+            border: `1px solid ${currentConfig.borderColor}`,
             zIndex: '10001',
             opacity: '0',
-            transform: 'scale(0.8)',
-            transition: 'all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1)', // 弹性动画
+            transition: 'all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)',
             pointerEvents: 'none',
-            backdropFilter: 'blur(8px)', // 毛玻璃效果
-            background: 'linear-gradient(135deg, #4caf50 0%, #45a049 100%)' // 渐变背景
+            backdropFilter: 'blur(12px)',
+            background: 'linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%)',
+            minWidth: '180px',
+            justifyContent: 'center'
         });
 
-        document.body.appendChild(toast);
+        // 设置图标样式
+        Object.assign(icon.style, {
+            width: '20px',
+            height: '20px',
+            borderRadius: '50%',
+            backgroundColor: currentConfig.iconBg,
+            color: 'white',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontSize: '12px',
+            fontWeight: 'bold',
+            flexShrink: '0'
+        });
 
-        // 计算最佳位置的函数
-        const calculatePosition = (x, y) => {
-            const rect = toast.getBoundingClientRect();
-            const viewportWidth = window.innerWidth;
-            const viewportHeight = window.innerHeight;
-            
-            let finalX = x + 15; // 默认在鼠标右侧
-            let finalY = y - rect.height / 2; // 垂直居中对齐鼠标
+        // 设置文字样式
+        Object.assign(text.style, {
+            color: currentConfig.textColor,
+            fontWeight: '500'
+        });
 
-            // 检查右边界
-            if (finalX + rect.width > viewportWidth - 10) {
-                finalX = x - rect.width - 15; // 切换到左侧
-            }
+        document.body.appendChild(toastContainer);
 
-            // 检查下边界
-            if (finalY + rect.height > viewportHeight - 10) {
-                finalY = viewportHeight - rect.height - 10;
-            }
-
-            // 检查上边界
-            if (finalY < 10) {
-                finalY = 10;
-            }
-
-            // 检查左边界
-            if (finalX < 10) {
-                finalX = 10;
-            }
-
-            return { x: finalX, y: finalY };
-        };
-
-        // 初始位置设置
-        const initialPos = calculatePosition(mouseX, mouseY);
-        toast.style.left = initialPos.x + 'px';
-        toast.style.top = initialPos.y + 'px';
-
-        // 显示动画 - 弹性出现
+        // 显示动画 - 从上方滑入
         setTimeout(() => {
-            toast.style.opacity = '1';
-            toast.style.transform = 'scale(1)';
+            toastContainer.style.opacity = '1';
+            toastContainer.style.transform = 'translateX(-50%) translateY(0)';
         }, 10);
-
-        // 鼠标移动跟随函数
-        const followMouse = (e) => {
-            if (toast.parentNode) {
-                const newPos = calculatePosition(e.clientX, e.clientY);
-                toast.style.left = newPos.x + 'px';
-                toast.style.top = newPos.y + 'px';
-            }
-        };
-
-        // 添加鼠标移动监听器
-        document.addEventListener('mousemove', followMouse);
 
         // 自动移除函数
         const removeToast = () => {
-            document.removeEventListener('mousemove', followMouse);
-            if (toast.parentNode) {
-                toast.style.opacity = '0';
-                toast.style.transform = 'scale(0.8)';
+            if (toastContainer.parentNode) {
+                toastContainer.style.opacity = '0';
+                toastContainer.style.transform = 'translateX(-50%) translateY(-50px)';
                 setTimeout(() => {
-                    if (toast.parentNode) {
-                        toast.parentNode.removeChild(toast);
+                    if (toastContainer.parentNode) {
+                        toastContainer.parentNode.removeChild(toastContainer);
                     }
-                }, 200);
+                }, 400);
             }
         };
 
-        // 1.5秒后自动移除
-        setTimeout(removeToast, 1500);
+        // 2.5秒后自动移除（失败提示稍长一些）
+        const duration = type === 'error' ? 2500 : 2000;
+        setTimeout(removeToast, duration);
 
         // 返回移除函数，以便外部可以提前移除
         return removeToast;
     }
 
     // 复制到剪贴板
-    async copyToClipboard(text, event, notification) {
+    async copyToClipboard(text, event) {
         try {
             await navigator.clipboard.writeText(text);
             
-            // 显示跟随鼠标的复制提示
-            this.showCopyToastFollowMouse(event);
+            // 显示固定位置的复制成功提示
+            this.showCopyToastFixed('success', '已复制到剪贴板');
             
             // 立即移除当前通知
-            this.removeNotification(notification);
+            const notification = event.target.closest('.notification-box');
+            if (notification) {
+                this.removeNotification(notification);
+            }
             
         } catch (err) {
             console.error('复制失败:', err);
-            this.show('复制失败，请手动复制', 'error', 2000);
+            
+            // 显示固定位置的复制失败提示
+            this.showCopyToastFixed('error', '复制失败，请手动复制');
+            
+            // 也移除当前通知
+            const notification = event.target.closest('.notification-box');
+            if (notification) {
+                this.removeNotification(notification);
+            }
         }
     }
 
