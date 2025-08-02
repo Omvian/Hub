@@ -1,3 +1,4 @@
+// notification-manager.js
 // 通知管理器
 class NotificationManager {
     constructor() {

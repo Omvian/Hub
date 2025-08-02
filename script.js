@@ -1,3 +1,5 @@
+// script.js
+// Github Page配置Supabase需要在仓库机密创建SUPABASE_KEY和SUPABASE_URL，再赋值时必须加""双引号
 // Supabase 配置 - 使用 let 而不是 const，以便在本地环境中重新赋值
 let supabaseConfig = {
     url: "%%SUPABASE_URL%%",
