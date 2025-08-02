@@ -68,39 +68,191 @@ class NotificationManager {
         copyButton.className = 'notification-copy';
         copyButton.innerHTML = '<i class="material-icons">content_copy</i>';
         copyButton.title = '复制到剪贴板';
-        copyButton.addEventListener('click', () => {
-            this.copyToClipboard(message);
+        copyButton.addEventListener('click', (event) => {
+            this.copyToClipboard(message, event, notification);
         });
 
         // 组装通知
         notification.appendChild(content);
         notification.appendChild(copyButton);
 
-        // 自动调整高度以适应内容
-        this.adjustNotificationHeight(notification);
-
         return notification;
     }
 
-    // 调整通知高度以适应内容
-    adjustNotificationHeight(notification) {
-        const content = notification.querySelector('.notification-content');
-        const minHeight = 150;
-        const padding = 32; // 上下各16px
-        const contentHeight = content.scrollHeight;
-
-        if (contentHeight + padding > minHeight) {
-            notification.style.minHeight = `${contentHeight + padding}px`;
-        } else {
-            notification.style.minHeight = `${minHeight}px`;
+    // 在鼠标位置显示带连接线的复制成功提示
+    showCopyToastFollowMouse(event) {
+        // 移除已存在的复制提示
+        const existingToast = document.querySelector('.copy-toast-container');
+        if (existingToast) {
+            existingToast.remove();
         }
+
+        // 获取初始鼠标位置
+        const mouseX = event.clientX;
+        const mouseY = event.clientY;
+
+        // 创建容器
+        const container = document.createElement('div');
+        container.className = 'copy-toast-container';
+        
+        // 创建连接线
+        const connector = document.createElement('div');
+        connector.className = 'copy-toast-connector';
+        
+        // 创建气泡提示
+        const toast = document.createElement('div');
+        toast.className = 'copy-toast-bubble';
+        toast.textContent = '已复制到剪贴板';
+
+        // 组装元素
+        container.appendChild(connector);
+        container.appendChild(toast);
+
+        // 设置容器样式
+        Object.assign(container.style, {
+            position: 'fixed',
+            left: mouseX + 'px',
+            top: mouseY + 'px',
+            zIndex: '10001',
+            opacity: '0',
+            transition: 'opacity 0.2s ease',
+            pointerEvents: 'none'
+        });
+
+        // 设置连接线样式
+        Object.assign(connector.style, {
+            position: 'absolute',
+            width: '2px',
+            height: '20px',
+            backgroundColor: '#4caf50',
+            left: '0px',
+            top: '0px',
+            borderRadius: '1px',
+            boxShadow: '0 0 4px rgba(76, 175, 80, 0.5)'
+        });
+
+        // 设置气泡样式
+        Object.assign(toast.style, {
+            position: 'absolute',
+            left: '8px', // 连接线右侧8px
+            top: '5px',  // 稍微向上偏移
+            backgroundColor: '#4caf50',
+            color: 'white',
+            padding: '6px 10px',
+            borderRadius: '8px',
+            fontSize: '11px',
+            fontWeight: '500',
+            whiteSpace: 'nowrap',
+            boxShadow: '0 3px 12px rgba(76, 175, 80, 0.4)',
+            border: '1px solid rgba(255, 255, 255, 0.3)',
+            // 添加小三角形指向鼠标
+            '&::before': 'content: ""; position: absolute; left: -6px; top: 50%; transform: translateY(-50%); width: 0; height: 0; border-top: 6px solid transparent; border-bottom: 6px solid transparent; border-right: 6px solid #4caf50;'
+        });
+
+        // 手动添加三角形伪元素
+        const triangle = document.createElement('div');
+        Object.assign(triangle.style, {
+            position: 'absolute',
+            left: '-6px',
+            top: '50%',
+            transform: 'translateY(-50%)',
+            width: '0',
+            height: '0',
+            borderTop: '6px solid transparent',
+            borderBottom: '6px solid transparent',
+            borderRight: '6px solid #4caf50'
+        });
+        toast.appendChild(triangle);
+
+        document.body.appendChild(container);
+
+        // 检查边界并调整位置
+        const adjustPosition = (x, y) => {
+            const rect = toast.getBoundingClientRect();
+            const viewportWidth = window.innerWidth;
+            const viewportHeight = window.innerHeight;
+            
+            let adjustedX = x;
+            let adjustedY = y;
+            let position = 'right'; // 默认在右侧
+
+            // 检查右边界 - 如果超出，切换到左侧
+            if (x + 8 + rect.width > viewportWidth) {
+                position = 'left';
+                toast.style.left = '-' + (rect.width + 8) + 'px';
+                triangle.style.left = 'auto';
+                triangle.style.right = '-6px';
+                triangle.style.borderRight = 'none';
+                triangle.style.borderLeft = '6px solid #4caf50';
+            }
+
+            // 检查下边界
+            if (y + rect.height > viewportHeight) {
+                adjustedY = y - rect.height - 10;
+                toast.style.top = '-' + (rect.height + 5) + 'px';
+                connector.style.height = '15px';
+                connector.style.top = '-15px';
+            }
+
+            // 检查上边界
+            if (adjustedY < 0) {
+                adjustedY = y + 20;
+                toast.style.top = '25px';
+                connector.style.height = '20px';
+                connector.style.top = '0px';
+            }
+
+            container.style.left = adjustedX + 'px';
+            container.style.top = adjustedY + 'px';
+        };
+
+        // 初始位置调整
+        setTimeout(() => {
+            adjustPosition(mouseX, mouseY);
+            container.style.opacity = '1';
+        }, 10);
+
+        // 鼠标移动跟随函数
+        const followMouse = (e) => {
+            if (container.parentNode) {
+                adjustPosition(e.clientX, e.clientY);
+            }
+        };
+
+        // 添加鼠标移动监听器
+        document.addEventListener('mousemove', followMouse);
+
+        // 自动移除
+        const removeToast = () => {
+            document.removeEventListener('mousemove', followMouse);
+            if (container.parentNode) {
+                container.style.opacity = '0';
+                setTimeout(() => {
+                    if (container.parentNode) {
+                        container.parentNode.removeChild(container);
+                    }
+                }, 200);
+            }
+        };
+
+        // 1.5秒后自动移除
+        setTimeout(removeToast, 1500);
+
+        // 返回移除函数，以便外部可以提前移除
+        return removeToast;
     }
 
     // 复制到剪贴板
-    async copyToClipboard(text) {
+    async copyToClipboard(text, event, notification) {
         try {
             await navigator.clipboard.writeText(text);
-            this.show('已复制到剪贴板', 'success', 2000);
+            
+            // 显示跟随鼠标的复制提示
+            this.showCopyToastFollowMouse(event);
+            
+            // 立即移除当前通知
+            this.removeNotification(notification);
+            
         } catch (err) {
             console.error('复制失败:', err);
             this.show('复制失败，请手动复制', 'error', 2000);

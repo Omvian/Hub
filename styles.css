@@ -173,41 +173,6 @@ header {
     cursor: not-allowed;
 }
 
-/* 认证按钮禁用状态 */
-.auth-buttons .btn:disabled {
-    position: relative;
-    overflow: hidden;
-    cursor: not-allowed;
-    opacity: 0.7;
-}
-
-.auth-buttons .btn:disabled::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.4);
-    z-index: 1;
-    backdrop-filter: blur(1px);
-}
-
-.auth-buttons .btn:disabled::before {
-    content: '⚠️ 账号系统维护中';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    color: #ffeb3b;
-    font-size: 14px;
-    font-weight: 500;
-    text-align: center;
-    z-index: 2;
-    white-space: nowrap;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
-    pointer-events: none;
-}
 
 /* 按钮悬停效果 */
 .auth-buttons .btn:not(:disabled):hover {
@@ -764,93 +729,128 @@ footer {
     position: fixed;
     bottom: 20px;
     right: 20px;
-    width: 480px;
+    width: 360px;
     z-index: 9999;
     display: flex;
     flex-direction: column-reverse; /* 反向排列，新的通知在底部 */
-    gap: 10px;
+    gap: 12px;
     pointer-events: none; /* 容器不拦截鼠标事件 */
 }
 
 /* 通知框 */
 .notification-box {
-    background-color: #323232;
+    background: linear-gradient(135deg, #2a2a2a 0%, #1e1e1e 100%);
     color: #ffffff;
-    border-radius: 8px;
-    padding: 16px;
-    min-height: 150px;
+    border-radius: 12px;
+    padding: 16px 20px;
+    min-height: 80px;
     width: 100%;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), 0 2px 8px rgba(0, 0, 0, 0.2);
     display: flex;
-    flex-direction: column;
+    align-items: center;
     position: relative;
     pointer-events: auto; /* 通知框可以响应鼠标事件 */
     opacity: 0;
-    transform: translateY(100px);
-    animation: slideInUp 0.3s ease forwards;
+    transform: translateX(100px);
+    animation: slideInRight 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
     transition: all 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
 }
 
 /* 通知框内容 */
 .notification-content {
     flex: 1;
-    display: flex;
-    align-items: center;
+    font-size: 14px;
+    line-height: 1.4;
     word-wrap: break-word;
     overflow: hidden;
     padding-right: 40px; /* 为复制按钮留出空间 */
+    display: flex;
+    align-items: center;
 }
 
 /* 通知框类型样式 */
 .notification-box.success {
-    background-color: #2e7d32;
+    background: linear-gradient(135deg, #4caf50 0%, #2e7d32 100%);
+    border-color: rgba(76, 175, 80, 0.3);
 }
 
 .notification-box.error {
-    background-color: #c62828;
+    background: linear-gradient(135deg, #f44336 0%, #c62828 100%);
+    border-color: rgba(244, 67, 54, 0.3);
 }
 
 .notification-box.info {
-    background-color: #1565c0;
+    background: linear-gradient(135deg, #2196f3 0%, #1565c0 100%);
+    border-color: rgba(33, 150, 243, 0.3);
 }
 
 .notification-box.warning {
-    background-color: #f57c00;
+    background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%);
+    border-color: rgba(255, 152, 0, 0.3);
 }
 
 /* 复制按钮 */
 .notification-copy {
     position: absolute;
-    top: 16px;
-    right: 16px;
-    background-color: rgba(255, 255, 255, 0.2);
+    top: 12px;
+    right: 12px;
+    background-color: rgba(255, 255, 255, 0.15);
     border: none;
     color: #ffffff;
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
     transition: all 0.2s ease;
+    font-size: 16px;
 }
 
 .notification-copy:hover {
-    background-color: rgba(255, 255, 255, 0.3);
-    transform: scale(1.1);
+    background-color: rgba(255, 255, 255, 0.25);
+    transform: scale(1.05);
 }
 
 .notification-copy:active {
     transform: scale(0.95);
 }
 
+.notification-copy i {
+    font-size: 14px;
+}
+
 /* 通知框移出动画 */
 .notification-box.removing {
-    animation: slideOutDown 0.3s ease forwards;
+    animation: slideOutRight 0.3s ease forwards;
 }
 
 /* 通知框动画 */
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(100px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideOutRight {
+    from {
+        opacity: 1;
+        transform: translateX(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateX(100px);
+    }
+}
+
 @keyframes slideInUp {
     from {
         opacity: 0;
@@ -900,9 +900,27 @@ footer {
     }
 
     .notification-container {
-        width: calc(100% - 40px);
-        right: 20px;
-        left: 20px;
+        width: calc(100% - 24px);
+        right: 12px;
+        left: 12px;
+        bottom: 12px;
+    }
+
+    .notification-box {
+        min-height: 70px;
+        padding: 14px 16px;
+        font-size: 13px;
+    }
+
+    .notification-copy {
+        width: 24px;
+        height: 24px;
+        top: 10px;
+        right: 10px;
+    }
+
+    .notification-copy i {
+        font-size: 12px;
     }
 }
 

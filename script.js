@@ -546,13 +546,11 @@ function setupAuthListeners() {
     }
 }
 
-// 禁用认证按钮并添加遮罩效果
+// 添加通用遮罩效果
 function disableAuthButtons() {
     const authButtons = document.querySelector('.auth-buttons');
-    const loginBtn = document.getElementById('loginBtn');
-    const registerBtn = document.getElementById('registerBtn');
 
-    // 创建遮罩层
+    // 创建通用遮罩层
     let overlay = document.getElementById('authOverlay');
     if (!overlay) {
         overlay = document.createElement('div');
@@ -566,17 +564,6 @@ function disableAuthButtons() {
         
         overlay.appendChild(warning);
         authButtons.appendChild(overlay);
-    }
-
-    // 确保按钮不被禁用
-    if (loginBtn) {
-        loginBtn.disabled = false;
-        loginBtn.title = '';
-    }
-
-    if (registerBtn) {
-        registerBtn.disabled = false;
-        registerBtn.title = '';
     }
 }
 
