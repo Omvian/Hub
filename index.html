@@ -425,7 +425,6 @@
     </div>
 </div>
 
-
 <!-- 全局通知 -->
 <div id="notification" class="notification"></div>
 
@@ -433,10 +432,7 @@
 <!-- 1. 外部依赖 -->
 <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 
-<!-- 2. 本地配置文件 -->
-<script src="local_test.js"></script>
-
-<!-- 3. 等待Supabase SDK加载完成后再加载其他脚本 -->
+<!-- 2. 等待Supabase SDK加载完成后再加载其他脚本 -->
 <script>
     // 等待Supabase SDK加载完成
     function waitForSupabase() {
@@ -492,7 +488,6 @@
         console.error('脚本加载失败:', error);
     });
 </script>
-
 
 </body>
 </html>

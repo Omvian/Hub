@@ -33,8 +33,9 @@ class AppInitializer {
         try {
             console.log('页面加载完成，开始初始化流程...');
 
-            // 步骤1: 等待本地配置加载
-            await this.waitForConfiguration();
+            // 步骤1: 配置已经在config-manager中直接设置，无需等待
+            this.updateLoadingStatus('正在加载配置...');
+            console.log('配置加载完成');
 
             // 步骤2: 初始化Supabase
             await this.initializeSupabase();
@@ -49,18 +50,6 @@ class AppInitializer {
             console.error('应用初始化失败:', error);
             this.handleInitializationError(error);
         }
-    }
-
-    // 等待配置加载
-    async waitForConfiguration() {
-        return new Promise((resolve) => {
-            this.updateLoadingStatus('正在加载配置...');
-            
-            window.configManager.waitForLocalConfig(() => {
-                console.log('配置加载完成');
-                resolve();
-            });
-        });
     }
 
     // 初始化Supabase
