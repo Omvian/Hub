@@ -29,15 +29,6 @@ OmvianHub/
 └── README.md                    # 项目说明
 ```
 
-## ✨ 核心功能
-
-- 🎬 **影视模块**: OmvianReview影评系统、电影库、电视剧、综艺节目
-- 🎵 **音乐模块**: 专辑推荐、歌单管理、歌手资料库
-- 💻 **科技模块**: 手机、电脑、相机等产品评测
-- 🏠 **生活模块**: 美食、运动、购物指南
-- 🔐 **用户认证**: 基于Supabase的完整认证系统
-- 📱 **响应式设计**: 完美适配桌面端和移动端
-- 🔔 **智能通知**: 优雅的消息提示系统
 
 ## 🔧 技术架构
 
@@ -47,10 +38,6 @@ OmvianHub/
 - **UI模块**: 界面交互、按钮管理、通知系统
 - **工具模块**: 常量定义、辅助函数
 
-### 配置管理
-- 本地开发使用 `local_test.js` 配置文件
-- 生产环境使用GitHub Actions环境变量替换
-- 配置文件已被 `.gitignore` 保护
 
 ### 脚本加载顺序
 1. Supabase SDK
@@ -60,24 +47,6 @@ OmvianHub/
 5. UI模块 (button-manager, notification-manager, ui-manager)
 6. 认证模块 (form-validator, auth-manager)
 7. 主脚本 (script.js)
-
-## 🛠️ 开发调试
-
-在浏览器控制台中使用以下命令：
-
-```javascript
-// 查看模块架构信息
-window.getModuleInfo()
-
-// 调试所有模块状态
-window.debugModules()
-
-// 检查模块健康状态
-window.checkModuleHealth()
-
-// 查看性能指标
-window.getPerformanceMetrics()
-```
 
 ## 📊 部署信息
 
