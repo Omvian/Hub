@@ -3,10 +3,22 @@
 
 class ConfigManager {
     constructor() {
-        // 使用 let 而不是 const，以便在本地环境中重新赋值
+        // 生产环境配置（GitHub Actions会替换占位符）
+        let rawUrl = "%%SUPABASE_URL%%";
+        let rawKey = "%%SUPABASE_KEY%%";
+        
+        // 处理GitHub Actions可能产生的双重引号问题
+        // 如果环境变量本身包含引号，GitHub Actions替换后会产生双重引号
+        if (rawUrl.startsWith('""') && rawUrl.endsWith('""')) {
+            rawUrl = rawUrl.slice(2, -2); // 移除外层引号
+        }
+        if (rawKey.startsWith('""') && rawKey.endsWith('""')) {
+            rawKey = rawKey.slice(2, -2); // 移除外层引号
+        }
+        
         this.supabaseConfig = {
-            url: "%%SUPABASE_URL%%",
-            key: "%%SUPABASE_KEY%%"
+            url: rawUrl,
+            key: rawKey
         };
         this.isSupabaseReady = false;
         this.supabase = null;
@@ -50,8 +62,8 @@ class ConfigManager {
             return false;
         }
 
-        // 检查是否是占位符
-        if (config.url.includes('%%') || config.key.includes('%%')) {
+        // 检查是否是占位符（生产环境不应该包含%%）
+        if (typeof config.url === 'string' && (config.url.includes('%%') || config.key.includes('%%'))) {
             console.warn('配置包含占位符，Supabase未正确配置');
             return false;
         }
@@ -70,8 +82,8 @@ class ConfigManager {
         console.log('环境检查:', this.isLocal ? '本地环境' : '生产环境');
 
         if (!this.isLocal) {
-            // 非本地环境，直接执行回调
-            console.log('生产环境，使用部署时替换的配置');
+            // 生产环境，直接使用构造函数中的配置
+            console.log('生产环境，使用GitHub Actions替换的配置');
             callback();
             return;
         }
