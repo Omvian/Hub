@@ -1,0 +1,20 @@
+# 忽略本地配置文件
+local_test.js
+test-supabase.html
+
+# 忽略IDE和系统文件
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.codebuddy
+
+# 忽略日志文件
+*.log
+
+# 忽略临时文件
+*.tmp
+*.temp
+.DS_Store
+Thumbs.db

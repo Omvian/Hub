@@ -1,0 +1,53 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Replace Supabase Config
+        run: |
+          echo "替换前的script.js内容:"
+          cat script.js | grep -A 5 "supabaseConfig"
+          
+          # 使用|作为分隔符，避免URL中的/冲突
+          sed -i "s|%%SUPABASE_URL%%|${{ secrets.SUPABASE_URL }}|g" script.js
+          sed -i "s|%%SUPABASE_KEY%%|${{ secrets.SUPABASE_KEY }}|g" script.js
+          
+          echo "替换后的script.js内容:"
+          cat script.js | grep -A 5 "supabaseConfig"
+          
+          # 验证替换是否成功
+          if grep -q "%%SUPABASE_URL%%" script.js || grep -q "%%SUPABASE_KEY%%" script.js; then
+            echo "错误: 替换未成功完成!" && exit 1
+          else
+            echo "替换成功完成!"
+          fi
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      - name: Upload to GitHub Pages
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

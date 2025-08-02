@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OmvianHub - 多功能主站</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<!-- 加载界面 -->
+<div id="loadingScreen" class="loading-screen">
+    <div class="loading-spinner"></div>
+    <div class="loading-text">正在加载 OmvianHub...</div>
+    <div id="loadingStatus" class="loading-status">验证连接中...</div>
+</div>
+
+<!-- 头部 -->
+<header>
+    <div class="logo">
+        <i class="material-icons">home</i>
+        <span>OmvianHub</span>
+    </div>
+    <div class="auth-buttons">
+        <button class="btn btn-secondary" id="loginBtn" disabled>
+            <i class="material-icons">login</i>
+            登录
+        </button>
+        <button class="btn btn-primary register-trigger" id="registerBtn" disabled>
+            <i class="material-icons">app_registration</i>
+            注册
+        </button>
+    </div>
+</header>
+
+<!-- 主内容区域 -->
+<div class="main-container">
+    <!-- 侧边栏 -->
+    <aside class="sidebar" id="sidebar">
+        <div class="category expanded" data-category="all">
+            <div class="category-header">
+                <div class="category-title">
+                    <i class="material-icons">dashboard</i>
+                    <span>全部</span>
+                </div>
+                <i class="material-icons category-arrow">arrow_right</i>
+            </div>
+            <div class="category-items">
+                <div class="category-item active" data-filter="all">
+                    <i class="material-icons">apps</i>
+                    <span>所有模块</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="category" data-category="movie">
+            <div class="category-header">
+                <div class="category-title">
+                    <i class="material-icons">movie</i>
+                    <span>影视</span>
+                </div>
+                <i class="material-icons category-arrow">arrow_right</i>
+            </div>
+            <div class="category-items">
+                <div class="category-item" data-filter="omvian-review">
+                    <i class="material-icons">star</i>
+                    <span>OmvianReview</span>
+                </div>
+                <div class="category-item" data-filter="movie-library">
+                    <i class="material-icons">video_library</i>
+                    <span>电影库</span>
+                </div>
+                <div class="category-item" data-filter="tv-series">
+                    <i class="material-icons">tv</i>
+                    <span>电视剧</span>
+                </div>
+                <div class="category-item" data-filter="variety-shows">
+                    <i class="material-icons">live_tv</i>
+                    <span>综艺</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="category" data-category="music">
+            <div class="category-header">
+                <div class="category-title">
+                    <i class="material-icons">music_note</i>
+                    <span>音乐</span>
+                </div>
+                <i class="material-icons category-arrow">arrow_right</i>
+            </div>
+            <div class="category-items">
+                <div class="category-item" data-filter="music">
+                    <i class="material-icons">album</i>
+                    <span>专辑推荐</span>
+                </div>
+                <div class="category-item" data-filter="music">
+                    <i class="material-icons">queue_music</i>
+                    <span>歌单</span>
+                </div>
+                <div class="category-item" data-filter="music">
+                    <i class="material-icons">mic</i>
+                    <span>歌手</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="category" data-category="tech">
+            <div class="category-header">
+                <div class="category-title">
+                    <i class="material-icons">devices</i>
+                    <span>科技</span>
+                </div>
+                <i class="material-icons category-arrow">arrow_right</i>
+            </div>
+            <div class="category-items">
+                <div class="category-item" data-filter="tech">
+                    <i class="material-icons">phone_android</i>
+                    <span>手机</span>
+                </div>
+                <div class="category-item" data-filter="tech">
+                    <i class="material-icons">computer</i>
+                    <span>电脑</span>
+                </div>
+                <div class="category-item" data-filter="tech">
+                    <i class="material-icons">camera_alt</i>
+                    <span>相机</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="category" data-category="life">
+            <div class="category-header">
+                <div class="category-title">
+                    <i class="material-icons">spa</i>
+                    <span>生活</span>
+                </div>
+                <i class="material-icons category-arrow">arrow_right</i>
+            </div>
+            <div class="category-items">
+                <div class="category-item" data-filter="life">
+                    <i class="material-icons">restaurant</i>
+                    <span>美食</span>
+                </div>
+                <div class="category-item" data-filter="life">
+                    <i class="material-icons">directions_run</i>
+                    <span>运动</span>
+                </div>
+                <div class="category-item" data-filter="life">
+                    <i class="material-icons">local_mall</i>
+                    <span>购物</span>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- 内容区域 -->
+    <main class="content">
+        <div class="content-header">
+            <h1 class="content-title">欢迎来到 OmvianHub</h1>
+            <p class="content-subtitle">探索您感兴趣的各个领域内容</p>
+        </div>
+
+        <!-- 模块卡片网格 -->
+        <div class="card-grid" id="moduleGrid">
+            <!-- 影视分类模块 -->
+            <div class="module-card" data-category="movie" data-module="omvian-review">
+                <div class="module-icon">
+                    <i class="material-icons">star</i>
+                </div>
+                <h3 class="module-title">OmvianReview</h3>
+                <p class="module-description">专业影评人Omvian为您提供的最新、最全面的影视作品评分和评论系统，涵盖电影、电视剧和综艺节目。</p>
+                <div class="module-meta">
+                    <span class="module-category">影视</span>
+                    <a href="#" class="module-link">
+                        进入 <i class="material-icons">arrow_forward</i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="module-card" data-category="movie" data-module="movie-library">
+                <div class="module-icon">
+                    <i class="material-icons">video_library</i>
+                </div>
+                <h3 class="module-title">电影库</h3>
+                <p class="module-description">海量电影资源库，按类型、年份、国家等多维度分类，提供详细的影片信息和观看链接。</p>
+                <div class="module-meta">
+                    <span class="module-category">影视</span>
+                    <a href="#" class="module-link">
+                        进入 <i class="material-icons">arrow_forward</i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="module-card" data-category="movie" data-module="tv-series">
+                <div class="module-icon">
+                    <i class="material-icons">tv</i>
+                </div>
+                <h3 class="module-title">电视剧</h3>
+                <p class="module-description">精选全球优质剧集，提供剧情简介、演员阵容、评分信息和观看平台推荐。</p>
+                <div class="module-meta">
+                    <span class="module-category">影视</span>
+                    <a href="#" class="module-link">
+                        进入 <i class="material-icons">arrow_forward</i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="module-card" data-category="movie" data-module="variety-shows">
+                <div class="module-icon">
+                    <i class="material-icons">live_tv</i>
+                </div>
+                <h3 class="module-title">综艺</h3>
+                <p class="module-description">国内外热门综艺节目一网打尽，包含真人秀、访谈、选秀等多种类型，提供最新更新和回看。</p>
+                <div class="module-meta">
+                    <span class="module-category">影视</span>
+                    <a href="#" class="module-link">
+                        进入 <i class="material-icons">arrow_forward</i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- 音乐分类模块 -->
+            <div class="module-card" data-category="music" data-module="album-recommend">
+                <div class="module-icon">
+                    <i class="material-icons">album</i>
+                </div>
+                <h3 class="module-title">专辑推荐</h3>
+                <p class="module-description">专业音乐编辑精心挑选的优质专辑，涵盖各种音乐风格，附带深度解析和聆听指南。</p>
+                <div class="module-meta">
+                    <span class="module-category">音乐</span>
+                    <a href="#" class="module-link">
+                        进入 <i class="material-icons">arrow_forward</i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="module-card" data-category="music" data-module="playlists">
+                <div class="module-icon">
+                    <i class="material-icons">queue_music</i>
+                </div>
+                <h3 class="module-title">歌单</h3>
+                <p class="module-description">根据心情、场景、风格等主题精心制作的歌单，满足您在不同时刻的音乐需求。</p>
+                <div class="module-meta">
+                    <span class="module-category">音乐</span>
+                    <a href="#" class="module-link">
+                        进入 <i class="material-icons">arrow_forward</i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="module-card" data-category="music" data-module="artists">
+                <div class="module-icon">
+                    <i class="material-icons">mic</i>
+                </div>
+                <h3 class="module-title">歌手</h3>
+                <p class="module-description">全球歌手资料库，包含艺人简介、代表作品、音乐风格和最新动态，全方位了解您喜爱的音乐人。</p>
+                <div class="module-meta">
+                    <span class="module-category">音乐</span>
+                    <a href="#" class="module-link">
+                        进入 <i class="material-icons">arrow_forward</i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- 科技分类模块 -->
+            <div class="module-card" data-category="tech" data-module="smartphones">
+                <div class="module-icon">
+                    <i class="material-icons">phone_android</i>
+                </div>
+                <h3 class="module-title">手机</h3>
+                <p class="module-description">最新手机产品评测、对比和选购指南，涵盖各大品牌旗舰机型，助您找到最适合的智能手机。</p>
+                <div class="module-meta">
+                    <span class="module-category">科技</span>
+                    <a href="#" class="module-link">
+                        进入 <i class="material-icons">arrow_forward</i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="module-card" data-category="tech" data-module="computers">
+                <div class="module-icon">
+                    <i class="material-icons">computer</i>
+                </div>
+                <h3 class="module-title">电脑</h3>
+                <p class="module-description">台式机、笔记本、一体机等各类电脑产品的深度评测和购买建议，满足办公、游戏、创作等不同需求。</p>
+                <div class="module-meta">
+                    <span class="module-category">科技</span>
+                    <a href="#" class="module-link">
+                        进入 <i class="material-icons">arrow_forward</i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="module-card" data-category="tech" data-module="cameras">
+                <div class="module-icon">
+                    <i class="material-icons">camera_alt</i>
+                </div>
+                <h3 class="module-title">相机</h3>
+                <p class="module-description">专业相机评测、镜头推荐和摄影技巧分享，从入门到专业，助您提升摄影水平。</p>
+                <div class="module-meta">
+                    <span class="module-category">科技</span>
+                    <a href="#" class="module-link">
+                        进入 <i class="material-icons">arrow_forward</i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- 生活分类模块 -->
+            <div class="module-card" data-category="life" data-module="food">
+                <div class="module-icon">
+                    <i class="material-icons">restaurant</i>
+                </div>
+                <h3 class="module-title">美食</h3>
+                <p class="module-description">各地美食推荐、餐厅评测、食谱分享和烹饪技巧，探索美食世界的无限可能。</p>
+                <div class="module-meta">
+                    <span class="module-category">生活</span>
+                    <a href="#" class="module-link">
+                        进入 <i class="material-icons">arrow_forward</i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="module-card" data-category="life" data-module="sports">
+                <div class="module-icon">
+                    <i class="material-icons">directions_run</i>
+                </div>
+                <h3 class="module-title">运动</h3>
+                <p class="module-description">健身指南、运动器材评测、赛事资讯和健康生活建议，打造更健康的生活方式。</p>
+                <div class="module-meta">
+                    <span class="module-category">生活</span>
+                    <a href="#" class="module-link">
+                        进入 <i class="material-icons">arrow_forward</i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="module-card" data-category="life" data-module="shopping">
+                <div class="module-icon">
+                    <i class="material-icons">local_mall</i>
+                </div>
+                <h3 class="module-title">购物</h3>
+                <p class="module-description">精选商品推荐、购物攻略、优惠信息和消费评测，帮您做出明智的购物决策。</p>
+                <div class="module-meta">
+                    <span class="module-category">生活</span>
+                    <a href="#" class="module-link">
+                        进入 <i class="material-icons">arrow_forward</i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<!-- 页脚 -->
+<footer>
+    <p>&copy; 2025 OmvianHub. 保留所有权利. | 使用 GitHub Pages 和 Supabase 构建</p>
+</footer>
+
+<!-- 登录模态框 -->
+<div id="loginModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>登录</h2>
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="username">邮箱</label>
+                <input type="email" id="username" placeholder="请输入您的邮箱" required>
+                <div id="usernameError" class="form-error"></div>
+            </div>
+            <div class="form-group">
+                <label for="password">密码</label>
+                <input type="password" id="password" placeholder="请输入您的密码" required>
+                <div id="passwordError" class="form-error"></div>
+            </div>
+            <button type="submit" class="btn btn-primary" id="loginSubmitBtn">
+                <span id="loginSpinner" class="spinner" style="display: none;"></span>
+                <span id="loginButtonText">登录</span>
+            </button>
+        </form>
+    </div>
+</div>
+
+<!-- 注册展开界面 -->
+<div id="registerOverlay" class="register-overlay">
+    <div class="register-overlay-content">
+        <div class="register-overlay-header">
+            <h2>注册</h2>
+            <button class="register-overlay-close" id="registerCloseBtn">
+                <i class="material-icons">close</i>
+            </button>
+        </div>
+        <form id="registerForm" class="register-overlay-form">
+            <div class="form-group">
+                <label for="regEmail">邮箱</label>
+                <input type="email" id="regEmail" placeholder="请输入您的邮箱" required>
+                <div id="regEmailError" class="form-error"></div>
+            </div>
+            <div class="form-group">
+                <label for="regNickname">昵称</label>
+                <input type="text" id="regNickname" placeholder="请输入您的昵称" required>
+                <div id="regNicknameError" class="form-error"></div>
+            </div>
+            <div class="form-group">
+                <label for="regPassword">密码</label>
+                <input type="password" id="regPassword" placeholder="请输入您的密码" required>
+                <div id="passwordStrength" class="password-strength">
+                    <div id="passwordStrengthBar" class="password-strength-bar"></div>
+                </div>
+                <div id="passwordStrengthText" class="password-strength-text"></div>
+                <div id="regPasswordError" class="form-error"></div>
+            </div>
+            <div class="form-group">
+                <label for="regConfirmPassword">确认密码</label>
+                <input type="password" id="regConfirmPassword" placeholder="请再次输入您的密码" required>
+                <div id="regConfirmPasswordError" class="form-error"></div>
+            </div>
+            <button type="submit" class="btn register-overlay-submit" id="registerSubmitBtn">
+                <span id="registerSpinner" class="spinner" style="display: none;"></span>
+                <span id="registerButtonText">注册</span>
+            </button>
+        </form>
+    </div>
+</div>
+
+
+<!-- 全局通知 -->
+<div id="notification" class="notification"></div>
+
+<!-- Supabase SDK -->
+<!-- 使用unpkg CDN代替jsdelivr以提高国内访问稳定性 -->
+<script src="https://unpkg.com/@supabase/supabase-js@2.0.0"></script>
+
+<!-- 条件加载本地配置文件 -->
+<script>
+    // 检查是否为本地环境
+    const isLocal = window.location.hostname === 'localhost' ||
+        window.location.hostname === '127.0.0.1' ||
+        window.location.protocol === 'file:';
+
+    if (isLocal) {
+        // 本地环境加载配置文件
+        console.log('本地环境，加载local_test.js');
+        const script = document.createElement('script');
+        script.src = 'local_test.js';
+        script.onload = function() {
+            console.log('本地配置文件加载完成');
+            console.log('配置内容:', window.supabaseConfig);
+        };
+        script.onerror = function() {
+            console.error('本地配置文件加载失败');
+        };
+        document.head.appendChild(script);
+    } else {
+        // GitHub环境，配置应该已经通过部署脚本替换
+        console.log('GitHub环境，使用部署脚本替换的配置');
+        // 不需要尝试加载local_test.js，因为生产环境中该文件不存在
+        // 初始化逻辑已在script.js中通过window.addEventListener('load')实现
+    }
+</script>
+
+
+
+<script src="notification-manager.js"></script>
+<script src="script.js"></script>
+
+
+</body>
+</html>
