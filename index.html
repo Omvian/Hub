@@ -152,7 +152,7 @@
             </div>
             <div class="form-group checkbox-group">
                 <label class="checkbox-label">
-                    <input type="checkbox" id="rememberMe">
+                    <input type="checkbox" id="rememberMe" onchange="if(this.checked && window.showWarning) window.showWarning('注意：您已启用自动登录，这可能存在安全风险，请勿在公共设备上使用此功能', 6000);">
                     <span class="checkbox-text">自动登录</span>
                 </label>
             </div>

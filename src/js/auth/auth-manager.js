@@ -468,9 +468,24 @@ class AuthManager {
             // 备用方案：直接设置按钮状态
             if (submitBtn) {
                 submitBtn.disabled = true;
+                submitBtn.classList.add('loading');
+                
+                // 添加加载动效
                 const spinner = document.getElementById('loginSpinner');
                 const buttonText = document.getElementById('loginButtonText');
-                if (spinner) spinner.style.display = 'inline-block';
+                
+                if (!spinner) {
+                    // 如果没有spinner元素，创建一个
+                    const newSpinner = document.createElement('span');
+                    newSpinner.id = 'loginSpinner';
+                    newSpinner.className = 'spinner';
+                    newSpinner.innerHTML = '<i class="material-icons rotating">refresh</i>';
+                    newSpinner.style.display = 'inline-block';
+                    submitBtn.prepend(newSpinner);
+                } else {
+                    spinner.style.display = 'inline-block';
+                }
+                
                 if (buttonText) buttonText.textContent = '登录中...';
             }
         }
@@ -497,6 +512,69 @@ class AuthManager {
                 window.logger.auth('登录成功');
             }
             window.showSuccess('登录成功！正在跳转...');
+            
+            // 隐藏登录按钮，显示登录成功提示
+            if (submitBtn) {
+                // 强制隐藏登录按钮 - 使用多种方法确保隐藏
+                submitBtn.style.display = 'none';
+                submitBtn.style.visibility = 'hidden';
+                submitBtn.style.opacity = '0';
+                submitBtn.style.position = 'absolute';
+                submitBtn.style.pointerEvents = 'none';
+                submitBtn.classList.add('hidden-button');
+                
+                // 创建登录成功提示元素
+                const successMessage = document.createElement('div');
+                successMessage.className = 'login-success-message';
+                successMessage.innerHTML = `
+                    <div class="success-icon-container">
+                        <i class="material-icons success-icon">check_circle</i>
+                    </div>
+                    <div class="success-text">
+                        <h3>登录成功</h3>
+                        <p>正在为您跳转...</p>
+                    </div>
+                `;
+                
+                // 设置成功提示的样式
+                successMessage.style.display = 'flex';
+                successMessage.style.alignItems = 'center';
+                successMessage.style.justifyContent = 'center';
+                successMessage.style.flexDirection = 'column';
+                successMessage.style.padding = '20px';
+                successMessage.style.textAlign = 'center';
+                successMessage.style.color = '#4CAF50';
+                successMessage.style.animation = 'fadeIn 0.5s ease-out';
+                
+                // 设置图标样式
+                const iconContainer = successMessage.querySelector('.success-icon-container');
+                if (iconContainer) {
+                    iconContainer.style.marginBottom = '15px';
+                }
+                
+                const icon = successMessage.querySelector('.success-icon');
+                if (icon) {
+                    icon.style.fontSize = '48px';
+                    icon.style.color = '#4CAF50';
+                }
+                
+                // 将成功提示添加到表单中
+                const form = document.getElementById('loginForm');
+                if (form) {
+                    // 在表单底部添加成功提示
+                    form.appendChild(successMessage);
+                    
+                    // 添加必要的动画样式
+                    const style = document.createElement('style');
+                    style.textContent = `
+                        @keyframes fadeIn {
+                            from { opacity: 0; transform: translateY(-10px); }
+                            to { opacity: 1; transform: translateY(0); }
+                        }
+                    `;
+                    document.head.appendChild(style);
+                }
+            }
 
             this.currentUser = data.user;
             this.setCrossPageAuthState(data.user); // 同步到localStorage
@@ -509,9 +587,7 @@ class AuthManager {
                     window.logger.auth('已设置自动登录Cookie');
                 }
                 
-                // 在登录成功且设置Cookie后显示通知
-                // 使用更健壮的通知显示方法，确保通知系统已初始化
-                this.showAutoLoginNotification();
+                // 不再显示通知，因为在勾选复选框时已经显示过了
             }
 
             // 更新UI显示用户已登录
@@ -1169,16 +1245,13 @@ class AuthManager {
     
     // 显示自动登录通知 - 确保通知系统已初始化
     showAutoLoginNotification() {
-        const message = '自动登录已启用，下次访问将自动登录';
-        const duration = 5000;
+        const message = '注意：您已启用自动登录，这可能存在安全风险，请勿在公共设备上使用此功能';
+        const duration = 6000;
         
-        // 直接使用alert显示通知，确保100%能看到
-        alert(message);
-        
-        // 同时尝试使用通知系统显示更美观的通知
-        if (typeof window.showInfo === 'function') {
+        // 只使用全局通知系统，不使用默认提示框
+        if (typeof window.showWarning === 'function') {
             try {
-                window.showInfo(message, duration);
+                window.showWarning(message, duration);
                 if (window.logger?.isDevelopment) {
                     window.logger.debug('已显示自动登录通知');
                 }
@@ -1186,7 +1259,12 @@ class AuthManager {
                 if (window.logger?.isDevelopment) {
                     window.logger.error('显示通知失败:', error);
                 }
+                // 如果通知系统失败，使用备用通知方法，但不使用alert
+                this.createFallbackNotification(message);
             }
+        } else {
+            // 通知系统不可用，使用备用通知方法，但不使用alert
+            this.createFallbackNotification(message);
         }
     }
     

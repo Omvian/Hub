@@ -241,12 +241,16 @@
                     </div>
                     <div id="passwordError" class="form-error"></div>
                 </div>
-                <button type="submit" class="btn btn-primary modal-btn breathing" id="loginSubmitBtn">
+                <div class="form-group checkbox-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="rememberMe" onchange="if(this.checked && window.showWarning) window.showWarning('注意：您已启用自动登录，这可能存在安全风险，请勿在公共设备上使用此功能', 6000);">
+                        <span class="checkbox-text">自动登录</span>
+                    </label>
+                </div>
+                <button type="submit" class="btn btn-primary modal-btn" id="loginSubmitBtn">
                     <div class="button-content">
                         <span id="loginSpinner" class="spinner" style="display: none;">
-                            <span class="dot dot1"></span>
-                            <span class="dot dot2"></span>
-                            <span class="dot dot3"></span>
+                            <i class="material-icons rotating">refresh</i>
                         </span>
                         <span id="loginButtonText">登录</span>
                     </div>

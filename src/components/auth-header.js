@@ -391,13 +391,13 @@ class AuthHeader extends HTMLElement {
         // 从localStorage检查登录状态
         const authData = localStorage.getItem('supabase.auth.token');
         const userData = localStorage.getItem('user_data');
+        const omvianAuthState = localStorage.getItem('omvian_auth_state');
         
         if (window.logger?.isDevelopment) {
             window.logger.debug('auth-header: checkAuthStatus 检查存储数据', {
                 authData: !!authData,
                 userData: !!userData,
-                authDataValue: authData ? authData.substring(0, 50) + '...' : null,
-                userDataValue: userData
+                omvianAuthState: !!omvianAuthState
             });
         }
         
@@ -409,40 +409,57 @@ class AuthHeader extends HTMLElement {
                     window.logger.debug('auth-header: checkAuthStatus 解析用户数据成功', user);
                 }
                 this.updateUserState(true, user);
+                return; // 找到用户数据后直接返回，不执行后续逻辑
             } catch (error) {
                 window.logger?.error('auth-header: checkAuthStatus 解析用户数据失败:', error);
-                // 解析失败时也不要立即设置为未登录，等待适配器处理
-                if (window.logger?.isDevelopment) {
-                    window.logger.debug('auth-header: checkAuthStatus 解析失败，等待适配器状态更新');
-                }
-                
-                // 解析失败时，显示登录按钮
-                setTimeout(() => {
-                    const authButtons = this.shadowRoot.getElementById('authButtons');
-                    if (authButtons && authButtons.classList.contains('hidden')) {
-                        authButtons.classList.remove('hidden');
-                        if (window.logger?.isDevelopment) {
-                            window.logger.debug('auth-header: 解析失败后显示登录按钮');
-                        }
-                    }
-                }, 1000); // 延迟1秒显示，给适配器一些处理时间
             }
-        } else {
-            if (window.logger?.isDevelopment) {
-                window.logger.debug('auth-header: checkAuthStatus 未找到用户数据，等待适配器状态更新');
-            }
-            
-            // 未找到用户数据时，延迟显示登录按钮
-            setTimeout(() => {
-                const authButtons = this.shadowRoot.getElementById('authButtons');
-                if (authButtons && authButtons.classList.contains('hidden')) {
-                    authButtons.classList.remove('hidden');
-                    if (window.logger?.isDevelopment) {
-                        window.logger.debug('auth-header: 未找到用户数据后显示登录按钮');
-                    }
-                }
-            }, 1000); // 延迟1秒显示，给适配器一些处理时间
         }
+        
+        // 尝试从omvian_auth_state中获取用户数据
+        if (omvianAuthState) {
+            try {
+                const state = JSON.parse(omvianAuthState);
+                if (state && state.user) {
+                    if (window.logger?.isDevelopment) {
+                        window.logger.debug('auth-header: 从omvian_auth_state解析用户数据成功', state.user);
+                    }
+                    this.updateUserState(true, state.user);
+                    return; // 找到用户数据后直接返回，不执行后续逻辑
+                }
+            } catch (error) {
+                window.logger?.error('auth-header: 解析omvian_auth_state失败:', error);
+            }
+        }
+        
+        // 检查Cookie中是否有自动登录数据
+        try {
+            const cookies = document.cookie.split(';');
+            for (let cookie of cookies) {
+                const [name, value] = cookie.trim().split('=');
+                if (name === 'omvian_auth' && value) {
+                    const cookieData = JSON.parse(decodeURIComponent(value));
+                    if (cookieData) {
+                        if (window.logger?.isDevelopment) {
+                            window.logger.debug('auth-header: 从Cookie解析用户数据成功', cookieData);
+                        }
+                        this.updateUserState(true, cookieData);
+                        return; // 找到用户数据后直接返回，不执行后续逻辑
+                    }
+                }
+            }
+        } catch (error) {
+            window.logger?.error('auth-header: 解析Cookie失败:', error);
+        }
+        
+        // 如果所有数据源都没有找到用户数据，则显示为未登录状态
+        if (window.logger?.isDevelopment) {
+            window.logger.debug('auth-header: 未找到任何用户数据，显示未登录状态');
+        }
+        
+        // 延迟显示登录按钮，给适配器一些处理时间
+        setTimeout(() => {
+            this.updateUserState(false, null);
+        }, 500);
     }
 
     updateUserState(isLoggedIn, user = null) {
