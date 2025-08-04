@@ -374,6 +374,41 @@
     display: flex !important;
 }
 
+/* 复选框组样式 */
+.checkbox-group {
+    display: flex;
+    flex-direction: column;
+    margin-top: 5px;
+    margin-bottom: 15px;
+}
+
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    user-select: none;
+}
+
+.checkbox-label input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    margin-right: 8px;
+    accent-color: var(--primary-color);
+    cursor: pointer;
+}
+
+.checkbox-text {
+    font-size: 14px;
+    color: var(--text-primary);
+}
+
+.checkbox-hint {
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin-top: 4px;
+    margin-left: 26px;
+}
+
 /* 小屏设备适配 */
 @media (max-width: 480px) {
     .auth-buttons {

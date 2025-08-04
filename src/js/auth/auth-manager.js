@@ -12,6 +12,8 @@ class AuthManager {
         this.hiddenCooldownTimer = null; // 隐藏的冷却期定时器
         this.storageKey = 'omvian_auth_state'; // 跨页面同步存储键
         this.syncListeners = []; // 跨页面同步监听器
+        this.cookieName = 'omvian_auth'; // 自动登录Cookie名称
+        this.cookieExpireDays = 30; // Cookie有效期（天）
     }
 
     // 初始化认证管理器
@@ -19,6 +21,91 @@ class AuthManager {
         this.setupAuthListeners();
         this.setupCrossPageSync(); // 设置跨页面同步
         this.checkUserSession();
+        this.checkAuthCookie(); // 检查自动登录Cookie
+    }
+    
+    // 设置认证Cookie
+    setAuthCookie(user) {
+        if (!user) return;
+        
+        try {
+            // 创建用户数据对象，只保存必要信息
+            const userData = {
+                id: user.id,
+                email: user.email,
+                display_name: user.user_metadata?.display_name
+            };
+            
+            // 设置Cookie过期时间
+            const expiryDate = new Date();
+            expiryDate.setDate(expiryDate.getDate() + this.cookieExpireDays);
+            
+            // 创建Cookie字符串
+            const cookieValue = encodeURIComponent(JSON.stringify(userData));
+            const cookieString = `${this.cookieName}=${cookieValue}; expires=${expiryDate.toUTCString()}; path=/; SameSite=Lax`;
+            
+            // 设置Cookie
+            document.cookie = cookieString;
+            
+            if (window.logger?.isDevelopment) {
+                window.logger.debug('已设置自动登录Cookie，有效期：', this.cookieExpireDays, '天');
+            }
+        } catch (error) {
+            window.logger?.error('设置认证Cookie失败:', error);
+        }
+    }
+    
+    // 获取认证Cookie
+    getAuthCookie() {
+        try {
+            const cookies = document.cookie.split(';');
+            for (let cookie of cookies) {
+                const [name, value] = cookie.trim().split('=');
+                if (name === this.cookieName && value) {
+                    return JSON.parse(decodeURIComponent(value));
+                }
+            }
+        } catch (error) {
+            window.logger?.error('读取认证Cookie失败:', error);
+        }
+        return null;
+    }
+    
+    // 清除认证Cookie
+    clearAuthCookie() {
+        try {
+            // 设置过期时间为过去的时间，使Cookie立即失效
+            document.cookie = `${this.cookieName}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; SameSite=Lax`;
+            
+            if (window.logger?.isDevelopment) {
+                window.logger.debug('已清除自动登录Cookie');
+            }
+        } catch (error) {
+            window.logger?.error('清除认证Cookie失败:', error);
+        }
+    }
+    
+    // 检查自动登录Cookie
+    checkAuthCookie() {
+        // 如果已经登录，不需要检查Cookie
+        if (this.currentUser) return;
+        
+        const cookieData = this.getAuthCookie();
+        if (cookieData) {
+            if (window.logger?.isDevelopment) {
+                window.logger.debug('发现自动登录Cookie，尝试恢复登录状态');
+            }
+            
+            // 使用Cookie中的用户数据恢复登录状态
+            this.currentUser = cookieData;
+            this.setCrossPageAuthState(cookieData);
+            this.updateAuthUI(cookieData);
+            this.notifyAuthChange(cookieData);
+            
+            if (window.logger?.isDevelopment) {
+                window.logger.debug('已通过Cookie恢复登录状态');
+            }
+        }
     }
 
     // 设置跨页面同步
@@ -154,9 +241,23 @@ class AuthManager {
                 }
             }
             
-            // 既没有会话也没有本地数据，才清除缓存
+            // 检查是否有自动登录Cookie
+            const cookieData = this.getAuthCookie();
+            if (cookieData) {
+                if (window.logger?.isDevelopment) {
+                    window.logger.info('没有会话但找到自动登录Cookie，恢复登录状态');
+                }
+                this.currentUser = cookieData;
+                this.updateAuthUI(cookieData);
+                this.notifyAuthChange(cookieData);
+                // 同步到localStorage，确保跨页面同步
+                this.setCrossPageAuthState(cookieData);
+                return;
+            }
+            
+            // 既没有会话也没有本地数据和Cookie，才清除缓存
             if (window.logger?.isDevelopment) {
-                window.logger.info('没有会话且没有本地用户数据，清除缓存');
+                window.logger.info('没有会话且没有本地用户数据和Cookie，清除缓存');
             }
             this.clearAllAuthCache();
         }
@@ -318,6 +419,7 @@ class AuthManager {
 
         const emailInput = document.getElementById('username');
         const passwordInput = document.getElementById('password');
+        const rememberMeCheckbox = document.getElementById('rememberMe');
         
         if (!emailInput || !passwordInput) {
             window.logger?.error('找不到登录表单元素');
@@ -327,6 +429,7 @@ class AuthManager {
 
         const email = emailInput.value.trim();
         const password = passwordInput.value;
+        const rememberMe = rememberMeCheckbox ? rememberMeCheckbox.checked : false;
 
         // 额外的客户端验证
         if (!email || !password) {
@@ -381,6 +484,14 @@ class AuthManager {
             this.currentUser = data.user;
             this.setCrossPageAuthState(data.user); // 同步到localStorage
             this.notifyAuthChange(data.user);
+
+            // 如果勾选了自动登录，设置Cookie
+            if (rememberMe) {
+                this.setAuthCookie(data.user);
+                if (window.logger?.isDevelopment) {
+                    window.logger.auth('已设置自动登录Cookie');
+                }
+            }
 
             // 更新UI显示用户已登录
             setTimeout(() => {
@@ -814,6 +925,9 @@ class AuthManager {
         // 清除 sessionStorage
         sessionStorage.clear();
         
+        // 清除自动登录Cookie
+        this.clearAuthCookie();
+        
         // 更新UI状态
         this.updateAuthUI(null);
         this.notifyAuthChange(null);
@@ -834,6 +948,9 @@ class AuthManager {
             
             // 清除所有缓存
             this.clearAllAuthCache();
+            
+            // 清除自动登录Cookie
+            this.clearAuthCookie();
             
             // 重新加载页面
             location.reload();
