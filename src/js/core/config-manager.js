@@ -130,39 +130,41 @@ class ConfigManager {
 // 创建全局配置管理器实例
 window.configManager = new ConfigManager();
 
-// 自动初始化配置管理器
-document.addEventListener('DOMContentLoaded', async () => {
+// 标记是否已经初始化
+let isInitializing = false;
+let isInitialized = false;
+
+// 统一的初始化函数
+const initializeOnce = async () => {
+    // 防止重复初始化
+    if (isInitializing || isInitialized) {
+        return;
+    }
+    
+    isInitializing = true;
+    
     if (window.logger?.isDevelopment) {
-        window.logger.info('开始自动初始化配置管理器');
+        window.logger.info('开始初始化配置管理器');
     }
     
     try {
         await window.configManager.initSupabase();
+        isInitialized = true;
         if (window.logger?.isDevelopment) {
-            window.logger.info('配置管理器自动初始化完成');
+            window.logger.info('配置管理器初始化完成');
         }
     } catch (error) {
-        window.logger?.error('配置管理器自动初始化失败:', error);
+        window.logger?.error('配置管理器初始化失败:', error);
+    } finally {
+        isInitializing = false;
     }
-});
+};
+
+// 监听DOM加载完成事件
+document.addEventListener('DOMContentLoaded', initializeOnce);
 
 // 如果DOM已经加载完成，立即初始化
-if (document.readyState === 'loading') {
-    // DOM还在加载中，等待DOMContentLoaded事件
-} else {
+if (document.readyState !== 'loading') {
     // DOM已经加载完成，立即初始化
-    setTimeout(async () => {
-        if (window.logger?.isDevelopment) {
-            window.logger.info('DOM已就绪，立即初始化配置管理器');
-        }
-        
-        try {
-            await window.configManager.initSupabase();
-            if (window.logger?.isDevelopment) {
-                window.logger.info('配置管理器立即初始化完成');
-            }
-        } catch (error) {
-            window.logger?.error('配置管理器立即初始化失败:', error);
-        }
-    }, 100);
+    setTimeout(initializeOnce, 100);
 }
