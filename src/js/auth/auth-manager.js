@@ -412,6 +412,12 @@ class AuthManager {
     async handleLogin(e) {
         e.preventDefault();
 
+        // 防止重复提交
+        const submitBtn = document.getElementById('loginSubmitBtn');
+        if (submitBtn && submitBtn.disabled) {
+            return;
+        }
+
         // 验证表单
         if (!window.formValidator.validateLoginForm()) {
             return;
@@ -456,7 +462,18 @@ class AuthManager {
         }
 
         // 设置按钮加载状态
-        window.buttonStateManager.setLoading('loginSubmitBtn', true);
+        if (window.buttonStateManager) {
+            window.buttonStateManager.setLoading('loginSubmitBtn', true);
+        } else {
+            // 备用方案：直接设置按钮状态
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                const spinner = document.getElementById('loginSpinner');
+                const buttonText = document.getElementById('loginButtonText');
+                if (spinner) spinner.style.display = 'inline-block';
+                if (buttonText) buttonText.textContent = '登录中...';
+            }
+        }
 
         try {
             const supabase = window.configManager.getSupabase();
@@ -540,6 +557,12 @@ class AuthManager {
     // 处理注册
     async handleRegister(e) {
         e.preventDefault();
+
+        // 防止重复提交
+        const submitBtn = document.getElementById('registerSubmitBtn');
+        if (submitBtn && submitBtn.disabled) {
+            return;
+        }
 
         // 检查是否在冷却期内
         if (this.isInCooldown) {
@@ -1285,12 +1308,30 @@ class AuthManager {
         const submitBtn = document.getElementById('loginSubmitBtn');
         const emailInput = document.getElementById('username');
         const passwordInput = document.getElementById('password');
+        const rememberMeCheckbox = document.getElementById('rememberMe');
 
         if (!submitBtn || !emailInput || !passwordInput) return;
 
         // 初始隐藏登录按钮 - 使用按钮状态管理器
         if (window.buttonStateManager) {
             window.buttonStateManager.hideButton('loginSubmitBtn');
+        }
+
+        // 从cookie中恢复自动登录勾选状态
+        if (rememberMeCheckbox) {
+            try {
+                const rememberMeState = this.getRememberMeState();
+                rememberMeCheckbox.checked = rememberMeState === 'true';
+            } catch (error) {
+                if (window.logger?.isDevelopment) {
+                    window.logger.error('恢复自动登录状态失败:', error);
+                }
+            }
+            
+            // 监听勾选状态变化，保存到cookie
+            rememberMeCheckbox.addEventListener('change', () => {
+                this.saveRememberMeState(rememberMeCheckbox.checked);
+            });
         }
 
         // 监听邮箱输入变化
@@ -1303,6 +1344,47 @@ class AuthManager {
         
         // 初始检查
         this.updateLoginButtonVisibility();
+    }
+    
+    // 保存自动登录勾选状态到cookie
+    saveRememberMeState(state) {
+        try {
+            // 设置Cookie过期时间为30天
+            const expiryDate = new Date();
+            expiryDate.setDate(expiryDate.getDate() + 30);
+            
+            // 创建Cookie字符串
+            const cookieString = `omvian_remember_me=${state}; expires=${expiryDate.toUTCString()}; path=/; SameSite=Lax`;
+            
+            // 设置Cookie
+            document.cookie = cookieString;
+            
+            if (window.logger?.isDevelopment) {
+                window.logger.debug('已保存自动登录勾选状态:', state);
+            }
+        } catch (error) {
+            if (window.logger?.isDevelopment) {
+                window.logger.error('保存自动登录勾选状态失败:', error);
+            }
+        }
+    }
+    
+    // 从cookie中获取自动登录勾选状态
+    getRememberMeState() {
+        try {
+            const cookies = document.cookie.split(';');
+            for (let cookie of cookies) {
+                const [name, value] = cookie.trim().split('=');
+                if (name === 'omvian_remember_me') {
+                    return value;
+                }
+            }
+        } catch (error) {
+            if (window.logger?.isDevelopment) {
+                window.logger.error('读取自动登录勾选状态失败:', error);
+            }
+        }
+        return 'false'; // 默认不勾选
     }
 
     // 设置登录密码框验证逻辑

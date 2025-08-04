@@ -213,8 +213,8 @@ class AuthHeader extends HTMLElement {
             </style>
             
             <div class="auth-container">
-                <!-- 未登录状态：显示登录注册按钮 -->
-                <div class="auth-buttons" id="authButtons">
+                <!-- 初始状态：隐藏所有按钮，直到确认登录状态 -->
+                <div class="auth-buttons hidden" id="authButtons">
                     <button class="btn btn-secondary" id="loginBtn">
                         <i class="fas fa-sign-in-alt"></i>
                         登录
@@ -415,12 +415,33 @@ class AuthHeader extends HTMLElement {
                 if (window.logger?.isDevelopment) {
                     window.logger.debug('auth-header: checkAuthStatus 解析失败，等待适配器状态更新');
                 }
+                
+                // 解析失败时，显示登录按钮
+                setTimeout(() => {
+                    const authButtons = this.shadowRoot.getElementById('authButtons');
+                    if (authButtons && authButtons.classList.contains('hidden')) {
+                        authButtons.classList.remove('hidden');
+                        if (window.logger?.isDevelopment) {
+                            window.logger.debug('auth-header: 解析失败后显示登录按钮');
+                        }
+                    }
+                }, 1000); // 延迟1秒显示，给适配器一些处理时间
             }
         } else {
             if (window.logger?.isDevelopment) {
                 window.logger.debug('auth-header: checkAuthStatus 未找到用户数据，等待适配器状态更新');
             }
-            // 不要立即设置为未登录，让适配器负责状态管理
+            
+            // 未找到用户数据时，延迟显示登录按钮
+            setTimeout(() => {
+                const authButtons = this.shadowRoot.getElementById('authButtons');
+                if (authButtons && authButtons.classList.contains('hidden')) {
+                    authButtons.classList.remove('hidden');
+                    if (window.logger?.isDevelopment) {
+                        window.logger.debug('auth-header: 未找到用户数据后显示登录按钮');
+                    }
+                }
+            }, 1000); // 延迟1秒显示，给适配器一些处理时间
         }
     }
 
