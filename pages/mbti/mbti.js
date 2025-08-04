@@ -29,146 +29,349 @@ let answers = [];
 let questions = [];
 let testStartTime = null;
 
-// MBTI测试题目数据
+// MBTI测试题目数据 - 权威版本（48题，每个维度12题）
 const mbtiQuestions = [
+    // E/I 维度题目 (12题)
     {
-        text: "在聚会中，你更倾向于：",
+        text: "在社交场合中，你通常会：",
         options: [
-            { text: "主动与很多人交谈，成为焦点", type: "E" },
-            { text: "与少数几个熟悉的人深入交流", type: "I" }
+            { text: "认识很多人并与大家交谈", type: "E" },
+            { text: "与少数几个你认识的人交谈", type: "I" }
         ]
     },
     {
-        text: "当面对新的挑战时，你通常：",
+        text: "你更喜欢：",
         options: [
-            { text: "关注具体的事实和细节", type: "S" },
-            { text: "思考可能性和潜在的意义", type: "N" }
+            { text: "参加聚会和社交活动", type: "E" },
+            { text: "独自或与一两个亲密朋友在一起的时光", type: "I" }
         ]
     },
     {
-        text: "做重要决定时，你更依赖：",
+        text: "当你需要在一个重要问题上做决定时，你倾向于：",
         options: [
-            { text: "逻辑分析和客观事实", type: "T" },
-            { text: "个人价值观和他人感受", type: "F" }
+            { text: "与他人讨论以理清思路", type: "E" },
+            { text: "独自思考后再与他人分享结论", type: "I" }
         ]
     },
     {
-        text: "对于计划安排，你更喜欢：",
+        text: "在工作或学习环境中，你更喜欢：",
         options: [
-            { text: "提前制定详细计划并严格执行", type: "J" },
-            { text: "保持灵活性，随机应变", type: "P" }
+            { text: "开放的协作空间，可以随时与他人交流", type: "E" },
+            { text: "安静的私人空间，可以专注思考", type: "I" }
         ]
     },
     {
-        text: "在工作环境中，你更喜欢：",
+        text: "当你遇到问题时，你通常会：",
         options: [
-            { text: "开放式办公室，与同事频繁互动", type: "E" },
-            { text: "安静的独立空间，专注工作", type: "I" }
+            { text: "立即寻求他人的建议和帮助", type: "E" },
+            { text: "先尝试自己解决，必要时才寻求帮助", type: "I" }
         ]
     },
     {
-        text: "学习新知识时，你更倾向于：",
+        text: "你更容易：",
         options: [
-            { text: "通过实践和具体例子理解", type: "S" },
-            { text: "理解概念和理论框架", type: "N" }
+            { text: "在与人交流中获得能量和灵感", type: "E" },
+            { text: "在独处时获得能量和灵感", type: "I" }
         ]
     },
     {
-        text: "当朋友向你寻求建议时，你会：",
+        text: "在会议或课堂上，你更可能：",
         options: [
-            { text: "分析问题并提供理性建议", type: "T" },
-            { text: "倾听并给予情感支持", type: "F" }
+            { text: "主动发言，分享想法", type: "E" },
+            { text: "倾听他人，仅在必要时发言", type: "I" }
         ]
     },
     {
-        text: "对于截止日期，你通常：",
+        text: "你更喜欢的工作方式是：",
         options: [
-            { text: "提前完成，避免最后时刻的压力", type: "J" },
-            { text: "在截止日期前完成，享受时间压力", type: "P" }
+            { text: "团队合作，可以与他人交流想法", type: "E" },
+            { text: "独立工作，可以专注于自己的任务", type: "I" }
         ]
     },
     {
-        text: "休息时间，你更愿意：",
+        text: "当你有空闲时间时，你更倾向于：",
         options: [
-            { text: "参加社交活动，与朋友聚会", type: "E" },
-            { text: "独自放松，阅读或思考", type: "I" }
+            { text: "外出与朋友相聚", type: "E" },
+            { text: "在家放松或进行个人爱好", type: "I" }
         ]
     },
     {
-        text: "面对复杂问题时，你倾向于：",
+        text: "你认为自己是：",
         options: [
-            { text: "分解为具体步骤逐一解决", type: "S" },
-            { text: "寻找创新的解决方案", type: "N" }
+            { text: "容易接近且健谈的人", type: "E" },
+            { text: "安静且有所保留的人", type: "I" }
         ]
     },
     {
-        text: "在团队冲突中，你更关注：",
+        text: "在新环境中，你通常会：",
         options: [
-            { text: "找出问题的根本原因", type: "T" },
-            { text: "维护团队和谐与关系", type: "F" }
+            { text: "迅速融入并结交新朋友", type: "E" },
+            { text: "慢慢观察并逐渐适应", type: "I" }
         ]
     },
     {
-        text: "对于变化，你的态度是：",
+        text: "长时间的社交活动后，你通常感到：",
         options: [
-            { text: "喜欢稳定，谨慎对待变化", type: "J" },
-            { text: "拥抱变化，享受新的可能性", type: "P" }
+            { text: "精力充沛，想继续社交", type: "E" },
+            { text: "需要独处时间来恢复精力", type: "I" }
+        ]
+    },
+    
+    // S/N 维度题目 (12题)
+    {
+        text: "你更关注：",
+        options: [
+            { text: "具体的事实和细节", type: "S" },
+            { text: "概念和可能性", type: "N" }
         ]
     },
     {
-        text: "在会议中，你更可能：",
+        text: "你更相信：",
         options: [
-            { text: "积极发言，分享想法", type: "E" },
-            { text: "仔细倾听，深思后发言", type: "I" }
+            { text: "直接经验和观察", type: "S" },
+            { text: "理论和想象", type: "N" }
         ]
     },
     {
-        text: "处理信息时，你更信任：",
+        text: "你更喜欢处理：",
         options: [
-            { text: "已验证的事实和经验", type: "S" },
-            { text: "直觉和预感", type: "N" }
+            { text: "已知的和实际的问题", type: "S" },
+            { text: "新颖的和抽象的问题", type: "N" }
         ]
     },
     {
-        text: "评价他人时，你更看重：",
+        text: "你更倾向于：",
         options: [
-            { text: "能力和成就", type: "T" },
-            { text: "品格和动机", type: "F" }
+            { text: "关注现实和当下", type: "S" },
+            { text: "思考未来和可能性", type: "N" }
         ]
     },
     {
-        text: "对于规则，你认为：",
+        text: "你更喜欢的工作是：",
         options: [
-            { text: "规则应该被遵守和执行", type: "J" },
-            { text: "规则可以根据情况灵活调整", type: "P" }
+            { text: "有明确步骤和具体结果的工作", type: "S" },
+            { text: "允许创新和探索新方法的工作", type: "N" }
         ]
     },
     {
-        text: "获得能量的方式：",
+        text: "你更喜欢的书籍或电影是：",
         options: [
-            { text: "通过与他人互动和交流", type: "E" },
-            { text: "通过独处和内省", type: "I" }
+            { text: "基于现实或历史事件的作品", type: "S" },
+            { text: "科幻、奇幻或充满想象力的作品", type: "N" }
         ]
     },
     {
-        text: "关注的焦点通常在：",
+        text: "在学习新事物时，你更喜欢：",
         options: [
-            { text: "当前的现实和具体情况", type: "S" },
-            { text: "未来的可能性和潜力", type: "N" }
+            { text: "循序渐进，掌握每个具体步骤", type: "S" },
+            { text: "先了解整体概念，再填补细节", type: "N" }
         ]
     },
     {
-        text: "做决定的依据主要是：",
+        text: "你更相信：",
         options: [
-            { text: "客观标准和逻辑推理", type: "T" },
-            { text: "个人价值观和情感考虑", type: "F" }
+            { text: "实践经验和已证实的方法", type: "S" },
+            { text: "直觉和创新方法", type: "N" }
         ]
     },
     {
-        text: "生活方式偏好：",
+        text: "你更喜欢的老师是：",
         options: [
-            { text: "有序、计划性强", type: "J" },
-            { text: "灵活、适应性强", type: "P" }
+            { text: "清晰讲解具体知识点的老师", type: "S" },
+            { text: "激发思考和探索新想法的老师", type: "N" }
+        ]
+    },
+    {
+        text: "在解决问题时，你更倾向于：",
+        options: [
+            { text: "使用已证实有效的方法", type: "S" },
+            { text: "尝试新颖的解决方案", type: "N" }
+        ]
+    },
+    {
+        text: "你更喜欢的工作指导是：",
+        options: [
+            { text: "具体明确的指示", type: "S" },
+            { text: "概括性的方向，留有创新空间", type: "N" }
+        ]
+    },
+    {
+        text: "你更关注：",
+        options: [
+            { text: "实际应用和实用性", type: "S" },
+            { text: "创新和理论可能性", type: "N" }
+        ]
+    },
+    
+    // T/F 维度题目 (12题)
+    {
+        text: "做决定时，你更看重：",
+        options: [
+            { text: "逻辑和客观分析", type: "T" },
+            { text: "个人价值观和对他人的影响", type: "F" }
+        ]
+    },
+    {
+        text: "你更倾向于：",
+        options: [
+            { text: "公正客观地分析情况", type: "T" },
+            { text: "考虑决定对人的影响", type: "F" }
+        ]
+    },
+    {
+        text: "你认为更重要的是：",
+        options: [
+            { text: "真实，即使可能伤害他人感受", type: "T" },
+            { text: "善良，避免不必要的伤害", type: "F" }
+        ]
+    },
+    {
+        text: "在冲突中，你更关注：",
+        options: [
+            { text: "找出问题的逻辑解决方案", type: "T" },
+            { text: "维护关系和每个人的感受", type: "F" }
+        ]
+    },
+    {
+        text: "你更欣赏他人的：",
+        options: [
+            { text: "清晰的思维和合理的论点", type: "T" },
+            { text: "强烈的同理心和情感理解", type: "F" }
+        ]
+    },
+    {
+        text: "你更喜欢的领导风格是：",
+        options: [
+            { text: "基于逻辑和公平的领导", type: "T" },
+            { text: "关注团队和谐与个人需求的领导", type: "F" }
+        ]
+    },
+    {
+        text: "在评估情况时，你更倾向于：",
+        options: [
+            { text: "客观分析利弊", type: "T" },
+            { text: "考虑对人的影响和价值观", type: "F" }
+        ]
+    },
+    {
+        text: "你更容易被他人形容为：",
+        options: [
+            { text: "理性和逻辑性强的人", type: "T" },
+            { text: "富有同情心和理解力的人", type: "F" }
+        ]
+    },
+    {
+        text: "在给予反馈时，你更倾向于：",
+        options: [
+            { text: "直接指出问题和解决方案", type: "T" },
+            { text: "先肯定优点，再委婉提出改进建议", type: "F" }
+        ]
+    },
+    {
+        text: "你更看重：",
+        options: [
+            { text: "公正和一致性", type: "T" },
+            { text: "和谐与同理心", type: "F" }
+        ]
+    },
+    {
+        text: "在工作中，你更关注：",
+        options: [
+            { text: "任务完成和效率", type: "T" },
+            { text: "团队合作和人际关系", type: "F" }
+        ]
+    },
+    {
+        text: "你更倾向于：",
+        options: [
+            { text: "基于原则和规则做决定", type: "T" },
+            { text: "考虑特殊情况和个人需求", type: "F" }
+        ]
+    },
+    
+    // J/P 维度题目 (12题)
+    {
+        text: "你更喜欢：",
+        options: [
+            { text: "有计划和结构的生活", type: "J" },
+            { text: "灵活和自发的生活", type: "P" }
+        ]
+    },
+    {
+        text: "你更倾向于：",
+        options: [
+            { text: "提前计划和安排", type: "J" },
+            { text: "随机应变，保持选择的开放性", type: "P" }
+        ]
+    },
+    {
+        text: "你更喜欢：",
+        options: [
+            { text: "有明确截止日期的项目", type: "J" },
+            { text: "灵活时间安排的项目", type: "P" }
+        ]
+    },
+    {
+        text: "你的工作区域通常是：",
+        options: [
+            { text: "整洁有序，物品归位", type: "J" },
+            { text: "创意性混乱，随手可及", type: "P" }
+        ]
+    },
+    {
+        text: "你更喜欢：",
+        options: [
+            { text: "按计划完成任务", type: "J" },
+            { text: "根据灵感和兴趣行动", type: "P" }
+        ]
+    },
+    {
+        text: "你更倾向于：",
+        options: [
+            { text: "做决定并完成事情", type: "J" },
+            { text: "保持选择的开放性，收集更多信息", type: "P" }
+        ]
+    },
+    {
+        text: "你更喜欢的工作方式是：",
+        options: [
+            { text: "有明确的目标和截止日期", type: "J" },
+            { text: "灵活调整，根据情况变化", type: "P" }
+        ]
+    },
+    {
+        text: "你更倾向于：",
+        options: [
+            { text: "按部就班，一步一步完成任务", type: "J" },
+            { text: "多任务处理，根据兴趣切换", type: "P" }
+        ]
+    },
+    {
+        text: "你更喜欢：",
+        options: [
+            { text: "提前计划假期的每一天", type: "J" },
+            { text: "即兴决定，根据当时情况安排", type: "P" }
+        ]
+    },
+    {
+        text: "你更倾向于：",
+        options: [
+            { text: "按时完成任务，避免最后冲刺", type: "J" },
+            { text: "在截止日期前突击完成", type: "P" }
+        ]
+    },
+    {
+        text: "你更喜欢的环境是：",
+        options: [
+            { text: "有序、可预测的环境", type: "J" },
+            { text: "灵活、可变化的环境", type: "P" }
+        ]
+    },
+    {
+        text: "你更倾向于：",
+        options: [
+            { text: "制定计划并坚持执行", type: "J" },
+            { text: "根据情况随时调整计划", type: "P" }
         ]
     }
 ];
@@ -570,82 +773,183 @@ function startTest() {
     
     // 初始化导航按钮
     initializeNavigation();
+    
+    // 显示开始测试的通知
+    if (window.showInfo) {
+        window.showInfo('测试已开始，请根据您的真实想法作答');
+    } else {
+        showNotification('测试已开始，请根据您的真实想法作答', 'info');
+    }
 }
 
-// 显示问题
+// 显示问题 - 现代化设计
 function showQuestion() {
     const question = questions[currentQuestionIndex];
     const questionCard = document.getElementById('questionCard');
     
-    // 更新问题编号
-    document.getElementById('questionNumber').textContent = currentQuestionIndex + 1;
-    document.getElementById('currentQuestion').textContent = currentQuestionIndex + 1;
-    document.getElementById('totalQuestions').textContent = questions.length;
+    // 添加淡出效果
+    questionCard.classList.add('fade-out');
     
-    // 更新进度条
-    const progress = ((currentQuestionIndex + 1) / questions.length) * 100;
-    document.getElementById('progressFill').style.width = `${progress}%`;
-    
-    // 更新问题内容
-    document.getElementById('questionText').textContent = question.text;
-    
-    // 创建选项
-    const optionsContainer = document.getElementById('questionOptions');
-    optionsContainer.innerHTML = '';
-    
-    question.options.forEach((option, index) => {
-        const optionBtn = document.createElement('button');
-        optionBtn.className = 'option-btn';
-        optionBtn.textContent = option.text;
-        optionBtn.dataset.type = option.type;
-        optionBtn.dataset.index = index;
+    setTimeout(() => {
+        // 更新问题编号 - 使用更清晰的对比色
+        document.getElementById('questionNumber').textContent = `${currentQuestionIndex + 1} / ${questions.length}`;
+        document.getElementById('currentQuestion').textContent = currentQuestionIndex + 1;
+        document.getElementById('totalQuestions').textContent = questions.length;
         
-        // 如果已经有答案，显示选中状态
-        if (answers[currentQuestionIndex] === index) {
-            optionBtn.classList.add('selected');
+        // 更新进度条和百分比
+        const progress = ((currentQuestionIndex + 1) / questions.length) * 100;
+        document.getElementById('progressFill').style.width = `${progress}%`;
+        document.getElementById('progressPercentage').textContent = `${Math.round(progress)}%`;
+        
+        // 确定问题类型和对应图标
+        let questionType = "";
+        let iconName = "psychology";
+        
+        if (question.options[0].type === "E" || question.options[0].type === "I") {
+            questionType = "外向/内向";
+            iconName = "groups";
+        } else if (question.options[0].type === "S" || question.options[0].type === "N") {
+            questionType = "感觉/直觉";
+            iconName = "lightbulb";
+        } else if (question.options[0].type === "T" || question.options[0].type === "F") {
+            questionType = "思考/情感";
+            iconName = "balance";
+        } else if (question.options[0].type === "J" || question.options[0].type === "P") {
+            questionType = "判断/感知";
+            iconName = "calendar_today";
         }
         
-        optionBtn.addEventListener('click', function() {
-            selectOption(this, index);
+        // 更新问题类别和图标
+        document.getElementById('questionCategory').textContent = questionType;
+        document.getElementById('questionIcon').textContent = iconName;
+        
+        // 更新问题内容
+        document.getElementById('questionText').textContent = question.text;
+        
+        // 创建选项
+        const optionsContainer = document.getElementById('questionOptions');
+        optionsContainer.innerHTML = '';
+        
+        question.options.forEach((option, index) => {
+            const optionBtn = document.createElement('button');
+            optionBtn.className = 'option-btn';
+            optionBtn.textContent = option.text;
+            optionBtn.dataset.type = option.type;
+            optionBtn.dataset.index = index;
+            
+            // 如果已经有答案，显示选中状态
+            if (answers[currentQuestionIndex] === index) {
+                optionBtn.classList.add('selected');
+            }
+            
+            optionBtn.addEventListener('click', function() {
+                selectOption(this, index);
+            });
+            
+            optionsContainer.appendChild(optionBtn);
         });
         
-        optionsContainer.appendChild(optionBtn);
-    });
-    
-    // 更新导航按钮状态
-    updateNavigationButtons();
+        // 更新导航按钮状态
+        updateNavigationButtons();
+        
+        // 添加淡入效果
+        questionCard.classList.remove('fade-out');
+        questionCard.classList.add('fade-in');
+        
+        // 移除淡入类，以便下次使用
+        setTimeout(() => {
+            questionCard.classList.remove('fade-in');
+        }, 500);
+        
+        // 平滑滚动到顶部
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    }, 300); // 短暂延迟以确保淡出效果可见
 }
 
-// 选择选项
+// 导航指示器功能已移除
+
+// 选择选项 - 现代化交互与平滑过渡
 function selectOption(button, optionIndex) {
     // 移除所有选中状态
     document.querySelectorAll('.option-btn').forEach(btn => {
         btn.classList.remove('selected');
     });
     
-    // 添加选中状态
+    // 添加选中状态和动画效果
     button.classList.add('selected');
     
     // 保存答案
     answers[currentQuestionIndex] = optionIndex;
     
-    // 启用下一题按钮
-    document.getElementById('nextBtn').disabled = false;
+    // 添加选择反馈动画
+    const ripple = document.createElement('span');
+    ripple.className = 'option-ripple';
+    button.appendChild(ripple);
     
-    // 自动进入下一题（延迟一点时间让用户看到选择效果）
-    setTimeout(() => {
-        if (currentQuestionIndex < questions.length - 1) {
-            nextQuestion();
-        } else {
-            finishTest();
+    // 找出已回答的最大题目索引
+    let maxAnsweredIndex = -1;
+    for (let i = 0; i < answers.length; i++) {
+        if (answers[i] !== undefined) {
+            maxAnsweredIndex = i;
         }
-    }, 500);
+    }
+    
+    // 如果当前题目索引小于已回答的最大题目索引，则处于回退状态
+    const isBacktracking = currentQuestionIndex < maxAnsweredIndex;
+    
+    // 标记是否将自动进入下一题
+    const willAutoAdvance = currentQuestionIndex < questions.length - 1 && !isBacktracking && !window.justClickedPrev;
+    
+    // 如果不会自动进入下一题，才更新导航按钮状态
+    if (!willAutoAdvance) {
+        updateNavigationButtons();
+    } else {
+        // 如果会自动进入下一题，确保下一题按钮不显示
+        const nextBtn = document.getElementById('nextBtn');
+        nextBtn.style.display = 'none';
+    }
+    
+    // 动画结束后移除
+    setTimeout(() => {
+        if (ripple.parentNode) {
+            ripple.parentNode.removeChild(ripple);
+        }
+    }, 700);
+    
+    // 只有在非回退状态下才自动进入下一题
+    if (willAutoAdvance) {
+        // 非回退状态，自动进入下一题
+        setTimeout(() => {
+            // 在开始切换动画时就更新当前题目索引
+            currentQuestionIndex++;
+            
+            // 添加淡出效果
+            const questionCard = document.getElementById('questionCard');
+            questionCard.classList.add('fade-out');
+            
+            // 等待淡出效果完成后显示下一题
+            setTimeout(() => {
+                showQuestion();
+            }, 300);
+        }, 800); // 延迟800毫秒后开始淡出动画
+    }
+    // 如果是回退状态，不自动进入下一题，让用户手动点击下一题按钮
 }
 
 // 初始化导航
 function initializeNavigation() {
     const prevBtn = document.getElementById('prevBtn');
     const nextBtn = document.getElementById('nextBtn');
+    
+    // 初始状态下隐藏所有导航按钮
+    prevBtn.style.display = 'none';
+    nextBtn.style.display = 'none';
+    
+    // 初始化全局标记
+    window.justClickedPrev = false;
     
     prevBtn.addEventListener('click', prevQuestion);
     nextBtn.addEventListener('click', nextQuestion);
@@ -655,6 +959,10 @@ function initializeNavigation() {
 function prevQuestion() {
     if (currentQuestionIndex > 0) {
         currentQuestionIndex--;
+        
+        // 添加一个全局标记，表示用户刚刚点击了上一题按钮
+        window.justClickedPrev = true;
+        
         showQuestion();
     }
 }
@@ -663,51 +971,130 @@ function prevQuestion() {
 function nextQuestion() {
     if (currentQuestionIndex < questions.length - 1) {
         currentQuestionIndex++;
+        // 清除回退状态标记
+        window.justClickedPrev = false;
         showQuestion();
     } else {
         finishTest();
     }
 }
 
-// 更新导航按钮状态
+// 更新导航按钮状态 - 使用圆形图标按钮
 function updateNavigationButtons() {
     const prevBtn = document.getElementById('prevBtn');
     const nextBtn = document.getElementById('nextBtn');
     
-    // 上一题按钮
-    prevBtn.disabled = currentQuestionIndex === 0;
+    // 找出已回答的最大题目索引
+    let maxAnsweredIndex = -1;
+    for (let i = 0; i < answers.length; i++) {
+        if (answers[i] !== undefined) {
+            maxAnsweredIndex = i;
+        }
+    }
+    
+    // 第一题时隐藏上一题按钮，第二题开始显示
+    if (currentQuestionIndex === 0) {
+        prevBtn.style.display = 'none';
+    } else {
+        prevBtn.style.display = 'flex';
+        prevBtn.disabled = false; // 确保上一题按钮可用
+    }
     
     // 下一题按钮
     const hasAnswer = answers[currentQuestionIndex] !== undefined;
-    nextBtn.disabled = !hasAnswer;
     
-    // 更新按钮文字
+    // 最后一题时显示提交结果按钮
     if (currentQuestionIndex === questions.length - 1) {
-        nextBtn.innerHTML = '完成测试 <i class="material-icons">check</i>';
+        // 最后一题只有在选择了答案后才显示提交按钮
+        nextBtn.style.display = hasAnswer ? 'flex' : 'none';
+        nextBtn.disabled = !hasAnswer;
+        nextBtn.innerHTML = '<i class="material-icons">check_circle</i>';
+        nextBtn.classList.toggle('submit-btn', true); // 添加提交按钮样式
+        
+        // 如果已选择答案，添加脉冲动画
+        if (hasAnswer) {
+            nextBtn.classList.add('pulse-animation');
+        } else {
+            nextBtn.classList.remove('pulse-animation');
+        }
     } else {
-        nextBtn.innerHTML = '下一题 <i class="material-icons">arrow_forward</i>';
+        // 非最后一题，只要当前题目已选择答案就显示下一题按钮
+        if (hasAnswer) {
+            nextBtn.style.display = 'flex';
+            nextBtn.disabled = false;
+            nextBtn.innerHTML = '<i class="material-icons">arrow_forward</i>';
+            nextBtn.classList.toggle('submit-btn', false); // 移除提交按钮样式
+            nextBtn.classList.remove('pulse-animation');
+        } else {
+            nextBtn.style.display = 'none';
+        }
     }
 }
 
-// 完成测试
+// 完成测试 - 现代化结果展示
 function finishTest() {
     console.log('✅ 测试完成');
     
     // 计算结果
     const result = calculateResult();
     
-    // 显示结果
-    showResult(result);
+    // 显示结果加载动画
+    showResultLoading();
     
-    // 隐藏测试页面和进度条
-    document.getElementById('testQuestions').style.display = 'none';
-    document.getElementById('testProgress').style.display = 'none';
+    // 延迟显示结果，增强用户体验
+    setTimeout(() => {
+        // 显示结果
+        showResult(result);
+        
+        // 隐藏测试页面和进度条
+        document.getElementById('testQuestions').style.display = 'none';
+        document.getElementById('testProgress').style.display = 'none';
+        
+        // 显示结果页面
+        document.getElementById('testResults').style.display = 'block';
+        
+        // 保存结果到本地存储
+        saveResultToStorage(result);
+        
+        // 显示完成通知
+        if (window.showSuccess) {
+            window.showSuccess('测试完成！您的MBTI类型已分析出来');
+        } else {
+            showNotification('测试完成！您的MBTI类型已分析出来', 'success');
+        }
+        
+        // 平滑滚动到顶部
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    }, 1500);
+}
+
+// 显示结果加载动画
+function showResultLoading() {
+    // 创建加载动画元素
+    const loadingOverlay = document.createElement('div');
+    loadingOverlay.className = 'result-loading-overlay';
+    loadingOverlay.innerHTML = `
+        <div class="result-loading-content">
+            <div class="result-loading-spinner">
+                <i class="material-icons rotating">psychology</i>
+            </div>
+            <h3>正在分析您的答案...</h3>
+            <p>请稍候，我们正在计算您的MBTI人格类型</p>
+        </div>
+    `;
     
-    // 显示结果页面
-    document.getElementById('testResults').style.display = 'block';
+    // 添加到页面
+    document.body.appendChild(loadingOverlay);
     
-    // 保存结果到本地存储
-    saveResultToStorage(result);
+    // 设置超时移除
+    setTimeout(() => {
+        if (loadingOverlay.parentNode) {
+            loadingOverlay.parentNode.removeChild(loadingOverlay);
+        }
+    }, 1500);
 }
 
 // 计算MBTI结果
@@ -741,9 +1128,9 @@ function calculateResult() {
     };
 }
 
-// 显示结果
+// 显示结果 - 现代化详细展示
 function showResult(result) {
-    const { type, scores, typeInfo } = result;
+    const { type, scores, typeInfo, testDuration } = result;
     
     // 显示类型
     document.getElementById('resultType').textContent = type;
@@ -755,17 +1142,30 @@ function showResult(result) {
     descriptionContainer.innerHTML = `
         <h3>性格描述</h3>
         <p>${typeInfo.description}</p>
+        <div class="result-meta">
+            <div class="result-meta-item">
+                <i class="material-icons">schedule</i>
+                <span>测试用时: ${testDuration} 分钟</span>
+            </div>
+            <div class="result-meta-item">
+                <i class="material-icons">today</i>
+                <span>测试日期: ${new Date().toLocaleDateString('zh-CN')}</span>
+            </div>
+        </div>
     `;
     
     // 显示维度分析
     const dimensionsContainer = document.getElementById('resultDimensions');
-    dimensionsContainer.innerHTML = '';
+    dimensionsContainer.innerHTML = '<h3>维度分析</h3>';
+    
+    const dimensionsGrid = document.createElement('div');
+    dimensionsGrid.className = 'dimensions-grid';
     
     const dimensions = [
-        { name: '外向 vs 内向', e: 'E', i: 'I', eLabel: '外向', iLabel: '内向' },
-        { name: '感觉 vs 直觉', e: 'S', i: 'N', eLabel: '感觉', iLabel: '直觉' },
-        { name: '思考 vs 情感', e: 'T', i: 'F', eLabel: '思考', iLabel: '情感' },
-        { name: '判断 vs 知觉', e: 'J', i: 'P', eLabel: '判断', iLabel: '知觉' }
+        { name: '外向 vs 内向', e: 'E', i: 'I', eLabel: '外向', iLabel: '内向', eDesc: '从外部世界获取能量', iDesc: '从内心世界获取能量' },
+        { name: '感觉 vs 直觉', e: 'S', i: 'N', eLabel: '感觉', iLabel: '直觉', eDesc: '关注具体事实和细节', iDesc: '关注概念和可能性' },
+        { name: '思考 vs 情感', e: 'T', i: 'F', eLabel: '思考', iLabel: '情感', eDesc: '基于逻辑做决定', iDesc: '基于价值观和感受做决定' },
+        { name: '判断 vs 知觉', e: 'J', i: 'P', eLabel: '判断', iLabel: '知觉', eDesc: '喜欢计划和确定性', iDesc: '喜欢灵活和自发性' }
     ];
     
     dimensions.forEach(dim => {
@@ -774,16 +1174,28 @@ function showResult(result) {
         const total = eScore + iScore;
         const ePercentage = Math.round((eScore / total) * 100);
         const iPercentage = Math.round((iScore / total) * 100);
+        const dominant = eScore > iScore ? dim.e : dim.i;
+        const dominantLabel = eScore > iScore ? dim.eLabel : dim.iLabel;
+        const dominantDesc = eScore > iScore ? dim.eDesc : dim.iDesc;
+        const dominantPercentage = Math.max(ePercentage, iPercentage);
         
         const dimensionDiv = document.createElement('div');
         dimensionDiv.className = 'dimension-result';
         dimensionDiv.innerHTML = `
             <h4>${dim.name}</h4>
-            <div class="dimension-value">${eScore > iScore ? dim.e : dim.i}</div>
-            <div class="dimension-label">${eScore > iScore ? dim.eLabel : dim.iLabel} (${Math.max(ePercentage, iPercentage)}%)</div>
+            <div class="dimension-value">${dominant}</div>
+            <div class="dimension-label">${dominantLabel} (${dominantPercentage}%)</div>
+            <div class="dimension-bar-container">
+                <div class="dimension-bar">
+                    <div class="dimension-bar-fill" style="width: ${dominantPercentage}%"></div>
+                </div>
+            </div>
+            <div class="dimension-description">${dominantDesc}</div>
         `;
-        dimensionsContainer.appendChild(dimensionDiv);
+        dimensionsGrid.appendChild(dimensionDiv);
     });
+    
+    dimensionsContainer.appendChild(dimensionsGrid);
     
     // 显示特征分析
     const characteristicsContainer = document.getElementById('resultCharacteristics');
@@ -798,6 +1210,46 @@ function showResult(result) {
             `).join('')}
         </div>
     `;
+    
+    // 添加职业建议部分
+    const careerSuggestions = getCareerSuggestions(type);
+    if (careerSuggestions && careerSuggestions.length > 0) {
+        const careerSection = document.createElement('div');
+        careerSection.className = 'result-careers';
+        careerSection.innerHTML = `
+            <h3>适合的职业方向</h3>
+            <div class="career-tags">
+                ${careerSuggestions.map(career => `
+                    <div class="career-tag">${career}</div>
+                `).join('')}
+            </div>
+        `;
+        characteristicsContainer.appendChild(careerSection);
+    }
+}
+
+// 获取职业建议
+function getCareerSuggestions(type) {
+    const careerMap = {
+        'INTJ': ['战略规划师', '系统分析师', '软件架构师', '投资银行家', '科学研究员', '企业顾问'],
+        'INTP': ['软件开发者', '数据科学家', '研究科学家', '系统设计师', '大学教授', '逻辑学家'],
+        'ENTJ': ['企业高管', '管理顾问', '律师', '项目经理', '政治家', '企业家'],
+        'ENTP': ['企业家', '营销策略师', '发明家', '创意总监', '风险投资家', '商业顾问'],
+        'INFJ': ['心理咨询师', '作家', '人力资源专家', '社会工作者', '教师', '艺术治疗师'],
+        'INFP': ['作家', '心理咨询师', '社会工作者', '艺术家', '设计师', '教师'],
+        'ENFJ': ['教育工作者', '人力资源经理', '公关专家', '销售经理', '市场营销总监', '职业顾问'],
+        'ENFP': ['创意总监', '记者', '演员', '市场营销专家', '活动策划师', '人力资源专员'],
+        'ISTJ': ['财务分析师', '会计师', '项目经理', '军事人员', '法官', '审计师'],
+        'ISFJ': ['护士', '小学教师', '行政助理', '社会工作者', '客户服务代表', '办公室经理'],
+        'ESTJ': ['销售经理', '项目经理', '军事或警察领导', '金融经理', '行政主管', '法官'],
+        'ESFJ': ['护士', '教师', '销售代表', '公关专员', '人力资源专员', '社区服务经理'],
+        'ISTP': ['工程师', '技术专家', '飞行员', '法医专家', '机械师', '软件开发者'],
+        'ISFP': ['艺术家', '设计师', '音乐家', '厨师', '兽医', '美容师'],
+        'ESTP': ['企业家', '销售代表', '市场营销专员', '运动员', '警察或消防员', '项目协调员'],
+        'ESFP': ['活动策划师', '销售代表', '旅游顾问', '演员', '教练', '儿童保育工作者']
+    };
+    
+    return careerMap[type] || [];
 }
 
 // 重置测试

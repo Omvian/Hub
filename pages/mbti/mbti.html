@@ -29,15 +29,7 @@
             </div>
         </div>
         
-        <!-- 测试进度条 -->
-        <div class="test-progress" id="testProgress" style="display: none;">
-            <span class="progress-text">
-                <span id="currentQuestion">1</span> / <span id="totalQuestions">20</span>
-            </span>
-            <div class="progress-bar">
-                <div class="progress-fill" id="progressFill"></div>
-            </div>
-        </div>
+        <!-- 顶部栏不再包含进度条 -->
         
         <!-- 统一账号组件 -->
         <auth-header id="mbtiAuthHeader"></auth-header>
@@ -47,130 +39,128 @@
     <main class="subpage-main">
         <!-- 测试介绍页面 -->
         <div id="testIntro" class="test-intro">
-            <div class="intro-hero">
+            <div class="intro-header">
                 <div class="intro-icon">
                     <i class="material-icons">psychology</i>
                 </div>
-                <h2>MBTI人格测试</h2>
-                <p class="intro-subtitle">通过科学的问题设计帮您深入了解自己的性格特点、优势和发展方向</p>
-            </div>
-
-            <div class="intro-content">
-                <div class="intro-description">
-                    <h3>什么是MBTI？</h3>
-                    <p>MBTI（Myers-Briggs Type Indicator）是基于荣格心理类型理论开发的人格测试工具，通过四个维度来分析个人的心理偏好，帮助您更好地了解自己的性格特点和行为模式。</p>
-                </div>
-
-                <!-- MBTI四个维度 -->
-                <div class="mbti-dimensions">
-                    <div class="dimension-card">
-                        <div class="dimension-header">
-                            <i class="material-icons">people</i>
-                            <h4>外向(E) vs 内向(I)</h4>
-                        </div>
-                        <p>能量来源和注意力方向 - 从外部世界获得能量还是从内心世界获得能量</p>
-                    </div>
-                    <div class="dimension-card">
-                        <div class="dimension-header">
-                            <i class="material-icons">visibility</i>
-                            <h4>感觉(S) vs 直觉(N)</h4>
-                        </div>
-                        <p>信息收集方式 - 关注具体事实和细节还是关注可能性和概念</p>
-                    </div>
-                    <div class="dimension-card">
-                        <div class="dimension-header">
-                            <i class="material-icons">psychology</i>
-                            <h4>思考(T) vs 情感(F)</h4>
-                        </div>
-                        <p>决策制定方式 - 基于逻辑分析还是基于价值观和情感</p>
-                    </div>
-                    <div class="dimension-card">
-                        <div class="dimension-header">
-                            <i class="material-icons">schedule</i>
-                            <h4>判断(J) vs 知觉(P)</h4>
-                        </div>
-                        <p>生活方式偏好 - 喜欢有序计划还是灵活自发</p>
-                    </div>
-                </div>
-
-                <!-- 测试信息 -->
-                <div class="test-info">
-                    <h3>测试信息</h3>
-                    <div class="info-grid">
-                        <div class="info-item">
-                            <i class="material-icons">quiz</i>
-                            <div>
-                                <h4>题目数量</h4>
-                                <p>20道精选题目</p>
-                            </div>
-                        </div>
-                        <div class="info-item">
-                            <i class="material-icons">schedule</i>
-                            <div>
-                                <h4>预计时长</h4>
-                                <p>5-10分钟</p>
-                            </div>
-                        </div>
-                        <div class="info-item">
-                            <i class="material-icons">analytics</i>
-                            <div>
-                                <h4>结果类型</h4>
-                                <p>16种人格类型</p>
-                            </div>
-                        </div>
-                        <div class="info-item">
-                            <i class="material-icons">verified</i>
-                            <div>
-                                <h4>科学依据</h4>
-                                <p>基于荣格理论</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 测试建议 -->
-                <div class="test-tips">
-                    <h3>测试建议</h3>
-                    <ul class="tips-list">
-                        <li><i class="material-icons">check_circle</i>请根据您的真实想法和行为习惯作答</li>
-                        <li><i class="material-icons">check_circle</i>选择最符合您日常表现的选项</li>
-                        <li><i class="material-icons">check_circle</i>不要过度思考，相信第一直觉</li>
-                        <li><i class="material-icons">check_circle</i>在安静的环境中完成测试效果更佳</li>
-                    </ul>
-                </div>
-
-                <!-- 开始测试 -->
-                <div class="start-test-section">
-                    <button class="btn btn-primary btn-large" id="startTestBtn">
-                        <i class="material-icons">play_arrow</i>
-                        开始MBTI测试
-                    </button>
-                    <p class="disclaimer">测试结果仅供参考，不能替代专业心理评估</p>
+                <div class="intro-title">
+                    <h2>MBTI人格测试</h2>
+                    <p class="intro-subtitle">了解你的性格特点、优势和发展方向</p>
                 </div>
             </div>
+            
+            <!-- 测试信息 - 简化版 -->
+            <div class="test-info-compact">
+                <div class="info-pill"><i class="material-icons">quiz</i> 48题</div>
+                <div class="info-pill"><i class="material-icons">schedule</i> 10-15分钟</div>
+                <div class="info-pill"><i class="material-icons">analytics</i> 16种类型</div>
+            </div>
+            
+            <!-- 开始测试按钮 -->
+            <button class="btn-start-test pulse-animation" id="startTestBtn">
+                <i class="material-icons">play_arrow</i>
+                开始测试
+            </button>
+            
+            <!-- 维度简介 - 简化版 -->
+            <div class="dimensions-compact">
+                <div class="dimension-row">
+                    <div class="dimension-pill">
+                        <span class="dimension-letter">E/I</span>
+                        <span class="dimension-name">外向/内向</span>
+                    </div>
+                    <div class="dimension-pill">
+                        <span class="dimension-letter">S/N</span>
+                        <span class="dimension-name">感觉/直觉</span>
+                    </div>
+                </div>
+                <div class="dimension-row">
+                    <div class="dimension-pill">
+                        <span class="dimension-letter">T/F</span>
+                        <span class="dimension-name">思考/情感</span>
+                    </div>
+                    <div class="dimension-pill">
+                        <span class="dimension-letter">J/P</span>
+                        <span class="dimension-name">判断/知觉</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 简化的测试建议 -->
+            <div class="tips-compact">
+                <div class="tip-item"><i class="material-icons">check_circle</i> 根据真实想法作答</div>
+                <div class="tip-item"><i class="material-icons">check_circle</i> 相信第一直觉</div>
+            </div>
+            
+            <p class="disclaimer">测试结果仅供参考，不能替代专业心理评估</p>
         </div>
 
-        <!-- 测试问题页面 -->
+        <!-- 测试问题页面 - 现代化设计 -->
         <div id="testQuestions" class="test-questions" style="display: none;">
+            <!-- 新位置的进度条 -->
+            <div class="test-progress-container" id="testProgress" style="display: none;">
+                <div class="test-progress">
+                    <div class="progress-info">
+                        <span class="progress-text">
+                            <span id="currentQuestion">1</span> / <span id="totalQuestions">48</span>
+                        </span>
+                        <span class="progress-percentage" id="progressPercentage">0%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill"></div>
+                    </div>
+                </div>
+            </div>
+            
             <div class="question-container">
+                <!-- 左侧装饰元素 -->
+                <div class="question-decoration left">
+                    <div class="decoration-circle"></div>
+                    <div class="decoration-line"></div>
+                    <div class="decoration-circle"></div>
+                </div>
+                
                 <div class="question-card" id="questionCard">
-                    <div class="question-number" id="questionNumber">第 1 题</div>
-                    <div class="question-text" id="questionText">问题内容将在这里显示</div>
+                    <div class="question-header">
+                        <div class="question-badge" id="questionNumber">第 1 题</div>
+                        <div class="question-category" id="questionCategory">外向/内向</div>
+                    </div>
+                    
+                    <div class="question-content">
+                        <div class="question-text" id="questionText">问题内容将在这里显示</div>
+                        <div class="question-illustration">
+                            <div class="illustration-icon">
+                                <i class="material-icons" id="questionIcon">psychology</i>
+                            </div>
+                        </div>
+                    </div>
+                    
                     <div class="question-options" id="questionOptions">
                         <!-- 选项将通过JavaScript动态生成 -->
                     </div>
+                    
+                    <div class="question-tip">
+                        <i class="material-icons">lightbulb</i>
+                        <span>选择最符合你真实想法的选项，不要过多思考</span>
+                    </div>
                 </div>
                 
-                <div class="question-navigation">
-                    <button class="btn btn-secondary" id="prevBtn" disabled>
-                        <i class="material-icons">arrow_back</i>
-                        上一题
-                    </button>
-                    <button class="btn btn-primary" id="nextBtn" disabled>
-                        下一题
-                        <i class="material-icons">arrow_forward</i>
-                    </button>
+                <!-- 右侧装饰元素 -->
+                <div class="question-decoration right">
+                    <div class="decoration-circle"></div>
+                    <div class="decoration-line"></div>
+                    <div class="decoration-circle"></div>
                 </div>
+            </div>
+            
+            <div class="question-navigation">
+                <button class="nav-btn prev-btn" id="prevBtn" disabled>
+                    <i class="material-icons">arrow_back</i>
+                </button>
+                
+                <button class="nav-btn next-btn" id="nextBtn" disabled>
+                    <i class="material-icons">arrow_forward</i>
+                </button>
             </div>
         </div>
 
