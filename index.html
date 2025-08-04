@@ -505,9 +505,18 @@
             localStorage.clear();
             sessionStorage.clear();
             
+            // 清除所有Cookie
+            const cookies = document.cookie.split(";");
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i];
+                const eqPos = cookie.indexOf("=");
+                const name = eqPos > -1 ? cookie.substring(0, eqPos).trim() : cookie.trim();
+                document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/";
+            }
+            
             // 显示提示信息
             if (window.showInfo) {
-                window.showInfo('缓存已清除，页面即将刷新...', 2000);
+                window.showInfo('缓存和Cookie已清除，页面即将刷新...', 2000);
             }
             
             // 延迟刷新页面，让用户看到提示
