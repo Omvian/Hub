@@ -430,6 +430,16 @@ class AuthManager {
         const email = emailInput.value.trim();
         const password = passwordInput.value;
         const rememberMe = rememberMeCheckbox ? rememberMeCheckbox.checked : false;
+        
+        // 如果用户勾选了自动登录，显示全局通知提示
+        if (rememberMe && window.notificationManager) {
+            window.notificationManager.showNotification({
+                type: 'info',
+                title: '自动登录已启用',
+                message: '您已启用自动登录功能，下次访问将自动登录',
+                duration: 5000
+            });
+        }
 
         // 额外的客户端验证
         if (!email || !password) {

@@ -57,11 +57,24 @@ class ConfigManager {
                     throw new Error('Supabase SDK 未正确加载');
                 }
                 
-                // 创建Supabase客户端
-                this.supabase = window.supabase.createClient(
-                    this.supabaseConfig.url, 
-                    this.supabaseConfig.key
-                );
+                // 检查是否已经存在全局Supabase实例
+                if (window._supabaseClient) {
+                    this.supabase = window._supabaseClient;
+                    if (window.logger?.isDevelopment) {
+                        window.logger.info('使用已存在的Supabase客户端实例');
+                    }
+                } else {
+                    // 创建Supabase客户端并保存到全局变量
+                    this.supabase = window.supabase.createClient(
+                        this.supabaseConfig.url, 
+                        this.supabaseConfig.key
+                    );
+                    // 保存到全局变量，避免重复创建
+                    window._supabaseClient = this.supabase;
+                    if (window.logger?.isDevelopment) {
+                        window.logger.info('创建新的Supabase客户端实例');
+                    }
+                }
                 
                 // 验证连接
                 const sessionResult = await this.supabase.auth.getSession();

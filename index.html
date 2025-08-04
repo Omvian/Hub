@@ -152,10 +152,9 @@
             </div>
             <div class="form-group checkbox-group">
                 <label class="checkbox-label">
-                    <input type="checkbox" id="rememberMe" checked>
+                    <input type="checkbox" id="rememberMe">
                     <span class="checkbox-text">自动登录</span>
                 </label>
-                <div class="checkbox-hint">不是自己的设备请勿勾选</div>
             </div>
             <button type="submit" class="btn btn-primary modal-btn breathing" id="loginSubmitBtn">
                 <div class="button-content">
@@ -284,6 +283,10 @@
         return new Promise((resolve) => {
             // 只检查SDK是否加载，不创建实例
             if (window.supabase) {
+                // 确保全局变量存在，用于存储单例Supabase客户端
+                if (!window._supabaseClient) {
+                    window._supabaseClient = null; // 初始化为null，由config-manager创建实例
+                }
                 resolve();
             } else {
                 setTimeout(() => waitForSupabase().then(resolve), 50); // 减少检查间隔
