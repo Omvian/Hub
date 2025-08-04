@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MBTI人格测试 - OmvianHub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="../../src/css/variables.css">
+    <link rel="stylesheet" href="../../src/css/base.css">
+    <link rel="stylesheet" href="../../src/css/components/buttons.css">
+    <link rel="stylesheet" href="../../src/css/main.css">
+    <link rel="stylesheet" href="../../src/css/mobile.css">
+    <link rel="stylesheet" href="../../src/css/auth-styles.css">
+    <link rel="stylesheet" href="mbti.css">
+    <link rel="icon" href="../../favicon.ico">
+</head>
+<body>
+    <!-- 子页面头部 -->
+    <header class="subpage-header">
+        <div class="header-left">
+            <a href="../../index.html" class="back-btn">
+                <i class="material-icons">arrow_back</i>
+                <span>返回主页</span>
+            </a>
+            <div class="page-title">
+                <i class="material-icons">quiz</i>
+                <h1>MBTI人格测试</h1>
+            </div>
+        </div>
+        
+        <!-- 测试进度条 -->
+        <div class="test-progress" id="testProgress" style="display: none;">
+            <span class="progress-text">
+                <span id="currentQuestion">1</span> / <span id="totalQuestions">20</span>
+            </span>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+        </div>
+        
+        <!-- 统一账号组件 -->
+        <auth-header id="mbtiAuthHeader"></auth-header>
+    </header>
+
+    <!-- 主内容区域 -->
+    <main class="subpage-main">
+        <!-- 测试介绍页面 -->
+        <div id="testIntro" class="test-intro">
+            <div class="intro-hero">
+                <div class="intro-icon">
+                    <i class="material-icons">psychology</i>
+                </div>
+                <h2>MBTI人格测试</h2>
+                <p class="intro-subtitle">通过科学的问题设计帮您深入了解自己的性格特点、优势和发展方向</p>
+            </div>
+
+            <div class="intro-content">
+                <div class="intro-description">
+                    <h3>什么是MBTI？</h3>
+                    <p>MBTI（Myers-Briggs Type Indicator）是基于荣格心理类型理论开发的人格测试工具，通过四个维度来分析个人的心理偏好，帮助您更好地了解自己的性格特点和行为模式。</p>
+                </div>
+
+                <!-- MBTI四个维度 -->
+                <div class="mbti-dimensions">
+                    <div class="dimension-card">
+                        <div class="dimension-header">
+                            <i class="material-icons">people</i>
+                            <h4>外向(E) vs 内向(I)</h4>
+                        </div>
+                        <p>能量来源和注意力方向 - 从外部世界获得能量还是从内心世界获得能量</p>
+                    </div>
+                    <div class="dimension-card">
+                        <div class="dimension-header">
+                            <i class="material-icons">visibility</i>
+                            <h4>感觉(S) vs 直觉(N)</h4>
+                        </div>
+                        <p>信息收集方式 - 关注具体事实和细节还是关注可能性和概念</p>
+                    </div>
+                    <div class="dimension-card">
+                        <div class="dimension-header">
+                            <i class="material-icons">psychology</i>
+                            <h4>思考(T) vs 情感(F)</h4>
+                        </div>
+                        <p>决策制定方式 - 基于逻辑分析还是基于价值观和情感</p>
+                    </div>
+                    <div class="dimension-card">
+                        <div class="dimension-header">
+                            <i class="material-icons">schedule</i>
+                            <h4>判断(J) vs 知觉(P)</h4>
+                        </div>
+                        <p>生活方式偏好 - 喜欢有序计划还是灵活自发</p>
+                    </div>
+                </div>
+
+                <!-- 测试信息 -->
+                <div class="test-info">
+                    <h3>测试信息</h3>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <i class="material-icons">quiz</i>
+                            <div>
+                                <h4>题目数量</h4>
+                                <p>20道精选题目</p>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <i class="material-icons">schedule</i>
+                            <div>
+                                <h4>预计时长</h4>
+                                <p>5-10分钟</p>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <i class="material-icons">analytics</i>
+                            <div>
+                                <h4>结果类型</h4>
+                                <p>16种人格类型</p>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <i class="material-icons">verified</i>
+                            <div>
+                                <h4>科学依据</h4>
+                                <p>基于荣格理论</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 测试建议 -->
+                <div class="test-tips">
+                    <h3>测试建议</h3>
+                    <ul class="tips-list">
+                        <li><i class="material-icons">check_circle</i>请根据您的真实想法和行为习惯作答</li>
+                        <li><i class="material-icons">check_circle</i>选择最符合您日常表现的选项</li>
+                        <li><i class="material-icons">check_circle</i>不要过度思考，相信第一直觉</li>
+                        <li><i class="material-icons">check_circle</i>在安静的环境中完成测试效果更佳</li>
+                    </ul>
+                </div>
+
+                <!-- 开始测试 -->
+                <div class="start-test-section">
+                    <button class="btn btn-primary btn-large" id="startTestBtn">
+                        <i class="material-icons">play_arrow</i>
+                        开始MBTI测试
+                    </button>
+                    <p class="disclaimer">测试结果仅供参考，不能替代专业心理评估</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 测试问题页面 -->
+        <div id="testQuestions" class="test-questions" style="display: none;">
+            <div class="question-container">
+                <div class="question-card" id="questionCard">
+                    <div class="question-number" id="questionNumber">第 1 题</div>
+                    <div class="question-text" id="questionText">问题内容将在这里显示</div>
+                    <div class="question-options" id="questionOptions">
+                        <!-- 选项将通过JavaScript动态生成 -->
+                    </div>
+                </div>
+                
+                <div class="question-navigation">
+                    <button class="btn btn-secondary" id="prevBtn" disabled>
+                        <i class="material-icons">arrow_back</i>
+                        上一题
+                    </button>
+                    <button class="btn btn-primary" id="nextBtn" disabled>
+                        下一题
+                        <i class="material-icons">arrow_forward</i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 测试结果页面 -->
+        <div id="testResults" class="test-results" style="display: none;">
+            <div class="results-container">
+                <div class="result-header">
+                    <div class="result-type" id="resultType">INTJ</div>
+                    <h2 class="result-title" id="resultTitle">建筑师</h2>
+                    <p class="result-subtitle" id="resultSubtitle">富有想象力和战略性的思想家</p>
+                </div>
+
+                <div class="result-content">
+                    <div class="result-description" id="resultDescription">
+                        <!-- 结果描述将通过JavaScript填充 -->
+                    </div>
+
+                    <div class="result-dimensions" id="resultDimensions">
+                        <!-- 维度分析将通过JavaScript填充 -->
+                    </div>
+
+                    <div class="result-characteristics" id="resultCharacteristics">
+                        <!-- 特征分析将通过JavaScript填充 -->
+                    </div>
+                </div>
+
+                <div class="result-actions">
+                    <button class="btn btn-primary" id="shareResultBtn">
+                        <i class="material-icons">share</i>
+                        分享结果
+                    </button>
+                    <button class="btn btn-secondary" id="saveResultBtn">
+                        <i class="material-icons">download</i>
+                        保存结果
+                    </button>
+                    <button class="btn btn-secondary" id="retakeTestBtn">
+                        <i class="material-icons">refresh</i>
+                        重新测试
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- 子页面页脚 -->
+    <footer class="subpage-footer">
+        <p>© 2025 OmvianHub. 保留所有权利. | <a href="../../index.html">返回主页</a></p>
+    </footer>
+
+    <!-- 登录模态框 -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>登录</h2>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="username">邮箱</label>
+                    <input type="email" id="username" placeholder="请输入您的邮箱" required>
+                    <div id="usernameError" class="form-error"></div>
+                </div>
+                <div class="form-group">
+                    <label for="password">密码</label>
+                    <div class="password-input-wrapper">
+                        <input type="password" id="password" placeholder="请输入您的密码" required>
+                        <button type="button" class="password-toggle" data-target="password">
+                            <i class="material-icons">visibility</i>
+                        </button>
+                    </div>
+                    <div id="passwordError" class="form-error"></div>
+                </div>
+                <button type="submit" class="btn btn-primary modal-btn breathing" id="loginSubmitBtn">
+                    <div class="button-content">
+                        <span id="loginSpinner" class="spinner" style="display: none;">
+                            <span class="dot dot1"></span>
+                            <span class="dot dot2"></span>
+                            <span class="dot dot3"></span>
+                        </span>
+                        <span id="loginButtonText">登录</span>
+                    </div>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- 注册展开界面 -->
+    <div id="registerOverlay" class="register-overlay">
+        <div class="register-overlay-content">
+            <div class="register-overlay-header">
+                <h2>注册</h2>
+                <button class="register-overlay-close" id="registerCloseBtn">
+                    <i class="material-icons">close</i>
+                </button>
+            </div>
+            <form id="registerForm" class="register-overlay-form">
+                <div class="form-group">
+                    <label for="regEmail">邮箱</label>
+                    <div class="input-wrapper">
+                        <input type="email" id="regEmail" placeholder="请输入有效的邮箱地址" required>
+                        <button type="button" class="clear-input-btn" data-target="regEmail" style="display: none;">
+                            <i class="material-icons">close</i>
+                        </button>
+                    </div>
+                    <div id="regEmailError" class="form-error"></div>
+                </div>
+                <div class="form-group">
+                    <label for="regNickname">昵称</label>
+                    <div class="input-wrapper">
+                        <input type="text" id="regNickname" placeholder="请输入昵称 (2-20个字符)" required>
+                        <button type="button" class="clear-input-btn" data-target="regNickname" style="display: none;">
+                            <i class="material-icons">close</i>
+                        </button>
+                    </div>
+                    <div id="regNicknameError" class="form-error"></div>
+                </div>
+                <div class="form-group">
+                    <label for="regPassword">密码</label>
+                    <div class="password-input-wrapper">
+                        <input type="password" id="regPassword" placeholder="请输入强密码 (6-20位，包含字母数字)" required minlength="6" maxlength="20">
+                        <button type="button" class="password-toggle" data-target="regPassword">
+                            <i class="material-icons">visibility</i>
+                        </button>
+                    </div>
+                    <div id="passwordStrength" class="password-strength">
+                        <div id="passwordStrengthBar" class="password-strength-bar"></div>
+                    </div>
+                    <div id="passwordStrengthText" class="password-strength-text"></div>
+                    <div id="regPasswordError" class="form-error"></div>
+                </div>
+                <div class="form-group" id="confirmPasswordGroup" style="display: none;">
+                    <label for="regConfirmPassword">确认密码</label>
+                    <div class="password-input-wrapper">
+                        <input type="password" id="regConfirmPassword" placeholder="请再次输入密码确保一致" required minlength="6" maxlength="20">
+                        <button type="button" class="password-toggle" data-target="regConfirmPassword">
+                            <i class="material-icons">visibility</i>
+                        </button>
+                    </div>
+                    <div id="regConfirmPasswordError" class="form-error"></div>
+                </div>
+                <button type="submit" class="btn btn-primary modal-btn breathing btn-hidden" id="registerSubmitBtn">
+                    <div class="button-content">
+                        <span id="registerSpinner" class="spinner" style="display: none;">
+                            <span class="dot dot1"></span>
+                            <span class="dot dot2"></span>
+                            <span class="dot dot3"></span>
+                        </span>
+                        <span id="registerButtonText">注册</span>
+                    </div>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- 邮箱验证提示框 -->
+    <div id="emailVerificationModal" class="modal">
+        <div class="modal-content">
+            <div class="email-verification-content">
+                <div class="email-verification-icon">
+                    <i class="material-icons success-icon">check_circle</i>
+                    <i class="material-icons email-icon">mail</i>
+                </div>
+                <h2 class="email-verification-title">注册成功</h2>
+                <p class="email-verification-message">
+                    请到邮箱内确认邮件，验证邮箱后即可登录
+                </p>
+                <div class="email-verification-email" id="verificationEmailDisplay"></div>
+                <div class="email-verification-tips">
+                    <div class="tips-title">
+                        <i class="material-icons">info</i>
+                        温馨提示
+                    </div>
+                    <ul class="tips-list">
+                        <li><i class="material-icons">check</i>请检查邮箱收件箱和垃圾邮件文件夹</li>
+                        <li><i class="material-icons">check</i>验证邮件可能需要几分钟才能到达</li>
+                        <li><i class="material-icons">check</i>点击邮件中的验证链接完成注册</li>
+                    </ul>
+                </div>
+                <button class="btn btn-primary email-verification-close" id="emailVerificationCloseBtn">
+                    我知道了
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 全局通知容器 -->
+    <div id="notification" class="notification"></div>
+
+    <!-- 脚本加载 -->
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    
+    <!-- 子页面认证系统依赖 - 按主页面顺序加载 -->
+    <script src="../../src/js/utils/logger.js"></script>
+    <script src="../../src/js/utils/constants.js"></script>
+    <script src="../../src/js/core/config-manager.js"></script>
+    <script src="../../src/js/ui/notification-manager.js"></script>
+    <script src="../../src/js/utils/helpers.js"></script>
+    <script src="../../src/js/utils/button-state-manager.js"></script>
+    <script src="../../src/js/utils/cookie-manager.js"></script>
+    <script src="../../src/js/auth/form-validator.js"></script>
+    <script src="../../src/js/auth/auth-sync-manager.js"></script>
+    <script src="../../src/js/auth/auth-manager.js"></script>
+    <script src="../../src/components/auth-header.js"></script>
+    <script src="../../src/js/auth-header-adapter.js"></script>
+    
+    <!-- MBTI测试功能脚本 -->
+    <script src="mbti.js"></script>
+</body>
+</html>

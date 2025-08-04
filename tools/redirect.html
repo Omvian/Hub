@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>邮箱验证重定向</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background: #121212;
+            color: #ffffff;
+        }
+        .container {
+            text-align: center;
+            padding: 2rem;
+        }
+        .spinner {
+            border: 4px solid #333;
+            border-top: 4px solid #BB86FC;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="spinner"></div>
+        <h2>邮箱验证成功</h2>
+        <p>正在重定向到主页...</p>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        async function handleEmailVerification() {
+            try {
+                // 使用正确的 Supabase 配置
+                const supabaseUrl = 'https://nqfxyrmhjmxjhcizwlwu.supabase.co';
+                const supabaseKey = 'sb_publishable_XRfyh45O5KCz2hRhMEYeog_uzd3Syvd';
+                const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+                
+                // 获取URL参数
+                const urlParams = new URLSearchParams(window.location.search);
+                const hashParams = new URLSearchParams(window.location.hash.substring(1));
+                
+                console.log('URL参数:', Object.fromEntries(urlParams));
+                console.log('Hash参数:', Object.fromEntries(hashParams));
+                
+                // 检查是否有验证参数
+                const accessToken = hashParams.get('access_token') || urlParams.get('access_token');
+                const refreshToken = hashParams.get('refresh_token') || urlParams.get('refresh_token');
+                
+                if (accessToken && refreshToken) {
+                    // 设置会话
+                    const { data, error } = await supabase.auth.setSession({
+                        access_token: accessToken,
+                        refresh_token: refreshToken
+                    });
+                    
+                    if (error) {
+                        console.error('设置会话失败:', error);
+                        document.querySelector('h2').textContent = '验证失败';
+                        document.querySelector('p').textContent = '邮箱验证失败，请重试';
+                    } else {
+                        console.log('验证成功，用户:', data.user);
+                        document.querySelector('h2').textContent = '邮箱验证成功';
+                        document.querySelector('p').textContent = '正在重定向到主页...';
+                        
+                        // 延迟2秒后重定向到主页
+                        setTimeout(() => {
+                            window.location.href = 'https://omvian.github.io/Hub/';
+                        }, 2000);
+                    }
+                } else {
+                    // 没有验证参数，直接重定向
+                    console.log('没有验证参数，直接重定向');
+                    let redirectUrl = 'https://omvian.github.io/Hub/';
+                    
+                    if (window.location.hash) {
+                        redirectUrl += window.location.hash;
+                    }
+                    
+                    setTimeout(() => {
+                        window.location.href = redirectUrl;
+                    }, 2000);
+                }
+                
+            } catch (error) {
+                console.error('处理验证时出错:', error);
+                document.querySelector('h2').textContent = '验证出错';
+                document.querySelector('p').textContent = '处理验证时出现错误，请重试';
+            }
+        }
+        
+        // 页面加载完成后执行验证处理
+        handleEmailVerification();
+    </script>
+</body>
+</html>

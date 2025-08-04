@@ -1,0 +1,363 @@
+/* buttons.css - 按钮组件样式
+ * 功能: 基础按钮、认证按钮、弹窗按钮、状态管理、移动端适配
+ * 规则: 所有按钮样式统一在此文件定义
+ */
+
+/* ===== 基础按钮样式 ===== */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    text-decoration: none;
+    outline: none;
+    position: relative;
+}
+
+/* ===== 头部认证按钮样式 ===== */
+.auth-buttons .btn {
+    border-radius: 8px;
+    padding: 10px 18px;
+    border: none;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    min-width: 75px;
+    justify-content: center;
+    background: rgba(187, 134, 252, 0.1);
+    color: var(--primary-color);
+    border: 1px solid rgba(187, 134, 252, 0.2);
+}
+
+.auth-buttons .btn:not(:disabled):hover {
+    background: rgba(187, 134, 252, 0.2);
+    border-color: rgba(187, 134, 252, 0.4);
+    color: #ffffff;
+    transform: translateY(-1px);
+}
+
+.auth-buttons .btn:not(:disabled):active {
+    transform: translateY(0);
+    background: rgba(187, 134, 252, 0.15);
+}
+
+.auth-buttons .btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background: rgba(100, 100, 100, 0.1) !important;
+    border-color: rgba(100, 100, 100, 0.2) !important;
+    color: var(--text-secondary) !important;
+}
+
+.auth-buttons .btn i {
+    font-size: 16px;
+}
+
+/* ===== 主要按钮样式 - 简约紫色主题 ===== */
+.btn-primary {
+    background: var(--primary-color);
+    color: #FFFFFF;
+    border: 1px solid transparent;
+}
+
+.btn-primary:hover:not(:disabled) {
+    background: #A876E8;
+}
+
+.btn-primary:active:not(:disabled) {
+    background: #A876E8;
+}
+
+.btn-secondary {
+    background: rgba(187, 134, 252, 0.1);
+    color: var(--primary-color);
+    border: 1px solid rgba(187, 134, 252, 0.2);
+}
+
+.btn-secondary:hover:not(:disabled) {
+    background: rgba(187, 134, 252, 0.2);
+    border-color: rgba(187, 134, 252, 0.4);
+}
+
+/* ===== 按钮状态管理 ===== */
+.btn-hidden {
+    display: none !important;
+}
+
+.btn-visible {
+    display: flex !important;
+}
+
+.btn-loading {
+    cursor: wait;
+    pointer-events: none;
+}
+
+.btn:disabled,
+.btn-disabled {
+    background: #666666 !important;
+    color: #999999 !important;
+    cursor: not-allowed !important;
+    opacity: 0.7 !important;
+}
+
+/* ===== 弹窗按钮样式 - 完全参考旧版本设计 ===== */
+
+/* 使用最高优先级选择器确保样式生效 */
+button#loginSubmitBtn,
+button#registerSubmitBtn,
+button#emailVerificationCloseBtn,
+.register-overlay-submit,
+button.modal-btn,
+button.btn-primary.modal-btn,
+button.breathing,
+#loginSubmitBtn.btn.btn-primary.modal-btn.breathing,
+#registerSubmitBtn.btn.btn-primary.modal-btn.breathing,
+#emailVerificationCloseBtn.btn.btn-primary.modal-btn.breathing {
+    /* 旧版本的简洁样式 */
+    background-color: var(--primary-color) !important;
+    color: #121212 !important;
+    border: none !important;
+    border-radius: 4px !important;
+    padding: 12px !important;
+    font-size: 16px !important;
+    font-weight: 500 !important;
+    cursor: pointer !important;
+    transition: background-color 0.3s ease !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    width: 100% !important;
+    min-height: 48px !important;
+    
+    /* 强制移除所有复杂效果 */
+    box-shadow: none !important;
+    transform: none !important;
+    animation: none !important;
+    text-shadow: none !important;
+    backdrop-filter: none !important;
+    overflow: visible !important;
+    position: relative !important;
+    letter-spacing: normal !important;
+    text-transform: none !important;
+    margin-top: 0 !important;
+    scale: none !important;
+    filter: none !important;
+}
+
+/* 悬停效果 - 只改变背景色，使用旧版本的颜色 */
+button#loginSubmitBtn:hover:not(:disabled),
+button#registerSubmitBtn:hover:not(:disabled),
+button#emailVerificationCloseBtn:hover:not(:disabled),
+.register-overlay-submit:hover:not(:disabled),
+button.modal-btn:hover:not(:disabled),
+button.btn-primary.modal-btn:hover:not(:disabled),
+button.breathing:hover:not(:disabled),
+#loginSubmitBtn.btn.btn-primary.modal-btn.breathing:hover:not(:disabled),
+#registerSubmitBtn.btn.btn-primary.modal-btn.breathing:hover:not(:disabled),
+#emailVerificationCloseBtn.btn.btn-primary.modal-btn.breathing:hover:not(:disabled) {
+    background-color: #A876E8 !important; /* 旧版本的悬停颜色 */
+    
+    /* 强制移除所有悬停效果 */
+    transform: none !important;
+    box-shadow: none !important;
+    animation: none !important;
+    scale: none !important;
+    filter: none !important;
+    text-shadow: none !important;
+}
+
+/* 激活效果 - 保持简洁 */
+button#loginSubmitBtn:active:not(:disabled),
+button#registerSubmitBtn:active:not(:disabled),
+button#emailVerificationCloseBtn:active:not(:disabled),
+.register-overlay-submit:active:not(:disabled),
+button.modal-btn:active:not(:disabled),
+button.btn-primary.modal-btn:active:not(:disabled),
+button.breathing:active:not(:disabled),
+#loginSubmitBtn.btn.btn-primary.modal-btn.breathing:active:not(:disabled),
+#registerSubmitBtn.btn.btn-primary.modal-btn.breathing:active:not(:disabled),
+#emailVerificationCloseBtn.btn.btn-primary.modal-btn.breathing:active:not(:disabled) {
+    background-color: #A876E8 !important;
+    transform: none !important;
+    box-shadow: none !important;
+    animation: none !important;
+    scale: none !important;
+}
+
+/* 禁用状态 */
+button#loginSubmitBtn:disabled,
+button#registerSubmitBtn:disabled,
+button#emailVerificationCloseBtn:disabled,
+.register-overlay-submit:disabled,
+button.modal-btn:disabled,
+button.btn-primary.modal-btn:disabled,
+button.breathing:disabled,
+#loginSubmitBtn.btn.btn-primary.modal-btn.breathing:disabled,
+#registerSubmitBtn.btn.btn-primary.modal-btn.breathing:disabled,
+#emailVerificationCloseBtn.btn.btn-primary.modal-btn.breathing:disabled {
+    opacity: 0.7 !important;
+    cursor: not-allowed !important;
+    background-color: #666666 !important;
+    color: #999999 !important;
+    transform: none !important;
+    animation: none !important;
+    box-shadow: none !important;
+}
+
+/* 强制移除所有伪元素效果 */
+button#loginSubmitBtn::before,
+button#loginSubmitBtn::after,
+button#registerSubmitBtn::before,
+button#registerSubmitBtn::after,
+button#emailVerificationCloseBtn::before,
+button#emailVerificationCloseBtn::after,
+.register-overlay-submit::before,
+.register-overlay-submit::after,
+button.modal-btn::before,
+button.modal-btn::after,
+button.btn-primary.modal-btn::before,
+button.btn-primary.modal-btn::after,
+button.breathing::before,
+button.breathing::after,
+#loginSubmitBtn.btn.btn-primary.modal-btn.breathing::before,
+#loginSubmitBtn.btn.btn-primary.modal-btn.breathing::after,
+#registerSubmitBtn.btn.btn-primary.modal-btn.breathing::before,
+#registerSubmitBtn.btn.btn-primary.modal-btn.breathing::after,
+#emailVerificationCloseBtn.btn.btn-primary.modal-btn.breathing::before,
+#emailVerificationCloseBtn.btn.btn-primary.modal-btn.breathing::after {
+    display: none !important;
+    content: none !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+}
+
+/* ===== 移动端适配 - 优化触摸体验 ===== */
+
+/* 平板设备适配 (768px - 1024px) */
+@media (min-width: 768px) and (max-width: 1024px) {
+    .auth-buttons .btn {
+        padding: 12px 20px;
+        font-size: 15px;
+        min-width: 80px;
+    }
+    
+    button#loginSubmitBtn,
+    button#registerSubmitBtn,
+    button#emailVerificationCloseBtn,
+    .register-overlay-submit,
+    button.modal-btn,
+    button.btn-primary.modal-btn,
+    button.breathing {
+        min-height: 50px !important;
+        font-size: 16px !important;
+        padding: 14px !important;
+    }
+}
+
+/* 移动设备适配 (< 768px) */
+@media (max-width: 767px) {
+    .auth-buttons {
+        gap: 10px !important;
+    }
+    
+    .auth-buttons .btn {
+        padding: 12px 16px;
+        font-size: 14px;
+        min-width: 70px;
+        /* 移动端触摸优化 */
+        min-height: 44px;
+        touch-action: manipulation;
+        -webkit-tap-highlight-color: rgba(187, 134, 252, 0.2);
+    }
+    
+    button#loginSubmitBtn,
+    button#registerSubmitBtn,
+    button#emailVerificationCloseBtn,
+    .register-overlay-submit,
+    button.modal-btn,
+    button.btn-primary.modal-btn,
+    button.breathing {
+        font-size: 16px !important;
+        min-height: 48px !important;
+        padding: 14px !important;
+        /* 移动端触摸优化 */
+        touch-action: manipulation !important;
+        -webkit-tap-highlight-color: rgba(187, 134, 252, 0.2) !important;
+        /* 确保按钮在移动端易于点击 */
+        position: relative !important;
+    }
+    
+    /* 移动端按钮间距优化 */
+    .privacy-banner-actions .privacy-btn {
+        min-height: 48px;
+        touch-action: manipulation;
+        -webkit-tap-highlight-color: rgba(187, 134, 252, 0.2);
+    }
+}
+
+/* 小屏移动设备适配 (< 480px) */
+@media (max-width: 479px) {
+    .auth-buttons {
+        gap: 8px !important;
+    }
+    
+    .auth-buttons .btn {
+        padding: 10px 14px;
+        font-size: 13px;
+        min-width: 65px;
+        min-height: 42px;
+    }
+    
+    button#loginSubmitBtn,
+    button#registerSubmitBtn,
+    button#emailVerificationCloseBtn,
+    .register-overlay-submit,
+    button.modal-btn,
+    button.btn-primary.modal-btn,
+    button.breathing {
+        font-size: 15px !important;
+        min-height: 46px !important;
+        padding: 12px !important;
+    }
+    
+    /* 小屏设备按钮文字优化 */
+    .auth-buttons .btn i {
+        font-size: 14px;
+    }
+}
+
+/* 触摸设备专用优化 */
+@media (hover: none) and (pointer: coarse) {
+    .auth-buttons .btn:hover {
+        /* 在触摸设备上禁用hover效果，使用active效果 */
+        background: rgba(187, 134, 252, 0.1) !important;
+        transform: none !important;
+    }
+    
+    .auth-buttons .btn:active {
+        background: rgba(187, 134, 252, 0.3) !important;
+        transform: scale(0.98) !important;
+        transition: all 0.1s ease !important;
+    }
+    
+    button#loginSubmitBtn:active:not(:disabled),
+    button#registerSubmitBtn:active:not(:disabled),
+    button#emailVerificationCloseBtn:active:not(:disabled) {
+        background-color: #9966CC !important;
+        transform: scale(0.98) !important;
+        transition: all 0.1s ease !important;
+    }
+}

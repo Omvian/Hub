@@ -1,0 +1,576 @@
+/* privacy-consent.css - 隐私同意功能样式
+ * 功能: 隐私同意横幅、设置模态框、政策页面、相关按钮、动画效果
+ * 响应式: 768px, 480px断点，高对比度、减少动画支持
+ */
+
+.privacy-consent-banner {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(145deg, rgba(30, 30, 30, 0.98) 0%, rgba(20, 20, 20, 0.98) 100%);
+    backdrop-filter: blur(20px) saturate(1.2);
+    border-top: 1px solid rgba(187, 134, 252, 0.4);
+    box-shadow: 
+        0 -12px 40px rgba(0, 0, 0, 0.5),
+        0 -4px 16px rgba(187, 134, 252, 0.15),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    z-index: 10000;
+    padding: 28px 24px;
+    animation: slideUp 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    border-radius: 16px 16px 0 0;
+}
+
+@keyframes slideUp {
+    from { transform: translateY(100%); }
+    to { transform: translateY(0); }
+}
+
+.privacy-banner-hiding {
+    animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+    from { transform: translateY(0); }
+    to { transform: translateY(100%); }
+}
+
+.privacy-banner-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 30px;
+}
+
+.privacy-banner-text {
+    flex: 1;
+}
+
+.privacy-banner-text h3 {
+    margin: 0 0 12px 0;
+    font-size: 19px;
+    font-weight: 700;
+    color: #BB86FC;
+    text-shadow: 0 2px 8px rgba(187, 134, 252, 0.3);
+    letter-spacing: 0.3px;
+    background: linear-gradient(135deg, #BB86FC 0%, #E1BEE7 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.privacy-banner-text p {
+    margin: 0 0 10px 0;
+    font-size: 14px;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.85);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.privacy-purposes {
+    font-size: 12px !important;
+    color: #888 !important;
+}
+
+.privacy-banner-actions {
+    display: flex;
+    gap: 12px;
+    flex-shrink: 0;
+}
+
+.privacy-btn {
+    padding: 12px 20px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    white-space: nowrap;
+    border: 2px solid;
+    position: relative;
+    overflow: hidden;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.privacy-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    transition: left 0.6s ease;
+}
+
+.privacy-btn:hover::before {
+    left: 100%;
+}
+
+.privacy-btn-accept {
+    background: linear-gradient(135deg, rgba(187, 134, 252, 0.1) 0%, rgba(187, 134, 252, 0.05) 100%);
+    color: #BB86FC;
+    border-color: #BB86FC;
+    padding: 12px 36px;
+    min-width: 130px;
+    box-shadow: 
+        0 4px 16px rgba(187, 134, 252, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.privacy-btn-accept:hover {
+    background: linear-gradient(135deg, rgba(187, 134, 252, 0.2) 0%, rgba(187, 134, 252, 0.1) 100%);
+    color: #ffffff;
+    border-color: #E1BEE7;
+    transform: translateY(-2px);
+    box-shadow: 
+        0 8px 24px rgba(187, 134, 252, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.privacy-btn-reject {
+    background: transparent;
+    color: rgba(255, 255, 255, 0.5);
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+.privacy-btn-reject:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.7);
+    border-color: rgba(255, 255, 255, 0.4);
+}
+
+.privacy-btn-manage {
+    background: transparent;
+    color: rgba(255, 255, 255, 0.5);
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+.privacy-btn-manage:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.7);
+    border-color: rgba(255, 255, 255, 0.4);
+}
+
+/* 添加微妙的光效 */
+.privacy-consent-banner::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, 
+        transparent 0%, 
+        rgba(187, 134, 252, 0.3) 20%, 
+        rgba(187, 134, 252, 0.8) 50%, 
+        rgba(187, 134, 252, 0.3) 80%, 
+        transparent 100%);
+    opacity: 0.8;
+    animation: shimmer 3s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+    0%, 100% { opacity: 0.8; }
+    50% { opacity: 1; }
+}
+
+/* 添加背景纹理效果 */
+.privacy-consent-banner::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+        radial-gradient(circle at 20% 50%, rgba(187, 134, 252, 0.03) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(187, 134, 252, 0.03) 0%, transparent 50%),
+        radial-gradient(circle at 40% 80%, rgba(187, 134, 252, 0.02) 0%, transparent 50%);
+    pointer-events: none;
+}
+
+/* 响应式设计 - 移动端优化 */
+@media (max-width: 768px) {
+    .privacy-consent-banner {
+        padding: 24px 16px;
+        /* 确保在固定定位的导航下方正确显示 */
+        bottom: 0;
+        z-index: 10000;
+    }
+
+    .privacy-banner-content {
+        flex-direction: column;
+        gap: 20px;
+        text-align: center;
+        max-width: none;
+    }
+
+    .privacy-banner-text h3 {
+        font-size: 18px;
+        margin-bottom: 12px;
+        line-height: 1.3;
+    }
+
+    .privacy-banner-text p {
+        font-size: 14px;
+        line-height: 1.6;
+        margin-bottom: 8px;
+    }
+
+    .privacy-purposes {
+        font-size: 13px !important;
+        margin-bottom: 0 !important;
+    }
+
+    .privacy-banner-actions {
+        width: 100%;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+
+    .privacy-btn {
+        flex: 1;
+        min-width: 120px;
+        padding: 12px 20px;
+        font-size: 14px;
+        font-weight: 600;
+    }
+
+    .privacy-btn-accept {
+        min-width: 140px;
+        order: 1; /* 确保"我接受"按钮在移动端优先显示 */
+    }
+
+    .privacy-btn-reject {
+        order: 2;
+    }
+
+    .privacy-btn-manage {
+        order: 3;
+        width: 100%; /* 管理设置按钮在移动端占满宽度 */
+        margin-top: 8px;
+    }
+}
+
+@media (max-width: 480px) {
+    .privacy-consent-banner {
+        padding: 20px 12px;
+    }
+
+    .privacy-banner-text h3 {
+        font-size: 16px;
+    }
+
+    .privacy-banner-text p {
+        font-size: 13px;
+    }
+
+    .privacy-banner-actions {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .privacy-btn {
+        width: 100%;
+        min-width: auto;
+        padding: 14px 20px;
+        font-size: 15px;
+    }
+
+    .privacy-btn-accept {
+        min-width: auto;
+    }
+
+    .privacy-btn-manage {
+        margin-top: 0;
+    }
+}
+
+/* 高对比度模式支持 */
+@media (prefers-contrast: high) {
+    .privacy-consent-banner {
+        border-top: 2px solid #BB86FC;
+        background: rgba(0, 0, 0, 0.95);
+    }
+
+.privacy-banner-text h3 {
+    margin: 0 0 12px 0;
+    font-size: 20px;
+    font-weight: 700;
+    color: #BB86FC;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    letter-spacing: 0.5px;
+}
+}
+
+/* 减少动画模式支持 */
+@media (prefers-reduced-motion: reduce) {
+    .privacy-consent-banner {
+        animation: none;
+    }
+
+    .privacy-banner-hiding {
+        animation: none;
+    }
+
+    .privacy-btn {
+        transition: none;
+    }
+
+    .privacy-btn::before {
+        display: none;
+    }
+}
+
+/* 隐私设置模态框样式 - 居中显示 */
+.privacy-settings-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(8px);
+    z-index: 10001;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.privacy-settings-content {
+    background: linear-gradient(145deg, rgba(30, 30, 30, 0.98) 0%, rgba(20, 20, 20, 0.98) 100%);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(187, 134, 252, 0.3);
+    border-radius: 16px;
+    box-shadow: 
+        0 20px 60px rgba(0, 0, 0, 0.6),
+        0 8px 24px rgba(187, 134, 252, 0.15),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    max-width: 500px;
+    width: 100%;
+    max-height: 80vh;
+    overflow-y: auto;
+    animation: slideInUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes slideInUp {
+    from { 
+        opacity: 0;
+        transform: translateY(30px) scale(0.95);
+    }
+    to { 
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.privacy-settings-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 24px 24px 0 24px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    margin-bottom: 20px;
+}
+
+.privacy-settings-header h3 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 700;
+    color: #BB86FC;
+    background: linear-gradient(135deg, #BB86FC 0%, #E1BEE7 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 24px;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.close-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.privacy-settings-body {
+    padding: 0 24px;
+}
+
+.privacy-category {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 16px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.privacy-category:last-child {
+    border-bottom: none;
+}
+
+.privacy-category div {
+    flex: 1;
+    margin-right: 16px;
+}
+
+.privacy-category h4 {
+    margin: 0 0 4px 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.privacy-category p {
+    margin: 0;
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.6);
+    line-height: 1.4;
+}
+
+/* 开关样式 */
+.privacy-switch {
+    position: relative;
+    display: inline-block;
+    width: 48px;
+    height: 24px;
+    flex-shrink: 0;
+}
+
+.privacy-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(255, 255, 255, 0.2);
+    transition: 0.3s;
+    border-radius: 24px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 2px;
+    bottom: 2px;
+    background-color: rgba(255, 255, 255, 0.8);
+    transition: 0.3s;
+    border-radius: 50%;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+input:checked + .slider {
+    background-color: #BB86FC;
+    border-color: #BB86FC;
+}
+
+input:checked + .slider:before {
+    transform: translateX(24px);
+    background-color: white;
+}
+
+input:disabled + .slider {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.privacy-settings-footer {
+    padding: 20px 24px 24px 24px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.privacy-policy-link {
+    color: #BB86FC;
+    text-decoration: underline;
+    font-size: 13px;
+    transition: color 0.2s ease;
+}
+
+.privacy-policy-link:hover {
+    color: #E1BEE7;
+}
+
+.privacy-settings-actions {
+    display: flex;
+    gap: 12px;
+}
+
+/* 移动端适配 */
+@media (max-width: 768px) {
+    .privacy-settings-modal {
+        padding: 16px;
+    }
+    
+    .privacy-settings-content {
+        max-width: none;
+        width: 100%;
+        max-height: 90vh;
+    }
+    
+    .privacy-settings-header {
+        padding: 20px 20px 0 20px;
+    }
+    
+    .privacy-settings-body {
+        padding: 0 20px;
+    }
+    
+    .privacy-settings-footer {
+        padding: 16px 20px 20px 20px;
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .privacy-settings-actions {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .privacy-category {
+        flex-direction: column;
+        gap: 12px;
+    }
+    
+    .privacy-category div {
+        margin-right: 0;
+    }
+}

@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OmvianReview - 专业影视评论</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="../../src/css/main.css">
+    <link rel="stylesheet" href="../../src/css/auth-styles.css">
+    <link rel="stylesheet" href="review.css">
+    <link rel="icon" href="../../favicon.ico">
+</head>
+<body>
+    <!-- 头部导航 -->
+    <header class="subpage-header">
+        <div class="header-left">
+            <a href="../../index.html" class="back-btn" onclick="sessionStorage.setItem('omvian_returning_from_subpage', 'true')">
+                <i class="material-icons">arrow_back</i>
+                <span>返回主站</span>
+            </a>
+            <div class="page-title">
+                <i class="material-icons">star</i>
+                <h1>OmvianReview</h1>
+            </div>
+        </div>
+        <div class="header-right">
+            <!-- 统一账号组件将在这里渲染 -->
+            <auth-header id="reviewAuthHeader"></auth-header>
+        </div>
+    </header>
+
+    <!-- 主内容区域 -->
+    <main class="subpage-main">
+        <!-- 页面介绍 -->
+        <section class="page-intro">
+            <div class="intro-content">
+                <h2>专业影视评论平台</h2>
+                <p>由专业影评人Omvian为您提供最新、最全面的影视作品评分和评论，涵盖电影、电视剧和综艺节目。</p>
+            </div>
+            <div class="intro-stats">
+                <div class="stat-item">
+                    <span class="stat-number">1,250+</span>
+                    <span class="stat-label">影视作品</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">8.5</span>
+                    <span class="stat-label">平均评分</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">50K+</span>
+                    <span class="stat-label">用户评价</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- 搜索区域 -->
+        <section class="search-section">
+            <div class="search-box">
+                <i class="material-icons">search</i>
+                <input type="text" placeholder="搜索影视作品..." id="searchInput">
+            </div>
+        </section>
+
+        <!-- 分类筛选 -->
+        <section class="filter-section">
+            <div class="filter-tabs">
+                <button class="filter-tab active" data-category="all">全部</button>
+                <button class="filter-tab" data-category="movie">电影</button>
+                <button class="filter-tab" data-category="tv">电视剧</button>
+                <button class="filter-tab" data-category="variety">综艺</button>
+            </div>
+            <div class="filter-options">
+                <select class="filter-select" id="genreFilter">
+                    <option value="">所有类型</option>
+                    <option value="action">动作</option>
+                    <option value="comedy">喜剧</option>
+                    <option value="drama">剧情</option>
+                    <option value="horror">恐怖</option>
+                    <option value="romance">爱情</option>
+                    <option value="sci-fi">科幻</option>
+                </select>
+                <select class="filter-select" id="yearFilter">
+                    <option value="">所有年份</option>
+                    <option value="2024">2024</option>
+                    <option value="2023">2023</option>
+                    <option value="2022">2022</option>
+                    <option value="2021">2021</option>
+                </select>
+                <select class="filter-select" id="ratingFilter">
+                    <option value="">所有评分</option>
+                    <option value="9+">9.0+</option>
+                    <option value="8+">8.0+</option>
+                    <option value="7+">7.0+</option>
+                    <option value="6+">6.0+</option>
+                </select>
+            </div>
+        </section>
+
+        <!-- 影视作品列表 -->
+        <section class="reviews-section">
+            <div class="reviews-grid" id="reviewsGrid">
+                <!-- 示例影视作品卡片 -->
+                <div class="review-card" data-category="movie" data-genre="drama" data-year="2024" data-rating="9.2">
+                    <div class="review-poster">
+                        <img src="https://images.unsplash.com/photo-1489599735734-79b4169c4388?w=200&h=300&fit=crop&crop=center" alt="电影海报">
+                        <div class="review-rating">
+                            <i class="material-icons">star</i>
+                            <span>9.2</span>
+                        </div>
+                    </div>
+                    <div class="review-info">
+                        <h3 class="review-title">示例电影标题</h3>
+                        <div class="review-meta">
+                            <span class="review-year">2024</span>
+                            <span class="review-genre">剧情</span>
+                            <span class="review-duration">142分钟</span>
+                        </div>
+                        <p class="review-summary">这是一部令人印象深刻的剧情片，通过精彩的故事情节和出色的演员表演...</p>
+                        <div class="review-actions">
+                            <button class="btn-secondary">查看详情</button>
+                            <button class="btn-icon" title="收藏">
+                                <i class="material-icons">favorite_border</i>
+                            </button>
+                            <button class="btn-icon" title="分享">
+                                <i class="material-icons">share</i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 更多示例卡片... -->
+                <div class="review-card" data-category="tv" data-genre="drama" data-year="2024" data-rating="8.8">
+                    <div class="review-poster">
+                        <img src="https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85?w=200&h=300&fit=crop&crop=center" alt="电视剧海报">
+                        <div class="review-rating">
+                            <i class="material-icons">star</i>
+                            <span>8.8</span>
+                        </div>
+                    </div>
+                    <div class="review-info">
+                        <h3 class="review-title">示例电视剧标题</h3>
+                        <div class="review-meta">
+                            <span class="review-year">2024</span>
+                            <span class="review-genre">剧情</span>
+                            <span class="review-duration">16集</span>
+                        </div>
+                        <p class="review-summary">一部制作精良的电视剧，剧情紧凑，人物刻画深入，值得追看...</p>
+                        <div class="review-actions">
+                            <button class="btn-secondary">查看详情</button>
+                            <button class="btn-icon" title="收藏">
+                                <i class="material-icons">favorite_border</i>
+                            </button>
+                            <button class="btn-icon" title="分享">
+                                <i class="material-icons">share</i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="review-card" data-category="variety" data-genre="entertainment" data-year="2024" data-rating="7.9">
+                    <div class="review-poster">
+                        <img src="https://images.unsplash.com/photo-1522869635100-9f4c5e86aa37?w=200&h=300&fit=crop&crop=center" alt="综艺海报">
+                        <div class="review-rating">
+                            <i class="material-icons">star</i>
+                            <span>7.9</span>
+                        </div>
+                    </div>
+                    <div class="review-info">
+                        <h3 class="review-title">示例综艺节目</h3>
+                        <div class="review-meta">
+                            <span class="review-year">2024</span>
+                            <span class="review-genre">娱乐</span>
+                            <span class="review-duration">每期90分钟</span>
+                        </div>
+                        <p class="review-summary">轻松愉快的综艺节目，嘉宾互动有趣，适合休闲时观看...</p>
+                        <div class="review-actions">
+                            <button class="btn-secondary">查看详情</button>
+                            <button class="btn-icon" title="收藏">
+                                <i class="material-icons">favorite_border</i>
+                            </button>
+                            <button class="btn-icon" title="分享">
+                                <i class="material-icons">share</i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 加载更多 -->
+            <div class="load-more-section">
+                <button class="btn-primary" id="loadMoreBtn">
+                    <i class="material-icons">expand_more</i>
+                    加载更多
+                </button>
+            </div>
+        </section>
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="subpage-footer">
+        <p>&copy; 2025 OmvianHub - OmvianReview. 保留所有权利.</p>
+    </footer>
+
+    <!-- 全局通知容器 -->
+    <div class="notification-container"></div>
+
+    <!-- 脚本加载 - 按依赖顺序加载 -->
+    <!-- 1. 外部依赖 -->
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+
+    <!-- 2. 等待Supabase SDK加载完成后再加载其他脚本 -->
+    <script>
+        // 等待Supabase SDK加载完成 - 优化版本
+        function waitForSupabase() {
+            return new Promise((resolve) => {
+                if (window.supabase && window.supabase.createClient) {
+                    resolve();
+                } else {
+                    setTimeout(() => waitForSupabase().then(resolve), 50);
+                }
+            });
+        }
+
+        // 优化的脚本加载 - 减少日志输出
+        async function loadScripts() {
+            await waitForSupabase();
+            
+            const scripts = [
+                '../../src/js/utils/constants.js',
+                '../../src/js/utils/helpers.js',
+                '../../src/js/utils/button-state-manager.js',
+                '../../src/js/core/config-manager.js',
+                '../../src/js/ui/notification-manager.js',
+                '../../src/js/ui/ui-manager.js',
+                '../../src/js/auth/form-validator.js',
+                '../../src/js/auth/auth-sync-manager.js',
+                '../../src/js/auth/auth-manager.js',
+                '../../src/components/auth-header.js',
+                '../../src/js/auth-header-adapter.js',
+                'review.js'
+            ];
+
+            for (const src of scripts) {
+                await new Promise((resolve, reject) => {
+                    const script = document.createElement('script');
+                    script.src = src;
+                    script.onload = resolve;
+                    script.onerror = () => reject(new Error(`Failed to load ${src}`));
+                    document.head.appendChild(script);
+                });
+            }
+        }
+
+        // 开始加载
+        loadScripts().catch(error => {
+            console.error('子页面脚本加载失败:', error);
+        });
+    </script>
+</body>
+</html>

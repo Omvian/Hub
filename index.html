@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OmvianHub - 多功能主站</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="src/css/variables.css">
+    <link rel="stylesheet" href="src/css/base.css">
+    <link rel="stylesheet" href="src/css/components/buttons.css">
+    <link rel="stylesheet" href="src/css/components/privacy-consent.css">
+    <link rel="stylesheet" href="src/css/main.css">
+    <link rel="stylesheet" href="src/css/mobile.css">
+    <link rel="stylesheet" href="src/css/mobile-fixed.css">
+    <link rel="stylesheet" href="src/css/auth-styles.css">
+    <link rel="icon" href="favicon.ico">
+</head>
+<body>
+<!-- 加载界面 -->
+<div id="loadingScreen" class="loading-screen">
+    <div class="loading-spinner"></div>
+    <div class="loading-text">正在加载 OmvianHub...</div>
+    <div id="loadingStatus" class="loading-status">验证连接中...</div>
+</div>
+
+<!-- 头部 -->
+<header>
+    <div class="logo">
+        <i class="material-icons">home</i>
+        <span>OmvianHub</span>
+    </div>
+    <!-- 统一账号组件 -->
+    <auth-header id="mainAuthHeader"></auth-header>
+</header>
+
+<!-- 移动端导航 - 仅在移动端显示 -->
+<nav class="mobile-nav">
+    <ul class="mobile-nav-list">
+        <li class="mobile-nav-item active" data-category="all">
+            <i class="material-icons">dashboard</i>
+            <span>全部</span>
+        </li>
+        <li class="mobile-nav-item" data-category="review">
+            <i class="material-icons">assessment</i>
+            <span>测评中心</span>
+        </li>
+        <li class="mobile-nav-item" data-category="psychology">
+            <i class="material-icons">psychology</i>
+            <span>心理测试</span>
+        </li>
+    </ul>
+</nav>
+
+<!-- 主内容区域 -->
+<div class="main-container">
+    <!-- 侧边栏 -->
+    <aside class="sidebar" id="sidebar">
+        <div class="category" data-category="all">
+            <div class="category-header">
+                <div class="category-title">
+                    <i class="material-icons">dashboard</i>
+                    <span>全部</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="category" data-category="review">
+            <div class="category-header">
+                <div class="category-title">
+                    <i class="material-icons">assessment</i>
+                    <span>测评中心</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="category" data-category="psychology">
+            <div class="category-header">
+                <div class="category-title">
+                    <i class="material-icons">psychology</i>
+                    <span>心理测试</span>
+                </div>
+            </div>
+        </div>
+    </aside>
+    <!-- 内容区域 -->
+    <main class="content">
+        <div class="content-header">
+            <h1 class="content-title">全部模块</h1>
+        </div>
+
+        <!-- 模块卡片网格 -->
+        <div class="card-grid" id="moduleGrid">
+            <!-- 影视分类模块 -->
+            <div class="module-card" data-category="review" data-module="review">
+                <div class="module-icon">
+                    <i class="material-icons">star</i>
+                </div>
+                <h3 class="module-title">OmvianReview</h3>
+                <p class="module-description">专业影评人Omvian为您提供的最新、最全面的影视作品评分和评论系统，涵盖电影、电视剧和综艺节目。</p>
+                <div class="module-meta">
+                    <span class="module-category">测评中心</span>
+                    <a href="pages/review/review.html" class="module-link">
+                        进入 <i class="material-icons">arrow_forward</i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- 心理测试分类模块 -->
+            <div class="module-card" data-category="psychology" data-module="mbti">
+                <div class="module-icon">
+                    <i class="material-icons">quiz</i>
+                </div>
+                <h3 class="module-title">MBTI测试</h3>
+                <p class="module-description">专业的MBTI人格类型测试，通过科学的问题设计帮您深入了解自己的性格特点、优势和发展方向。</p>
+                <div class="module-meta">
+                    <span class="module-category">心理测试</span>
+                    <a href="pages/mbti/mbti.html" class="module-link">
+                        进入 <i class="material-icons">arrow_forward</i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<!-- 页脚 -->
+        <footer>
+            <p><a href="#" id="clearCacheLink" style="color: #BB86FC; text-decoration: none; margin-right: 10px;">清除缓存</a>© 2025 OmvianHub. 保留所有权利. | 使用 GitHub Pages 和 Supabase 构建</p>
+        </footer>
+
+<!-- 登录模态框 -->
+<div id="loginModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>登录</h2>
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="username">邮箱</label>
+                <input type="email" id="username" placeholder="请输入您的邮箱" required>
+                <div id="usernameError" class="form-error"></div>
+            </div>
+            <div class="form-group">
+                <label for="password">密码</label>
+                <div class="password-input-wrapper">
+                    <input type="password" id="password" placeholder="请输入您的密码" required>
+                    <button type="button" class="password-toggle" data-target="password">
+                        <i class="material-icons">visibility</i>
+                    </button>
+                </div>
+                <div id="passwordError" class="form-error"></div>
+            </div>
+            <button type="submit" class="btn btn-primary modal-btn breathing" id="loginSubmitBtn">
+                <div class="button-content">
+                    <span id="loginSpinner" class="spinner" style="display: none;">
+                        <span class="dot dot1"></span>
+                        <span class="dot dot2"></span>
+                        <span class="dot dot3"></span>
+                    </span>
+                    <span id="loginButtonText">登录</span>
+                </div>
+            </button>
+        </form>
+    </div>
+</div>
+
+<!-- 注册展开界面 -->
+<div id="registerOverlay" class="register-overlay">
+    <div class="register-overlay-content">
+        <div class="register-overlay-header">
+            <h2>注册</h2>
+            <button class="register-overlay-close" id="registerCloseBtn">
+                <i class="material-icons">close</i>
+            </button>
+        </div>
+        <form id="registerForm" class="register-overlay-form">
+            <div class="form-group">
+                <label for="regEmail">邮箱</label>
+                <div class="input-wrapper">
+                    <input type="email" id="regEmail" placeholder="请输入有效的邮箱地址" required>
+                    <button type="button" class="clear-input-btn" data-target="regEmail" style="display: none;">
+                        <i class="material-icons">close</i>
+                    </button>
+                </div>
+                <div id="regEmailError" class="form-error"></div>
+            </div>
+            <div class="form-group">
+                <label for="regNickname">昵称</label>
+                <div class="input-wrapper">
+                    <input type="text" id="regNickname" placeholder="请输入昵称 (2-20个字符)" required>
+                    <button type="button" class="clear-input-btn" data-target="regNickname" style="display: none;">
+                        <i class="material-icons">close</i>
+                    </button>
+                </div>
+                <div id="regNicknameError" class="form-error"></div>
+            </div>
+            <div class="form-group">
+                <label for="regPassword">密码</label>
+                <div class="password-input-wrapper">
+                    <input type="password" id="regPassword" placeholder="请输入强密码 (6-20位，包含字母数字)" required minlength="6" maxlength="20">
+                    <button type="button" class="password-toggle" data-target="regPassword">
+                        <i class="material-icons">visibility</i>
+                    </button>
+                </div>
+                <div id="passwordStrength" class="password-strength">
+                    <div id="passwordStrengthBar" class="password-strength-bar"></div>
+                </div>
+                <div id="passwordStrengthText" class="password-strength-text"></div>
+                <div id="regPasswordError" class="form-error"></div>
+            </div>
+            <div class="form-group" id="confirmPasswordGroup" style="display: none;">
+                <label for="regConfirmPassword">确认密码</label>
+                <div class="password-input-wrapper">
+                    <input type="password" id="regConfirmPassword" placeholder="请再次输入密码确保一致" required minlength="6" maxlength="20">
+                    <button type="button" class="password-toggle" data-target="regConfirmPassword">
+                        <i class="material-icons">visibility</i>
+                    </button>
+                </div>
+                <div id="regConfirmPasswordError" class="form-error"></div>
+            </div>
+            <button type="submit" class="btn btn-primary modal-btn breathing btn-hidden" id="registerSubmitBtn">
+                <div class="button-content">
+                    <span id="registerSpinner" class="spinner" style="display: none;">
+                        <span class="dot dot1"></span>
+                        <span class="dot dot2"></span>
+                        <span class="dot dot3"></span>
+                    </span>
+                    <span id="registerButtonText">注册</span>
+                </div>
+            </button>
+        </form>
+    </div>
+</div>
+
+<!-- 邮箱验证提示框 -->
+<div id="emailVerificationModal" class="modal">
+    <div class="modal-content">
+        <div class="email-verification-content">
+            <div class="email-verification-icon">
+                <i class="material-icons success-icon">check_circle</i>
+                <i class="material-icons email-icon">mail</i>
+            </div>
+            <h2 class="email-verification-title">注册成功</h2>
+            <p class="email-verification-message">
+                请到邮箱内确认邮件，验证邮箱后即可登录
+            </p>
+            <div class="email-verification-email" id="verificationEmailDisplay"></div>
+            <div class="email-verification-tips">
+                <div class="tips-title">
+                    <i class="material-icons">info</i>
+                    温馨提示
+                </div>
+                <ul class="tips-list">
+                    <li><i class="material-icons">check</i>请检查邮箱收件箱和垃圾邮件文件夹</li>
+                    <li><i class="material-icons">check</i>验证邮件可能需要几分钟才能到达</li>
+                    <li><i class="material-icons">check</i>点击邮件中的验证链接完成注册</li>
+                </ul>
+            </div>
+            <button class="btn btn-primary email-verification-close" id="emailVerificationCloseBtn">
+                我知道了
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- 全局通知 -->
+<div id="notification" class="notification"></div>
+
+<!-- 脚本加载 - 按依赖顺序加载 -->
+<!-- 1. 外部依赖 -->
+<script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+
+<!-- 2. 优化的脚本加载 - 减少日志输出，加快加载速度 -->
+<script>
+    // 等待Supabase SDK加载完成
+    function waitForSupabase() {
+        return new Promise((resolve) => {
+            if (window.supabase && window.supabase.createClient) {
+                resolve();
+            } else {
+                setTimeout(() => waitForSupabase().then(resolve), 50); // 减少检查间隔
+            }
+        });
+    }
+
+    // 优化的脚本加载 - 支持快速重入
+    async function loadScripts() {
+        // 检查是否是从子页面返回
+        const isReturningFromSubpage = sessionStorage.getItem('omvian_returning_from_subpage');
+        const lastInitTime = sessionStorage.getItem('omvian_last_init_time');
+        const now = Date.now();
+        
+        // 如果是从子页面返回且距离上次初始化不到30秒，使用快速加载
+        if (isReturningFromSubpage && lastInitTime && (now - parseInt(lastInitTime)) < 30000) {
+            const loadingStatus = document.getElementById('loadingStatus');
+            if (loadingStatus) loadingStatus.textContent = '正在恢复状态...';
+            
+            // 快速隐藏加载界面
+            setTimeout(() => {
+                const loadingScreen = document.getElementById('loadingScreen');
+                if (loadingScreen) loadingScreen.classList.add('hidden');
+                
+                // 清除返回标记
+                sessionStorage.removeItem('omvian_returning_from_subpage');
+            }, 300);
+            
+            return;
+        }
+        
+        // 正常初始化流程
+        const loadingStatus = document.getElementById('loadingStatus');
+        if (loadingStatus) loadingStatus.textContent = '正在加载核心模块...';
+        
+        await waitForSupabase();
+        
+        // 记录初始化时间
+        sessionStorage.setItem('omvian_last_init_time', now.toString());
+        
+        // 核心依赖脚本 - 必须按顺序加载
+        const coreScripts = [
+            'src/js/utils/logger.js',
+            'src/js/utils/constants.js',
+            'src/js/core/config-manager.js',
+            'src/js/ui/notification-manager.js'
+        ];
+        
+        // 可并行加载的脚本
+        const parallelScripts = [
+            'src/js/utils/helpers.js',
+            'src/js/utils/button-state-manager.js',
+            'src/js/utils/cookie-manager.js',
+            'src/js/ui/ui-manager.js',
+            'src/js/auth/form-validator.js'
+        ];
+        
+        // 认证相关脚本 - 需要在核心脚本后加载
+        const authScripts = [
+            'src/js/auth/auth-sync-manager.js',
+            'src/js/auth/auth-manager.js',
+            'src/components/auth-header.js',
+            'src/js/auth-header-adapter.js'
+        ];
+        
+        // 应用脚本 - 最后加载
+        const appScripts = [
+            'src/js/core/app-initializer.js',
+            'src/js/mobile-adapter.js',
+            'script.js'
+        ];
+
+        try {
+            // 1. 加载核心依赖
+            for (const src of coreScripts) {
+                await loadScript(src);
+            }
+            
+            if (loadingStatus) loadingStatus.textContent = '正在加载功能模块...';
+            
+            // 2. 并行加载工具脚本
+            await Promise.all(parallelScripts.map(src => loadScript(src)));
+            
+            if (loadingStatus) loadingStatus.textContent = '正在初始化认证系统...';
+            
+            // 3. 加载认证脚本
+            for (const src of authScripts) {
+                await loadScript(src);
+            }
+            
+            if (loadingStatus) loadingStatus.textContent = '正在完成初始化...';
+            
+            // 4. 加载应用脚本
+            for (const src of appScripts) {
+                await loadScript(src);
+            }
+            
+        } catch (error) {
+            console.error('脚本加载失败:', error);
+            if (loadingStatus) loadingStatus.textContent = '加载失败，请刷新页面重试';
+        }
+    }
+
+    // 优化的脚本加载函数 - 移除详细日志
+    function loadScript(src) {
+        return new Promise((resolve, reject) => {
+            const script = document.createElement('script');
+            script.src = src;
+            script.onload = resolve;
+            script.onerror = () => reject(new Error(`Failed to load ${src}`));
+            document.head.appendChild(script);
+        });
+    }
+
+    // 开始加载
+    loadScripts();
+
+    // ===== 主页面分类点击功能 =====
+    // 功能: 处理左侧分类点击、模块过滤、标题更新
+    // 重要: 此脚本与 ui-manager.js 中的 updateContentTitle 函数有关联
+    // 修改时需要同时检查 src/js/ui/ui-manager.js 中的标题映射
+    document.addEventListener('DOMContentLoaded', function() {
+        
+        // ===== 分类点击事件处理 =====
+        // 功能: 监听左侧分类点击，切换活跃状态，触发模块过滤
+        document.querySelectorAll('.category-header').forEach(header => {
+            header.addEventListener('click', function() {
+                const category = this.closest('.category');
+                const categoryType = category.dataset.category;
+                
+                // 移除所有分类的活跃状态
+                document.querySelectorAll('.category').forEach(cat => {
+                    cat.classList.remove('active');
+                });
+                
+                // 添加当前分类的活跃状态 (CSS: .category.active)
+                category.classList.add('active');
+                
+                // 根据分类显示对应模块
+                filterModules(categoryType);
+            });
+        });
+
+        // ===== 模块过滤函数 =====
+        // 功能: 根据分类类型显示/隐藏对应的模块卡片
+        // 参数: categoryType - 'all'|'review'|'psychology'
+        // 重要: 模块卡片需要有 data-category 属性
+        function filterModules(categoryType) {
+            const moduleCards = document.querySelectorAll('.module-card');
+            
+            moduleCards.forEach(card => {
+                const cardCategory = card.dataset.category;
+                
+                if (categoryType === 'all') {
+                    // 显示所有模块
+                    card.style.display = 'block';
+                } else if (categoryType === cardCategory) {
+                    // 显示匹配的模块
+                    card.style.display = 'block';
+                } else {
+                    // 隐藏不匹配的模块
+                    card.style.display = 'none';
+                }
+            });
+            
+            // 更新内容标题
+            updateContentTitle(categoryType);
+        }
+
+        // ===== 内容标题更新函数 =====
+        // 功能: 根据选中的分类更新页面标题和副标题
+        // 重要: 此函数的逻辑必须与 ui-manager.js 中的 updateContentTitle 保持一致
+        // 修改时必须同时更新两处的标题映射
+        function updateContentTitle(categoryType) {
+            const contentTitle = document.querySelector('.content-title');
+            const contentSubtitle = document.querySelector('.content-subtitle');
+            
+            // 标题映射 - 与 ui-manager.js 中的 filterTitles 对象保持一致
+            switch(categoryType) {
+                case 'all':
+                    contentTitle.textContent = '全部模块';
+                    if (contentSubtitle) contentSubtitle.textContent = '';
+                    break;
+                case 'review':
+                    if (contentTitle) contentTitle.textContent = '测评中心';
+                    if (contentSubtitle) contentSubtitle.textContent = '';
+                    break;
+                case 'psychology':
+                    if (contentTitle) contentTitle.textContent = '心理测试';
+                    if (contentSubtitle) contentSubtitle.textContent = '';
+                    break;
+                    // 默认情况与 'all' 保持一致，避免显示错误的欢迎文字
+                default:
+                    if (contentTitle) contentTitle.textContent = '全部模块';
+                    if (contentSubtitle) contentSubtitle.textContent = '';
+            }
+        }
+
+        // ===== 页面初始化 =====
+        // 功能: 设置默认状态 - 显示所有模块，"全部"分类为活跃状态
+        filterModules('all');
+        document.querySelector('[data-category="all"]').classList.add('active');
+        
+        // 为子页面链接添加标记，用于快速返回检测
+        document.querySelectorAll('.module-link').forEach(link => {
+            link.addEventListener('click', () => {
+                sessionStorage.setItem('omvian_from_main_page', 'true');
+            });
+        });
+
+        // 清除缓存功能
+        document.getElementById('clearCacheLink').addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            // 清除所有本地存储
+            localStorage.clear();
+            sessionStorage.clear();
+            
+            // 显示提示信息
+            if (window.showInfo) {
+                window.showInfo('缓存已清除，页面即将刷新...', 2000);
+            }
+            
+            // 延迟刷新页面，让用户看到提示
+            setTimeout(() => {
+                location.reload();
+            }, 1000);
+        });
+    });
+</script>
+
+</body>
+</html>

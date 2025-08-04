@@ -1,0 +1,35 @@
+/* variables.css - 全局CSS变量和主题配置
+ * 功能: 颜色主题、设计令牌、全局变量定义
+ * 影响: 整个项目的视觉效果
+ */
+:root {
+    /* 主题色 - 用于按钮、链接等主要元素 */
+    --primary-color: #BB86FC;        /* 紫色主色调 - 按钮背景色 */
+    --secondary-color: #03DAC6;      /* 青色辅助色 - 强调元素 */
+    
+    /* 背景色 - 深色主题 */
+    --background-color: #121212;     /* 页面主背景色 */
+    --surface-color: #1E1E1E;        /* 卡片、弹窗背景色 */
+    
+    /* 文字色 */
+    --text-color: #FFFFFF;           /* 主要文字颜色 */
+    --text-secondary: #B0B0B0;       /* 次要文字颜色 */
+    
+    /* 边框和分割线 */
+    --divider-color: #333333;        /* 分割线颜色 */
+    --border-color: #333333;         /* 边框颜色 */
+    
+    /* 状态色 - 用于通知、提示等 */
+    --success-color: #4caf50;        /* 成功状态 - 绿色 */
+    --error-color: #f44336;          /* 错误状态 - 红色 */
+    --warning-color: #ff9800;        /* 警告状态 - 橙色 */
+    --info-color: #2196f3;           /* 信息状态 - 蓝色 */
+}
+
+/* 
+修改主题色指南:
+1. 修改 --primary-color 可以改变按钮和主要元素的颜色
+2. 修改 --background-color 可以改变整体背景色调
+3. 修改 --text-color 可以改变文字颜色
+4. 所有颜色变量都会自动应用到相关组件
+*/

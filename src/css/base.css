@@ -1,0 +1,46 @@
+/* base.css - 基础样式重置和全局样式
+ * 功能: CSS重置、全局基础样式、动画定义、通用工具类
+ * 影响: 整个项目的基础样式
+ */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* 动画定义 */
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+@keyframes shimmer {
+    0% { left: -100%; }
+    100% { left: 100%; }
+}
+
+@keyframes pulse {
+    0%, 100% { box-shadow: 0 4px 12px rgba(187, 134, 252, 0.3); }
+    50% { box-shadow: 0 4px 20px rgba(187, 134, 252, 0.5); }
+}
+
+@keyframes errorSlideIn {
+    0% {
+        opacity: 0;
+        transform: translateY(-10px);
+        max-height: 0;
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+        max-height: 100px;
+    }
+}
