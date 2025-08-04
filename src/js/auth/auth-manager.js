@@ -430,16 +430,6 @@ class AuthManager {
         const email = emailInput.value.trim();
         const password = passwordInput.value;
         const rememberMe = rememberMeCheckbox ? rememberMeCheckbox.checked : false;
-        
-        // 如果用户勾选了自动登录，显示全局通知提示
-        if (rememberMe && window.notificationManager) {
-            window.notificationManager.showNotification({
-                type: 'info',
-                title: '自动登录已启用',
-                message: '您已启用自动登录功能，下次访问将自动登录',
-                duration: 5000
-            });
-        }
 
         // 额外的客户端验证
         if (!email || !password) {
@@ -501,6 +491,10 @@ class AuthManager {
                 if (window.logger?.isDevelopment) {
                     window.logger.auth('已设置自动登录Cookie');
                 }
+                
+                // 在登录成功且设置Cookie后显示通知
+                // 使用更健壮的通知显示方法，确保通知系统已初始化
+                this.showAutoLoginNotification();
             }
 
             // 更新UI显示用户已登录
@@ -1146,6 +1140,92 @@ class AuthManager {
             const closeBtn = document.getElementById('emailVerificationCloseBtn');
             if (closeBtn) {
                 closeBtn.onclick = null;
+            }
+        }
+    }
+    
+    // 显示自动登录通知 - 确保通知系统已初始化
+    showAutoLoginNotification() {
+        const message = '自动登录已启用，下次访问将自动登录';
+        const duration = 5000;
+        
+        // 直接使用alert显示通知，确保100%能看到
+        alert(message);
+        
+        // 同时尝试使用通知系统显示更美观的通知
+        if (typeof window.showInfo === 'function') {
+            try {
+                window.showInfo(message, duration);
+                if (window.logger?.isDevelopment) {
+                    window.logger.debug('已显示自动登录通知');
+                }
+            } catch (error) {
+                if (window.logger?.isDevelopment) {
+                    window.logger.error('显示通知失败:', error);
+                }
+            }
+        }
+    }
+    
+    // 创建备用通知 - 当通知系统不可用时使用
+    createFallbackNotification(message) {
+        try {
+            // 检查是否已存在备用通知
+            let fallbackNotification = document.getElementById('fallbackNotification');
+            if (fallbackNotification) {
+                fallbackNotification.remove();
+            }
+            
+            // 创建备用通知元素
+            fallbackNotification = document.createElement('div');
+            fallbackNotification.id = 'fallbackNotification';
+            fallbackNotification.style.cssText = `
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                background-color: #2196F3;
+                color: white;
+                padding: 12px 20px;
+                border-radius: 4px;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+                z-index: 9999;
+                font-size: 14px;
+                max-width: 300px;
+                animation: fadeIn 0.3s ease-out;
+            `;
+            
+            fallbackNotification.textContent = message;
+            document.body.appendChild(fallbackNotification);
+            
+            // 5秒后自动移除
+            setTimeout(() => {
+                if (fallbackNotification.parentNode) {
+                    fallbackNotification.style.animation = 'fadeOut 0.3s ease-in';
+                    setTimeout(() => {
+                        if (fallbackNotification.parentNode) {
+                            fallbackNotification.parentNode.removeChild(fallbackNotification);
+                        }
+                    }, 300);
+                }
+            }, 5000);
+            
+            // 添加必要的动画样式
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes fadeIn {
+                    from { opacity: 0; transform: translateY(20px); }
+                    to { opacity: 1; transform: translateY(0); }
+                }
+                @keyframes fadeOut {
+                    from { opacity: 1; transform: translateY(0); }
+                    to { opacity: 0; transform: translateY(20px); }
+                }
+            `;
+            document.head.appendChild(style);
+            
+        } catch (error) {
+            if (window.logger?.isDevelopment) {
+                window.logger.error('创建备用通知失败:', error);
             }
         }
     }

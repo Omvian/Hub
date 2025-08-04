@@ -37,6 +37,21 @@ class NotificationManager {
 
     // 显示通知
     show(message, type = 'info', duration = 5000) {
+        // 确保容器已初始化
+        if (!this.container) {
+            this.init();
+            
+            // 如果容器仍然不存在，使用延迟重试
+            if (!this.container) {
+                return new Promise((resolve) => {
+                    setTimeout(() => {
+                        const notification = this.show(message, type, duration);
+                        resolve(notification);
+                    }, 100);
+                });
+            }
+        }
+        
         // 创建通知元素
         const notification = this.createNotification(message, type);
 
