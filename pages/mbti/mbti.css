@@ -497,6 +497,214 @@
     flex-shrink: 0;
 }
 
+/* ===== 上次测试结果样式 ===== */
+/* 动态创建的上次测试结果提示区域 */
+.lastResultHint {
+    background: linear-gradient(135deg, rgba(30, 30, 40, 0.9) 0%, rgba(40, 40, 50, 0.9) 100%);
+    border: 1px solid rgba(187, 134, 252, 0.3);
+    border-radius: 16px;
+    padding: 20px 24px;
+    margin: 24px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: 
+        0 10px 30px rgba(0, 0, 0, 0.25),
+        0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+    backdrop-filter: blur(15px);
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    max-width: 600px;
+    transition: all 0.3s ease;
+}
+
+.lastResultHint::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(
+        circle at center,
+        rgba(187, 134, 252, 0.1) 0%,
+        rgba(187, 134, 252, 0) 60%
+    );
+    opacity: 0.6;
+    z-index: -1;
+    animation: pulse-glow 4s infinite ease-in-out;
+}
+
+.result-info {
+    font-size: 16px;
+    color: var(--text-secondary);
+    margin-bottom: 16px;
+    text-align: center;
+    line-height: 1.6;
+}
+
+.result-info span {
+    color: var(--primary-color);
+    font-weight: 600;
+    text-shadow: 0 0 10px rgba(187, 134, 252, 0.5);
+}
+
+.view-result-btn {
+    background: linear-gradient(135deg, rgba(187, 134, 252, 0.8) 0%, rgba(168, 118, 232, 0.7) 100%);
+    color: white;
+    border: none;
+    border-radius: 20px;
+    padding: 8px 24px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    box-shadow: 
+        0 5px 15px rgba(187, 134, 252, 0.2),
+        0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+    position: relative;
+}
+
+.view-result-btn:hover {
+    box-shadow: 
+        0 8px 20px rgba(187, 134, 252, 0.3),
+        0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+}
+
+.view-result-btn:active {
+    box-shadow: 
+        0 3px 10px rgba(187, 134, 252, 0.2),
+        0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+}
+
+@keyframes flow {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}
+.previous-result {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 30px;
+    width: 100%;
+}
+
+.result-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 18px;
+    color: var(--text-secondary);
+    background: linear-gradient(135deg, rgba(187, 134, 252, 0.1) 0%, rgba(168, 118, 232, 0.05) 100%);
+    border: 1px solid rgba(187, 134, 252, 0.2);
+    border-radius: 20px;
+    padding: 12px 24px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.result-label {
+    font-weight: 500;
+}
+
+.result-type-highlight {
+    font-weight: 700;
+    color: var(--primary-color);
+    text-shadow: 0 0 10px rgba(187, 134, 252, 0.5);
+}
+
+.result-date {
+    font-size: 16px;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.btn-view-result {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    background: linear-gradient(135deg, var(--primary-color) 0%, #A876E8 100%);
+    color: white;
+    border: none;
+    border-radius: 30px;
+    padding: 15px 40px;
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow:
+        0 15px 30px rgba(187, 134, 252, 0.4),
+        0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-view-result:hover {
+    transform: translateY(-3px);
+    box-shadow:
+        0 20px 35px rgba(187, 134, 252, 0.5),
+        0 0 0 1px rgba(255, 255, 255, 0.15) inset;
+}
+
+.btn-view-result:active {
+    transform: translateY(-1px);
+    box-shadow:
+        0 10px 25px rgba(187, 134, 252, 0.4),
+        0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+}
+
+/* 添加按钮发光效果 */
+.btn-view-result::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(
+        circle at center,
+        rgba(255, 255, 255, 0.3) 0%,
+        rgba(255, 255, 255, 0) 60%
+    );
+    opacity: 0.6;
+    z-index: 0;
+    animation: shine 3s infinite linear;
+}
+
+@keyframes shine {
+    0% { transform: translateX(-50%) translateY(-50%) rotate(0deg); }
+    100% { transform: translateX(-50%) translateY(-50%) rotate(360deg); }
+}
+
+.btn-view-result i,
+.btn-view-result span {
+    position: relative;
+    z-index: 1;
+}
+
+/* 脉冲动画 */
+.pulse-animation {
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { box-shadow:
+        0 0 0 0 rgba(187, 134, 252, 0.7),
+        0 15px 30px rgba(187, 134, 252, 0.4),
+        0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+    }
+    70% { box-shadow:
+        0 0 0 10px rgba(187, 134, 252, 0),
+        0 15px 30px rgba(187, 134, 252, 0.4),
+        0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+    }
+    100% { box-shadow:
+        0 0 0 0 rgba(187, 134, 252, 0),
+        0 15px 30px rgba(187, 134, 252, 0.4),
+        0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+    }
+}
+
 /* ===== 开始测试按钮 - 现代年轻人风格 ===== */
 .btn-start-test {
     padding: 20px 60px;
