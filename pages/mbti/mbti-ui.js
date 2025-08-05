@@ -83,9 +83,9 @@ class MBTIUI {
         questionCard.classList.add('fade-out');
         
         setTimeout(() => {
-            // 更新问题编号
-            document.getElementById('questionNumber').textContent = 
-                `${progress.current} / ${progress.total}`;
+            // 移除问题编号显示
+        // document.getElementById('questionNumber').textContent = 
+        //     `${progress.current} / ${progress.total}`;
             document.getElementById('currentQuestion').textContent = progress.current;
             document.getElementById('totalQuestions').textContent = progress.total;
             
@@ -735,24 +735,16 @@ ${window.MBTI_DATA.ui.labels.testLink}: ${resultData.url}
     // 显示音乐控制按钮
     showMusicControlBtn() {
         let btn = document.getElementById('musicControlBtn');
-        const testQuestions = document.getElementById('testQuestions');
-        if (!testQuestions) return;
+        const titleContainer = document.querySelector('.question-title-container');
+        const questionCategory = document.getElementById('questionCategory');
+        if (!titleContainer || !questionCategory) return;
         if (!btn) {
             btn = document.createElement('button');
             btn.id = 'musicControlBtn';
-            btn.style.position = 'absolute';
-            btn.style.top = '18px';
-            btn.style.right = '18px';
-            btn.style.zIndex = '10';
-            btn.style.background = 'rgba(30,30,40,0.7)';
-            btn.style.color = '#fff';
-            btn.style.border = 'none';
-            btn.style.borderRadius = '50%';
-            btn.style.width = '40px';
-            btn.style.height = '40px';
-            btn.style.cursor = 'pointer';
+            btn.className = 'music-control-btn';
             btn.innerHTML = '<i class="material-icons">' + (this.isMuted ? 'volume_off' : 'music_note') + '</i>';
-            testQuestions.appendChild(btn);
+            // 添加到标题容器中，与标题同一层级
+            titleContainer.appendChild(btn);
         } else {
             btn.innerHTML = '<i class="material-icons">' + (this.isMuted ? 'volume_off' : 'music_note') + '</i>';
         }

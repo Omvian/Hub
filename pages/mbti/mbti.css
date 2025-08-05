@@ -949,19 +949,20 @@
 /* 问题头部 */
 .question-header {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
+    gap: 15px;
     margin-bottom: 30px;
+    width: 100%;
 }
 
-.question-badge {
-    background: linear-gradient(135deg, var(--primary-color) 0%, #A876E8 100%);
-    color: white;
-    font-weight: 600;
-    font-size: 14px;
-    padding: 8px 16px;
-    border-radius: 20px;
-    box-shadow: 0 4px 12px rgba(187, 134, 252, 0.4);
+/* 标题和音乐按钮容器 - 新布局 */
+.question-title-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
 }
 
 .question-category {
@@ -971,6 +972,34 @@
     padding: 8px 16px;
     border-radius: 20px;
     border: 1px solid rgba(255, 255, 255, 0.1);
+    white-space: nowrap;
+}
+
+/* 音乐控制按钮样式 - 简化版 */
+.music-control-btn {
+    background: rgba(187, 134, 252, 0.2);
+    color: var(--text-secondary);
+    border: 1px solid rgba(187, 134, 252, 0.3);
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.music-control-btn:hover {
+    background: rgba(187, 134, 252, 0.3);
+    transform: translateY(-2px);
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+}
+
+.music-control-btn:active {
+    transform: translateY(-1px);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 /* 问题内容 */
