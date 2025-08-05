@@ -116,6 +116,8 @@ class MBTIUI {
             
             setTimeout(() => {
                 questionCard.classList.remove('fade-in');
+                // 动画完成后启用选项
+                this.enableOptions();
             }, 500);
             
             // 平滑滚动到顶部
@@ -148,6 +150,7 @@ class MBTIUI {
             optionBtn.textContent = option.text;
             optionBtn.dataset.type = option.type;
             optionBtn.dataset.index = index;
+            optionBtn.disabled = true; // 默认禁用选项
             
             // 如果已经有答案，显示选中状态
             if (this.core.answers[this.core.currentQuestionIndex] === index) {
@@ -159,6 +162,13 @@ class MBTIUI {
             });
             
             optionsContainer.appendChild(optionBtn);
+        });
+    }
+
+    // 启用所有选项
+    enableOptions() {
+        document.querySelectorAll('.option-btn').forEach(btn => {
+            btn.disabled = false;
         });
     }
 
@@ -724,7 +734,7 @@ ${window.MBTI_DATA.ui.labels.testLink}: ${resultData.url}
     playMusic() {
         if (!this.audio) {
             this.audio = document.createElement('audio');
-            this.audio.src = 'assets/audio/space.mp3';
+            this.audio.src = 'assets/audio/space.opus';
             this.audio.loop = true;
             this.audio.volume = 0.6;
             document.body.appendChild(this.audio);
