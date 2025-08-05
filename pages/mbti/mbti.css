@@ -503,13 +503,13 @@
     background: linear-gradient(135deg, rgba(30, 30, 40, 0.9) 0%, rgba(40, 40, 50, 0.9) 100%);
     border: 1px solid rgba(187, 134, 252, 0.3);
     border-radius: 16px;
-    padding: 20px 24px;
-    margin: 24px 0;
+    padding: 16px 20px;
+    margin: 16px 0;
     display: flex;
     flex-direction: column;
     align-items: center;
     box-shadow: 
-        0 10px 30px rgba(0, 0, 0, 0.25),
+        0 8px 25px rgba(0, 0, 0, 0.2),
         0 0 0 1px rgba(255, 255, 255, 0.05) inset;
     backdrop-filter: blur(15px);
     position: relative;
@@ -536,12 +536,13 @@
     animation: pulse-glow 4s infinite ease-in-out;
 }
 
-.result-info {
-    font-size: 16px;
+.lastResultHint .result-info {
+    font-size: 14px;
     color: var(--text-secondary);
-    margin-bottom: 16px;
+    margin-bottom: 12px;
     text-align: center;
-    line-height: 1.6;
+    line-height: 1.5;
+    width: 100%;
 }
 
 .result-info span {
@@ -555,7 +556,7 @@
     color: white;
     border: none;
     border-radius: 20px;
-    padding: 8px 24px;
+    padding: 8px 20px;
     font-size: 14px;
     font-weight: 500;
     cursor: pointer;
@@ -563,6 +564,50 @@
         0 5px 15px rgba(187, 134, 252, 0.2),
         0 0 0 1px rgba(255, 255, 255, 0.1) inset;
     position: relative;
+    width: 100%;
+    max-width: 200px;
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+    .lastResultHint {
+        padding: 10px 14px;
+        margin: 10px 0;
+    }
+    
+    .lastResultHint .result-info {
+        font-size: 12px;
+        margin-bottom: 8px;
+    }
+    
+    .view-result-btn {
+        padding: 6px 14px;
+        font-size: 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    .lastResultHint {
+        border-radius: 12px;
+        padding: 8px 12px;
+    }
+    
+    .lastResultHint .result-info {
+        font-size: 11px;
+        margin-bottom: 6px;
+        line-height: 1.4;
+    }
+    
+    .view-result-btn {
+        padding: 5px 12px;
+        font-size: 11px;
+        max-width: 140px;
+    }
+}
+
+/* 优化文本显示 */
+.result-info span {
+    white-space: nowrap;
 }
 
 .view-result-btn:hover {
@@ -998,8 +1043,59 @@
 }
 
 .music-control-btn:active {
-    transform: translateY(-1px);
+    transform: translateY(1px);
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* 音频播放提示 */
+.audio-play-prompt {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.7);
+    border-radius: 24px;
+    padding: 12px 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: white;
+    z-index: 100;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    transition: all 0.3s ease;
+}
+
+.audio-play-prompt .prompt-content {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.audio-play-prompt i {
+    font-size: 24px;
+    color: var(--primary-color);
+}
+
+.audio-play-prompt p {
+    margin: 0;
+    font-size: 16px;
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+    .audio-play-prompt {
+        padding: 10px 20px;
+    }
+
+    .audio-play-prompt i {
+        font-size: 20px;
+    }
+
+    .audio-play-prompt p {
+        font-size: 14px;
+    }
 }
 
 /* 问题内容 */

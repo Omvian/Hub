@@ -738,20 +738,43 @@ ${window.MBTI_DATA.ui.labels.testLink}: ${resultData.url}
     preloadMusic() {
         return new Promise((resolve, reject) => {
             if (this.audio) {
-                resolve();
-                return;
+                // 检查是否已经缓存
+                if (this.audio.readyState >= 4) {
+                    resolve();
+                    return;
+                }
             }
 
             this.audio = document.createElement('audio');
-            this.audio.src = 'assets/audio/space.opus';
+            this.audio.src = 'assets/audio/space.m4a';
             this.audio.loop = true;
             this.audio.volume = 0.6;
             document.body.appendChild(this.audio);
 
             // 监听音频可以播放的事件
-            this.audio.addEventListener('canplaythrough', () => {
-                console.log('音乐预加载完成');
+            const canPlayHandler = () => {
+                console.log('音乐可以开始播放');
+                // 对于iOS设备，需要额外处理
+                if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
+                    // iOS需要用户交互后才能播放，但我们可以提前准备
+                    this.audio.pause();
+                }
                 resolve();
+            };
+
+            this.audio.addEventListener('canplay', canPlayHandler);
+
+            // 监听可以无缓冲播放的事件
+            this.audio.addEventListener('canplaythrough', () => {
+                console.log('音乐预加载完成，可以无缓冲播放');
+            });
+
+            // 监听进度事件
+            this.audio.addEventListener('progress', () => {
+                if (this.audio.buffered.length > 0) {
+                    const bufferedPercent = (this.audio.buffered.end(0) / this.audio.duration) * 100;
+                    console.log(`音乐已缓冲: ${bufferedPercent.toFixed(1)}%`);
+                }
             });
 
             // 监听错误事件
@@ -771,12 +794,59 @@ ${window.MBTI_DATA.ui.labels.testLink}: ${resultData.url}
             // 确保音乐已预加载
             await this.preloadMusic();
             this.audio.muted = this.isMuted;
-            this.audio.play().catch((err) => {
-                console.error('音乐播放失败:', err);
-            });
+
+            // 针对iOS设备的特殊处理
+            if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
+                // iOS需要用户交互才能播放，这里使用play方法并捕获可能的错误
+                this.audio.play().catch((err) => {
+                    console.error('iOS音乐播放失败，需要用户交互:', err);
+                    // 显示一个提示，引导用户交互
+                    this.showAudioPlayPrompt();
+                });
+            } else {
+                // 非iOS设备直接播放
+                this.audio.play().catch((err) => {
+                    console.error('音乐播放失败:', err);
+                });
+            }
         } catch (err) {
             console.error('播放音乐时出错:', err);
         }
+    }
+
+    // 显示音频播放提示
+    showAudioPlayPrompt() {
+        let prompt = document.getElementById('audioPlayPrompt');
+        if (!prompt) {
+            prompt = document.createElement('div');
+            prompt.id = 'audioPlayPrompt';
+            prompt.className = 'audio-play-prompt';
+            prompt.innerHTML = `
+                <div class="prompt-content">
+                    <i class="material-icons">volume_up</i>
+                    <p>点击播放背景音乐</p>
+                </div>
+            `;
+            document.body.appendChild(prompt);
+
+            // 点击提示时播放音乐
+            prompt.addEventListener('click', () => {
+                if (this.audio) {
+                    this.audio.play().catch((err) => {
+                        console.error('用户交互后播放失败:', err);
+                    });
+                }
+                prompt.style.display = 'none';
+            });
+        }
+        prompt.style.display = 'flex';
+
+        // 5秒后自动隐藏
+        setTimeout(() => {
+            if (prompt) {
+                prompt.style.display = 'none';
+            }
+        }, 5000);
     }
     // 显示音乐控制按钮
     showMusicControlBtn() {
