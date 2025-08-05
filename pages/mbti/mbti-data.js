@@ -624,6 +624,18 @@ window.MBTI_DATA = {
       "T": "balance", "F": "balance",
       "J": "calendar_today", "P": "calendar_today"
     },
+    "stageLabels": [
+      "外向/内向",
+      "感觉/直觉",
+      "思考/情感",
+      "判断/知觉"
+    ],
+    "stageIcons": [
+      "groups",
+      "lightbulb",
+      "balance",
+      "calendar_today"
+    ],
     "dimensions": [
       { "name": "外向 vs 内向", "e": "E", "i": "I", "eLabel": "外向", "iLabel": "内向", "eDesc": "从外部世界获取能量", "iDesc": "从内心世界获取能量" },
       { "name": "感觉 vs 直觉", "e": "S", "i": "N", "eLabel": "感觉", "iLabel": "直觉", "eDesc": "关注具体事实和细节", "iDesc": "关注概念和可能性" },

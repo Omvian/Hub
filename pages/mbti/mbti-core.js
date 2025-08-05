@@ -77,10 +77,12 @@ class MBTICore {
 
     // 获取测试进度
     getProgress() {
+        // 初始时(currentQuestionIndex为0)进度应为0%
+        const percentage = this.currentQuestionIndex === 0 ? 0 : Math.round(((this.currentQuestionIndex + 1) / this.data.questions.length) * 100);
         return {
             current: this.currentQuestionIndex + 1,
             total: this.data.questions.length,
-            percentage: Math.round(((this.currentQuestionIndex + 1) / this.data.questions.length) * 100)
+            percentage: percentage
         };
     }
 

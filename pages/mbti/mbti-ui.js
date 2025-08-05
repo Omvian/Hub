@@ -69,12 +69,21 @@ class MBTIUI {
         document.getElementById('testQuestions').style.display = 'block';
         document.getElementById('testProgress').style.display = 'flex';
         
+        // 显示问题容器
+        document.querySelector('.question-container').style.display = 'block';
+        
+        // 显示导航按钮
+        document.querySelector('.question-navigation').style.display = 'flex';
+        
         // 显示第一题
         this.showQuestion();
         
         // 播放音乐并显示控制按钮
         this.playMusic();
         this.showMusicControlBtn();
+
+        // 显示测试提示通知
+        window.showInfo('选择最符合你真实想法的选项，不要过多思考', 5000);
     }
 
     // 显示问题
@@ -87,22 +96,37 @@ class MBTIUI {
         questionCard.classList.add('fade-out');
         
         setTimeout(() => {
-            // 移除问题编号显示
-        // document.getElementById('questionNumber').textContent = 
-        //     `${progress.current} / ${progress.total}`;
-            document.getElementById('currentQuestion').textContent = progress.current;
-            document.getElementById('totalQuestions').textContent = progress.total;
+            // 更新问题进度显示
+            const currentQuestionEl = document.getElementById('currentQuestion');
+            if (currentQuestionEl) {
+                currentQuestionEl.textContent = progress.current;
+            }
+
+            // 更新阶段进度
+            this.updateStageProgress(progress.current);
+
+            const totalQuestionsEl = document.getElementById('totalQuestions');
+            if (totalQuestionsEl) {
+                totalQuestionsEl.textContent = progress.total;
+            }
             
             // 更新进度条
-            document.getElementById('progressFill').style.width = `${progress.percentage}%`;
-            document.getElementById('progressPercentage').textContent = `${progress.percentage}%`;
+            const progressBarEl = document.getElementById('progressBar');
+            if (progressBarEl) {
+                progressBarEl.style.width = `${progress.percentage}%`;
+            }
+
+            // 更新进度百分比显示
+            const progressPercentageEl = document.getElementById('progressPercentage');
+            if (progressPercentageEl) {
+                progressPercentageEl.textContent = `${progress.percentage}%`;
+            }
             
             // 确定问题类型和图标
             const questionType = this.getQuestionType(question);
             const iconName = this.getQuestionIcon(question);
             
-            // 更新问题类别和图标
-            document.getElementById('questionCategory').textContent = questionType;
+            // 更新问题图标
             document.getElementById('questionIcon').textContent = iconName;
             
             // 更新问题内容
@@ -228,6 +252,74 @@ class MBTIUI {
             this.showQuestion();
         } else {
             this.finishTest();
+        }
+    }
+
+    // 更新阶段进度
+    updateStageProgress(currentQuestion) {
+        // 每组12题，共4组
+        const stageSize = 12;
+        const totalStages = 4;
+        const currentStage = Math.ceil(currentQuestion / stageSize);
+        const questionInStage = (currentQuestion - 1) % stageSize + 1;
+        
+        // 更新阶段指示器
+        for (let i = 1; i <= totalStages; i++) {
+            const stageEl = document.getElementById(`stage${i}`);
+            const stageCircleEl = document.getElementById(`stageCircle${i}`);
+            const stageLabelEl = document.querySelectorAll('.stage-label')[i-1];
+            
+            if (stageEl && stageCircleEl && stageLabelEl) {
+                // 移除所有状态
+                stageEl.classList.remove('completed', 'active');
+                stageCircleEl.classList.remove('completed');
+                stageLabelEl.classList.remove('active');
+                
+                if (i < currentStage) {
+                    // 已完成的阶段
+                    stageEl.classList.add('completed');
+                    stageCircleEl.classList.add('completed');
+                    stageLabelEl.classList.add('active');
+                } else if (i === currentStage) {
+                    // 当前阶段
+                    stageEl.classList.add('active');
+                    stageLabelEl.classList.add('active');
+                    // 计算当前阶段的进度 - 每做一题就更新
+                    // 第一题时进度应为0%
+                    let stageProgress = currentQuestion === 1 ? 0 : (questionInStage / stageSize) * 100;
+                    
+                    // 使用CSS变量控制进度条宽度
+                    stageEl.style.setProperty('--stage-progress', `${stageProgress}%`);
+                    
+                    // 直接更新伪元素的宽度
+                    const style = document.createElement('style');
+                    style.textContent = `#stage${i}::before { width: ${stageProgress}%; }`;
+                    document.head.appendChild(style);
+                    
+                    // 第一题时移除active类，避免显示动画效果
+                    if (currentQuestion === 1) {
+                        stageEl.classList.remove('active');
+                    }
+                    
+                    // 如果完成了当前阶段，标记为已完成并触发填充动画
+                    if (questionInStage === stageSize) {
+                        setTimeout(() => {
+                            stageEl.classList.remove('active');
+                            stageEl.classList.add('completed');
+                            stageCircleEl.classList.add('completed');
+                        }, 500);
+                    }
+                    
+                    // 如果完成了当前阶段，标记为已完成并触发填充动画
+                    if (questionInStage === stageSize) {
+                        setTimeout(() => {
+                            stageEl.classList.remove('active');
+                            stageEl.classList.add('completed');
+                            stageCircleEl.classList.add('completed');
+                        }, 500);
+                    }
+                }
+            }
         }
     }
 
@@ -366,31 +458,32 @@ class MBTIUI {
         dimensionsContainer.innerHTML = `<h3>${window.MBTI_DATA.ui.labels.dimensionAnalysis}</h3>`;
         
         const dimensionsGrid = document.createElement('div');
-        dimensionsGrid.className = 'dimensions-grid';
+        dimensionsGrid.className = 'result-dimensions'; // 使用已有的网格布局类
         
         const dimensions = window.MBTI_DATA.ui.dimensions;
         
         dimensions.forEach(dim => {
-            const eScore = scores[dim.e];
-            const iScore = scores[dim.i];
+            const eScore = scores[dim.e] || 0;
+            const iScore = scores[dim.i] || 0;
             const total = eScore + iScore;
-            const ePercentage = Math.round((eScore / total) * 100);
-            const iPercentage = Math.round((iScore / total) * 100);
-            const dominant = eScore > iScore ? dim.e : dim.i;
-            const dominantLabel = eScore > iScore ? dim.eLabel : dim.iLabel;
-            const dominantDesc = eScore > iScore ? dim.eDesc : dim.iDesc;
+            // 防止除以零错误
+            const ePercentage = total > 0 ? Math.round((eScore / total) * 100) : 0;
+            const iPercentage = total > 0 ? Math.round((iScore / total) * 100) : 0;
+            const dominant = eScore > iScore ? dim.e : (iScore > eScore ? dim.i : dim.e); // 默认为第一个维度
+            const dominantLabel = eScore > iScore ? dim.eLabel : (iScore > eScore ? dim.iLabel : dim.eLabel);
+            const dominantDesc = eScore > iScore ? dim.eDesc : (iScore > eScore ? dim.iDesc : dim.eDesc);
             const dominantPercentage = Math.max(ePercentage, iPercentage);
             
             const dimensionDiv = document.createElement('div');
             dimensionDiv.className = 'dimension-result';
             dimensionDiv.innerHTML = `
-                <h4>${dim.name}</h4>
-                <div class="dimension-value">${dominant}</div>
-                <div class="dimension-label">${dominantLabel} (${dominantPercentage}%)</div>
+                <div class="dimension-title">
+                    ${dominantLabel}
+                    <span class="dimension-opposite">${eScore > iScore ? dim.iLabel : dim.eLabel}</span>
+                </div>
+                <div class="dimension-value">${dominant} (${dominantPercentage}%)</div>
                 <div class="dimension-bar-container">
-                    <div class="dimension-bar">
-                        <div class="dimension-bar-fill" style="width: ${dominantPercentage}%"></div>
-                    </div>
+                    <div class="dimension-bar-fill" style="width: ${dominantPercentage}%"></div>
                 </div>
                 <div class="dimension-description">${dominantDesc}</div>
             `;
@@ -795,6 +888,14 @@ ${window.MBTI_DATA.ui.labels.testLink}: ${resultData.url}
             await this.preloadMusic();
             this.audio.muted = this.isMuted;
 
+            // 更新音乐按钮状态
+            const btn = document.getElementById('musicControlBtn');
+            if (btn) {
+                if (!this.isMuted) {
+                    btn.classList.add('playing');
+                }
+            }
+
             // 针对iOS设备的特殊处理
             if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
                 // iOS需要用户交互才能播放，这里使用play方法并捕获可能的错误
@@ -809,6 +910,21 @@ ${window.MBTI_DATA.ui.labels.testLink}: ${resultData.url}
                     console.error('音乐播放失败:', err);
                 });
             }
+
+            // 监听播放状态变化
+            this.audio.addEventListener('play', () => {
+                const btn = document.getElementById('musicControlBtn');
+                if (btn && !this.isMuted) {
+                    btn.classList.add('playing');
+                }
+            });
+
+            this.audio.addEventListener('pause', () => {
+                const btn = document.getElementById('musicControlBtn');
+                if (btn) {
+                    btn.classList.remove('playing');
+                }
+            });
         } catch (err) {
             console.error('播放音乐时出错:', err);
         }
@@ -851,23 +967,46 @@ ${window.MBTI_DATA.ui.labels.testLink}: ${resultData.url}
     // 显示音乐控制按钮
     showMusicControlBtn() {
         let btn = document.getElementById('musicControlBtn');
-        const titleContainer = document.querySelector('.question-title-container');
-        const questionCategory = document.getElementById('questionCategory');
-        if (!titleContainer || !questionCategory) return;
+        const progressInfo = document.querySelector('.progress-info');
+        const progressPercentage = document.querySelector('.progress-percentage');
+        if (!progressInfo || !progressPercentage) return;
         if (!btn) {
-            btn = document.createElement('button');
+            btn = document.createElement('div');
             btn.id = 'musicControlBtn';
-            btn.className = 'music-control-btn';
-            btn.innerHTML = '<i class="material-icons">' + (this.isMuted ? 'volume_off' : 'music_note') + '</i>';
-            // 添加到标题容器中，与标题同一层级
-            titleContainer.appendChild(btn);
+            btn.className = 'music-control-btn' + (this.audio && !this.audio.paused ? ' playing' : '');
+            btn.innerHTML = '<i class="material-icons">' + (this.isMuted ? 'volume_off' : 'play_circle') + '</i>';
+            // 添加到进度信息区域，放在进度百分比前面
+            progressInfo.insertBefore(btn, progressPercentage);
+            // 确保按钮可见
+            btn.style.display = 'flex';
         } else {
-            btn.innerHTML = '<i class="material-icons">' + (this.isMuted ? 'volume_off' : 'music_note') + '</i>';
+            btn.innerHTML = '<i class="material-icons">' + (this.isMuted ? 'volume_off' : 'play_circle') + '</i>';
+            if (this.audio && !this.audio.paused) {
+                btn.classList.add('playing');
+            } else {
+                btn.classList.remove('playing');
+            }
         }
         btn.onclick = () => {
             this.isMuted = !this.isMuted;
-            if (this.audio) this.audio.muted = this.isMuted;
-            btn.innerHTML = '<i class="material-icons">' + (this.isMuted ? 'volume_off' : 'music_note') + '</i>';
+            if (this.audio) {
+                this.audio.muted = this.isMuted;
+                // 如果当前没有播放，则开始播放
+                if (this.audio.paused) {
+                    this.audio.play().catch((err) => {
+                        console.error('音乐播放失败:', err);
+                    });
+                    btn.classList.add('playing');
+                } else {
+                    // 切换静音状态
+                    if (this.isMuted) {
+                        btn.classList.remove('playing');
+                    } else {
+                        btn.classList.add('playing');
+                    }
+                }
+            }
+            btn.innerHTML = '<i class="material-icons">' + (this.isMuted ? 'volume_off' : 'play_circle') + '</i>';
         };
     }
 }

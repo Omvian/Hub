@@ -1,0 +1,297 @@
+/* 子页面头部样式 */
+.subpage-header {
+    background: rgba(30, 30, 40, 0.8);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(187, 134, 252, 0.15);
+    padding: 16px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+/* 返回按钮 */
+.back-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: linear-gradient(135deg, rgba(187, 134, 252, 0.2) 0%, rgba(168, 118, 232, 0.1) 100%);
+    border: 1px solid rgba(187, 134, 252, 0.3);
+    border-radius: 12px;
+    padding: 8px 16px;
+    color: var(--primary-color);
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+}
+
+.back-btn:hover {
+    background: linear-gradient(135deg, rgba(187, 134, 252, 0.3) 0%, rgba(168, 118, 232, 0.2) 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(187, 134, 252, 0.2);
+}
+
+.back-btn i {
+    font-size: 18px;
+}
+
+/* 页面标题 */
+.page-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.page-title i {
+    font-size: 28px;
+    color: var(--primary-color);
+}
+
+.page-title h1 {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text-color);
+    margin: 0;
+}
+
+/* 测试进度条 */
+.test-progress-container {
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto 10px auto;
+    padding: 0 24px;
+}
+
+.test-progress {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+    background: linear-gradient(135deg, rgba(30, 30, 40, 0.8) 0%, rgba(40, 40, 50, 0.8) 100%);
+    border: 1px solid rgba(187, 134, 252, 0.3);
+    border-radius: 20px;
+    padding: 10px 24px;
+    box-shadow: 
+        0 10px 30px rgba(0, 0, 0, 0.25),
+        0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+    backdrop-filter: blur(15px);
+    position: relative;
+    overflow: hidden;
+}
+
+/* 添加背景光效 */
+.test-progress::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(
+        circle at center,
+        rgba(187, 134, 252, 0.1) 0%,
+        rgba(187, 134, 252, 0) 60%
+    );
+    opacity: 0.6;
+    z-index: -1;
+    animation: pulse-glow 4s infinite ease-in-out;
+}
+
+@keyframes pulse-glow {
+    0% { transform: scale(1); opacity: 0.6; }
+    50% { transform: scale(1.05); opacity: 0.8; }
+    100% { transform: scale(1); opacity: 0.6; }
+}
+
+.progress-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.progress-text {
+    font-size: 15px;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.9);
+    white-space: nowrap;
+    background: linear-gradient(135deg, rgba(187, 134, 252, 0.2) 0%, rgba(168, 118, 232, 0.1) 100%);
+    padding: 6px 14px;
+    border-radius: 20px;
+    border: 1px solid rgba(187, 134, 252, 0.3);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.progress-stage-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+.progress-stage-indicator {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    margin-top: 8px;
+    padding: 0 10px;
+}
+
+.stage-container {
+    display: flex;
+    align-items: center;
+    position: relative;
+    flex: 1;
+}
+
+.stage {
+    height: 2px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 1px;
+    position: relative;
+    overflow: hidden;
+    flex: 1;
+}
+
+.stage::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, var(--primary-color) 0%, #A876E8 100%);
+    transition: width 0.5s ease-in-out;
+}
+
+.stage.completed::before {
+    width: 100%;
+}
+
+.stage.active::before {
+    background: linear-gradient(90deg, var(--primary-color) 0%, #FF6B8B 100%);
+    /* 只有当宽度大于0时才应用动画 */
+    animation: pulse-stage 1.5s infinite alternate;
+}
+
+@keyframes pulse-stage {
+    0% { opacity: 0.7; }
+    100% { opacity: 1; }
+}
+
+.stage-circle {
+    width: 12px;
+    height: 12px;
+    border: 2px solid rgba(187, 134, 252, 0.3);
+    border-radius: 50%;
+    background-color: rgba(30, 30, 40, 0.8);
+    position: relative;
+    z-index: 10;
+    margin: 0 5px 0 0;
+    transition: all 0.3s ease;
+}
+
+.stage-circle.completed {
+    border-color: var(--primary-color);
+    animation: fill-circle 0.8s ease forwards;
+}
+
+@keyframes fill-circle {
+    0% {
+        background-color: rgba(30, 30, 40, 0.8);
+        box-shadow: 0 0 0 rgba(187, 134, 252, 0);
+    }
+    50% {
+        background-color: rgba(187, 134, 252, 0.3);
+        box-shadow: 0 0 10px rgba(187, 134, 252, 0.5);
+    }
+    100% {
+        background-color: var(--primary-color);
+        box-shadow: 0 0 20px rgba(187, 134, 252, 0.8);
+    }
+}
+
+.stage-labels-container {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin-top: 10px;
+    padding: 0 20px;
+}
+
+.stage-label {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.7);
+    white-space: nowrap;
+    transition: color 0.3s ease;
+    text-align: center;
+    flex: 1;
+}
+
+.stage-label.active {
+    color: var(--primary-color);
+}
+
+.progress-bar-container {
+    flex: 1;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    overflow: hidden;
+    height: 10px;
+    position: relative;
+}
+
+.progress-bar {
+    width: 0%;
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary-color) 0%, #A876E8 100%);
+    border-radius: 10px;
+    transition: width 0.5s ease-in-out;
+    position: relative;
+    overflow: hidden;
+    box-shadow:
+        0 0 20px rgba(187, 134, 252, 0.8),
+        0 0 8px rgba(255, 255, 255, 0.6) inset;
+    animation: pulse-glow-fill 2s infinite alternate;
+}
+
+.progress-bar::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(90deg,
+        rgba(255, 255, 255, 0) 0%,
+        rgba(255, 255, 255, 0.3) 50%,
+        rgba(255, 255, 255, 0) 100%);
+    animation: flow 2s infinite linear;
+}
+
+@keyframes flow {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}
+
+@keyframes pulse-glow-fill {
+    0% { box-shadow: 0 0 15px rgba(187, 134, 252, 0.7), 0 0 5px rgba(255, 255, 255, 0.5) inset; }
+    100% { box-shadow: 0 0 25px rgba(187, 134, 252, 0.9), 0 0 10px rgba(255, 255, 255, 0.7) inset; }
+}
+
+/* 移除重复的progress-fill类，将效果合并到progress-bar中 */

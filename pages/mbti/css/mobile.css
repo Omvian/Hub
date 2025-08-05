@@ -1,0 +1,211 @@
+/* 移动端样式优化 */
+@media (max-width: 768px) {
+    /* 返回主页按钮只显示图标 */
+    .back-btn span {
+        display: none;
+    }
+
+    .test-intro {
+        margin-top: -48px; /* 视情况调整这个值，一般匹配 header 高度即可 */
+    }
+    
+    #testIntro {
+        position: relative;
+        top: -98px; /* 整体上移50px */
+    }
+
+    /* 调整返回按钮样式 */
+    .back-btn {
+        padding: 8px;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    /* 调整页面标题样式 */
+    .page-title h1 {
+        font-size: 16px;
+    }
+    
+    /* 确保标题图标与页面图标一致 */
+    .page-title i {
+        font-size: 20px;
+    }
+    
+    /* 调整问题导航按钮，防止底部被裁切 */
+    .question-navigation {
+        padding-bottom: 30px;
+        margin-top: -20px !important; /* 或者 -10px，如果想紧贴问题卡片 */
+    }
+    
+    .nav-btn {
+        width: 50px;
+        height: 50px;
+    }
+    
+    /* 调整问题卡片样式 */
+    .question-container {
+            order: 2;
+            display: none;
+            margin: 0 16px 24px;
+            margin-top: 0 !important; /* 或者设置为更小的值，如 8px */
+        }
+
+    .question-card {
+        padding: 20px 15px;
+        box-sizing: border-box;
+        width: 100%;
+        max-width: 800px;
+        margin: 0 auto;
+        transform: translateY(-10px);
+    }
+    
+    
+    .test-progress {
+        padding: 8px 15px;
+    }
+    
+    .progress-text {
+        font-size: 12px;
+        padding: 4px 10px;
+    }
+    
+    /* 测试前页面移动端适配 */
+    .test-intro {
+    padding: 8px 6px 15px;
+    min-height: auto;
+    margin-top: -5px;
+}
+    
+    .intro-header {
+        flex-direction: column;
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+    
+    .intro-icon {
+        width: 60px;
+        height: 60px;
+    }
+    
+    .intro-icon i {
+        font-size: 30px;
+    }
+    
+    .intro-title h2 {
+        font-size: 22px;
+    }
+    
+    .intro-subtitle {
+        font-size: 14px;
+    }
+    
+    .btn-start-test {
+        padding: 12px 30px;
+        font-size: 16px;
+        margin: 20px 0;
+        width: 100%;
+        max-width: 300px;
+    }
+    
+    /* 调整测试信息标签为水平排列 */
+    .test-info-compact {
+        flex-direction: row;
+        flex-wrap: nowrap;
+        gap: 5px;
+        margin-bottom: 15px;
+        overflow-x: auto;
+        padding-bottom: 5px;
+    }
+
+    .info-pill {
+        padding: 3px 8px;
+        font-size: 10px;
+        justify-content: center;
+        white-space: nowrap;
+        flex-shrink: 0;
+    }
+
+    /* 调整标题图标与顶部栏间距 */
+    .page-title {
+        margin-top: 0;
+    }
+
+    /* 调整移动端进度条与顶部栏间距 */
+    .test-stage-container {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-top: -2px; /* 整体上移50px */
+            width: 100%;
+            max-width: 800px;
+        }
+
+        .test-progress-container {
+            order: 1;
+            padding: 12px 16px;
+            background: rgba(40, 40, 50, 0.9);
+            border-radius: 12px;
+            margin: -30px 16px 0 16px;
+            margin-top: -65px !important; /* 如果你仍想整体上移 */
+        }
+
+
+        /* 确保body.loaded不会遮挡进度框 */
+        body.loaded {
+            z-index: 1;
+            position: relative;
+        }
+    
+    .test-questions {
+    margin-top: -40px; /* 移动端上移效果 */
+    padding-top: 0;
+}
+
+.dimensions-compact {
+    margin: 12px 0 15px;
+}
+    
+    .dimension-row {
+        flex-direction: column;
+        gap: 8px;
+        margin-bottom: 10px;
+    }
+    
+    .dimension-pill {
+        padding: 8px 15px;
+        font-size: 13px;
+        justify-content: center;
+    }
+    
+    .tips-compact {
+    margin: 12px 0;
+    padding: 0 8px;
+}
+    
+    .tip-item {
+        font-size: 13px;
+        padding: 8px 0;
+    }
+    
+    .disclaimer {
+        font-size: 12px;
+        padding: 0 10px;
+    }
+}
+
+/* 修复上一题按钮被裁切的问题 */
+.question-navigation {
+    position: relative;
+    padding-bottom: 20px;
+}
+
+#prevBtn,
+#nextBtn {
+    position: relative;
+    bottom: 0;
+    margin-top: 10px;
+}
+

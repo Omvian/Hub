@@ -6,6 +6,9 @@
     <title>MBTI人格测试 - OmvianHub</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="css/main.css" rel="stylesheet">
+    <link href="css/mobile.css" rel="stylesheet">
+    <link href="css/intro.css" rel="stylesheet">
     <!-- 关键CSS内联 - 用于首屏快速渲染 -->
     <style>
         /* 基础样式 */
@@ -56,20 +59,20 @@
         .subpage-main {
             max-width: 800px;
             margin: 0 auto;
-            padding: 32px 24px;
+            padding: 8px 24px; /* 进一步减少顶部内边距 */
         }
 
         /* 测试介绍页面关键样式 */
         .test-intro {
             text-align: center;
-            min-height: calc(100vh - 200px);
+            min-height: calc(100vh - 120px);
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             padding: 40px 20px;
-            max-width: 800px;
-            margin: 0 auto;
+            width: 100%;
+            margin: 0;
         }
 
         .intro-header {
@@ -132,25 +135,43 @@
             document.head.appendChild(link);
         }
 
+        // 优先加载关键CSS
+        loadCSS('../../src/css/variables.css');
+        loadCSS('../../src/css/base.css');
+        loadCSS('css/main.css');
+
         // 页面加载完成后加载非关键CSS
         window.addEventListener('load', function() {
-            // 优先加载变量和基础样式
-            loadCSS('../../src/css/variables.css');
-            loadCSS('../../src/css/base.css');
-
             // 延迟加载其他样式
             setTimeout(() => {
                 loadCSS('../../src/css/components/buttons.css');
                 loadCSS('../../src/css/main.css');
                 loadCSS('../../src/css/mobile.css');
                 loadCSS('../../src/css/auth-styles.css');
-                loadCSS('mbti.css');
             }, 500);
         });
     </script>
     <link rel="icon" href="../../favicon.ico">
 </head>
-<body>
+<body class="loading">
+    <!-- 加载页面 -->
+    <div id="loader" class="loader">
+        <div class="loader-container">
+            <div class="loader-logo">
+                <i class="material-icons">psychology</i>
+            </div>
+            <div class="loader-spinner">
+                <div class="spinner-circle"></div>
+                <div class="spinner-text">加载中...</div>
+            </div>
+            <div class="loader-progress">
+                <div class="progress-track">
+                    <div class="progress-fill" id="loaderProgressFill"></div>
+                </div>
+                <div class="progress-percentage" id="loaderProgressText">0%</div>
+            </div>
+        </div>
+    </div>
     <!-- 子页面头部 -->
     <header class="subpage-header">
         <div class="header-left">
@@ -159,8 +180,8 @@
                 <span>返回主页</span>
             </a>
             <div class="page-title">
-                <i class="material-icons">quiz</i>
-                <h1>MBTI人格测试</h1>
+                <i class="material-icons">psychology</i>
+                <h1>MBTI</h1>
             </div>
         </div>
         
@@ -172,8 +193,11 @@
 
     <!-- 主内容区域 -->
     <main class="subpage-main">
-        <!-- 测试介绍页面 -->
-        <div id="testIntro" class="test-intro">
+        <!-- 测试问题和结果将在这里显示 -->
+    </main>
+
+    <!-- 测试介绍页面 - 移出subpage-main层级以适应全屏背景 -->
+    <div id="testIntro" class="test-intro">
             <div class="intro-header">
                 <div class="intro-icon">
                     <i class="material-icons">psychology</i>
@@ -239,15 +263,36 @@
                         <span class="progress-text">
                             <span id="currentQuestion">1</span> / <span id="totalQuestions">48</span>
                         </span>
-                        <span class="progress-percentage" id="progressPercentage">0%</span>
+                        <div class="music-control-btn" id="musicControlBtn">
+                            <i class="material-icons" id="musicIcon">play_circle</i>
+                        </div>
+                        <div class="progress-percentage">
+                            <span id="progressPercentage">0%</span>
+                        </div>
                     </div>
-                    <div class="progress-bar">
-                        <div class="progress-fill" id="progressFill"></div>
+                    <div class="progress-stage-indicator">
+                        <div class="stage" id="stage1"></div>
+                        <div class="stage-circle" id="stageCircle1"></div>
+                        <div class="stage" id="stage2"></div>
+                        <div class="stage-circle" id="stageCircle2"></div>
+                        <div class="stage" id="stage3"></div>
+                        <div class="stage-circle" id="stageCircle3"></div>
+                        <div class="stage" id="stage4"></div>
+                        <div class="stage-circle" id="stageCircle4"></div>
+                    </div>
+                    <div class="stage-labels-container">
+                        <div class="stage-label">外向/内向</div>
+                        <div class="stage-label">感觉/直觉</div>
+                        <div class="stage-label">思考/情感</div>
+                        <div class="stage-label">判断/感知</div>
+                    </div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar" id="progressBar"></div>
                     </div>
                 </div>
             </div>
             
-            <div class="question-container">
+            <div class="question-container" style="display: none;">
                 <!-- 左侧装饰元素 -->
                 <div class="question-decoration left">
                     <div class="decoration-circle"></div>
@@ -258,28 +303,26 @@
                 <div class="question-card" id="questionCard">
                     <div class="question-header">
                         <div class="question-title-container">
-                            <div class="question-category" id="questionCategory">外向/内向</div>
                             <!-- 音乐按钮将通过JavaScript动态添加到这里 -->
+                            <div class="question-category" id="questionCategory">外向/内向</div>
                         </div>
                     </div>
-                    
+
+
                     <div class="question-content">
-                        <div class="question-text" id="questionText">问题内容将在这里显示</div>
                         <div class="question-illustration">
                             <div class="illustration-icon">
                                 <i class="material-icons" id="questionIcon">psychology</i>
                             </div>
                         </div>
+                        <div class="question-text" id="questionText">问题内容将在这里显示</div>
                     </div>
                     
                     <div class="question-options" id="questionOptions">
                         <!-- 选项将通过JavaScript动态生成 -->
                     </div>
                     
-                    <div class="question-tip">
-                        <i class="material-icons">lightbulb</i>
-                        <span>选择最符合你真实想法的选项，不要过多思考</span>
-                    </div>
+
                 </div>
                 
                 <!-- 右侧装饰元素 -->
@@ -290,7 +333,7 @@
                 </div>
             </div>
             
-            <div class="question-navigation">
+            <div class="question-navigation" style="display: none;">
                 <button class="nav-btn prev-btn" id="prevBtn" disabled>
                     <i class="material-icons">arrow_back</i>
                 </button>
@@ -513,5 +556,39 @@
     <script src="mbti-storage.js"></script>
     <script src="mbti-utils.js"></script>
     <script src="mbti-main.js"></script>
+
+    <!-- 加载页面控制脚本 -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 获取加载元素
+            const loader = document.getElementById('loader');
+            const progressBar = document.getElementById('loaderProgressFill');
+            const progressText = document.getElementById('loaderProgressText');
+            const body = document.body;
+            
+            // 模拟加载进度
+            let progress = 0;
+            const interval = setInterval(() => {
+                progress += Math.random() * 15;
+                if (progress > 100) {
+                    progress = 100;
+                    clearInterval(interval);
+                }
+                
+                progressBar.style.width = `${progress}%`;
+                progressText.textContent = `加载中...${Math.round(progress)}%`;
+                
+                if (progress === 100) {
+                    // 加载完成，隐藏加载页面
+                    setTimeout(() => {
+                        loader.classList.add('hidden');
+                        // 移除loading类并添加loaded类
+                        body.classList.remove('loading');
+                        body.classList.add('loaded');
+                    }, 500);
+                }
+            }, 300);
+        });
+    </script>
 </body>
 </html>

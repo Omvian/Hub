@@ -15,7 +15,7 @@
     body {
         position: relative;
         /* 为固定定位的header和导航留出空间 */
-        padding-top: 136px; /* header(60px) + mobile-nav(56px) + 间距(20px) */
+        padding-top: 116px; /* header(60px) + mobile-nav(56px) + 间距(0px) - 减少20px间距 */
     }
     
     /* 确保header置顶 */
@@ -95,6 +95,7 @@
 .back-to-top-button i {
     font-size: 24px;
 }
+
 
 /* 侧边栏遮罩层 */
 .sidebar-overlay {
