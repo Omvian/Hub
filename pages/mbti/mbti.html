@@ -6,13 +6,148 @@
     <title>MBTI人格测试 - OmvianHub</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link rel="stylesheet" href="../../src/css/variables.css">
-    <link rel="stylesheet" href="../../src/css/base.css">
-    <link rel="stylesheet" href="../../src/css/components/buttons.css">
-    <link rel="stylesheet" href="../../src/css/main.css">
-    <link rel="stylesheet" href="../../src/css/mobile.css">
-    <link rel="stylesheet" href="../../src/css/auth-styles.css">
-    <link rel="stylesheet" href="mbti.css">
+    <!-- 关键CSS内联 - 用于首屏快速渲染 -->
+    <style>
+        /* 基础样式 */
+        :root {
+            --primary-color: #BB86FC;
+            --text-color: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.7);
+            --success-color: #4CAF50;
+            --background-color: #121212;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        body {
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* 子页面头部关键样式 */
+        .subpage-header {
+            background: linear-gradient(135deg, rgba(26, 26, 26, 0.95) 0%, rgba(45, 45, 45, 0.95) 100%);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(187, 134, 252, 0.2);
+            padding: 16px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .page-title h1 {
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--text-color);
+            margin: 0;
+        }
+
+        /* 主内容区域关键样式 */
+        .subpage-main {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 32px 24px;
+        }
+
+        /* 测试介绍页面关键样式 */
+        .test-intro {
+            text-align: center;
+            min-height: calc(100vh - 200px);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .intro-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        .btn-start-test {
+            padding: 20px 60px;
+            font-size: 22px;
+            font-weight: 700;
+            margin: 40px 0;
+            border-radius: 50px;
+            background: linear-gradient(135deg, #BB86FC 0%, #A876E8 100%);
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        /* 问题卡片关键样式 */
+        .question-card {
+            background: rgba(30, 30, 40, 0.7);
+            border: 1px solid rgba(187, 134, 252, 0.2);
+            border-radius: 24px;
+            padding: 40px;
+            margin: 0 auto;
+            width: 100%;
+            max-width: 800px;
+        }
+
+        .question-options {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .option-btn {
+            padding: 15px 20px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-color);
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+    </style>
+
+    <!-- 延迟加载非关键CSS -->
+    <script>
+        // 延迟加载CSS文件
+        function loadCSS(href) {
+            const link = document.createElement('link');
+            link.rel = 'stylesheet';
+            link.href = href;
+            document.head.appendChild(link);
+        }
+
+        // 页面加载完成后加载非关键CSS
+        window.addEventListener('load', function() {
+            // 优先加载变量和基础样式
+            loadCSS('../../src/css/variables.css');
+            loadCSS('../../src/css/base.css');
+
+            // 延迟加载其他样式
+            setTimeout(() => {
+                loadCSS('../../src/css/components/buttons.css');
+                loadCSS('../../src/css/main.css');
+                loadCSS('../../src/css/mobile.css');
+                loadCSS('../../src/css/auth-styles.css');
+                loadCSS('mbti.css');
+            }, 500);
+        });
+    </script>
     <link rel="icon" href="../../favicon.ico">
 </head>
 <body>

@@ -13,6 +13,10 @@ class MBTIUI {
         this.initializeKeyboardShortcuts();
         this.initializeScrollEffects();
         this.showLastResultHint(); // 新增：初始化时显示上次结果提示
+        // 预加载音乐
+        this.preloadMusic().catch(err => {
+            console.error('音乐预加载失败:', err);
+        });
     }
 
     // 初始化事件监听器
@@ -730,17 +734,49 @@ ${window.MBTI_DATA.ui.labels.testLink}: ${resultData.url}
         };
     }
 
-    // 音乐播放
-    playMusic() {
-        if (!this.audio) {
+    // 音乐预加载
+    preloadMusic() {
+        return new Promise((resolve, reject) => {
+            if (this.audio) {
+                resolve();
+                return;
+            }
+
             this.audio = document.createElement('audio');
             this.audio.src = 'assets/audio/space.opus';
             this.audio.loop = true;
             this.audio.volume = 0.6;
             document.body.appendChild(this.audio);
+
+            // 监听音频可以播放的事件
+            this.audio.addEventListener('canplaythrough', () => {
+                console.log('音乐预加载完成');
+                resolve();
+            });
+
+            // 监听错误事件
+            this.audio.addEventListener('error', (err) => {
+                console.error('音乐加载失败:', err);
+                reject(err);
+            });
+
+            // 开始加载音频
+            this.audio.load();
+        });
+    }
+
+    // 音乐播放
+    async playMusic() {
+        try {
+            // 确保音乐已预加载
+            await this.preloadMusic();
+            this.audio.muted = this.isMuted;
+            this.audio.play().catch((err) => {
+                console.error('音乐播放失败:', err);
+            });
+        } catch (err) {
+            console.error('播放音乐时出错:', err);
         }
-        this.audio.muted = this.isMuted;
-        this.audio.play().catch(() => {});
     }
     // 显示音乐控制按钮
     showMusicControlBtn() {
